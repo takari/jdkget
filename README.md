@@ -13,7 +13,7 @@ OsxJdkGetter getter = OsxJdkGetter.builder()
 getter.get();  
 ```
 
-This will retrieve the Java equivalent of [turducken][2], that are the GZipped CPIO files of the JDK, wrapped in an XAR file, inside an HFS disk image. Can't we just use TarGz files? No, no, that would be too easy.
+This will retrieve the Java equivalent of a [turducken][2]: the GZipped CPIO files of the JDK, wrapped in an XAR file, inside an HFS disk image. Can't we just use TarGz files? No, no, that would be too easy.
 
 You can find a list of available JDKs [here](Jdks.md).
 
