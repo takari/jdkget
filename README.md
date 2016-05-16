@@ -17,6 +17,8 @@ This will retrieve the Java equivalent of [turducken][2], that are the GZipped C
 
 You can find a list of available JDKs [here](Jdks.md).
 
+Once the XAR code is release, I will cut a release with an Uber JAR so it's easy to use.
+
 By using this utilitiy you agree to the [Oracle Binary Code License Agreement for Java SE][1].
 
 ## TODO
@@ -24,6 +26,7 @@ By using this utilitiy you agree to the [Oracle Binary Code License Agreement fo
 - replace internal XML code with dd-plist which is small and uses the JDK's XML classes
 - replace plexus-utils with JDK directory/file code
 - replace simpleframework XML in xar with JDK XML code: https://github.com/sprylab/xar/issues/1
+- ask xar guys to do a release so I can do a release
 - figure out how to get the <=1.6 JDKs from Apple automatically
 
 ## NOTES
