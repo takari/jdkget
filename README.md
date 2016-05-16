@@ -4,16 +4,18 @@ OsxJdkGet is a Java utility that allows you to download OSX JDKs from Oracle, an
 
 To install an OSX JDK you can use something like the following:
 
-```
+```java
 OsxJdkGetter getter = OsxJdkGetter.builder()
   .version("1.8.0_92-b14")
   .outputDirectory(jdkDirectory)
   .build();  
-  
+    
 getter.get();  
 ```
 
 This will retrieve the Java equivalent of [turducken][2], that are the GZipped CPIO files of the JDK, wrapped in an XAR file, inside an HFS disk image. Can't we just use TarGz files? No, no, that would be too easy.
+
+You can find a list of available JDKs [here](Jdks.md).
 
 By using this utilitiy you agree to the [Oracle Binary Code License Agreement for Java SE][1].
 
