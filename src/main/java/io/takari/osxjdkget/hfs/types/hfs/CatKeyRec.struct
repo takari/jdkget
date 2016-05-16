@@ -1,0 +1,7 @@
+struct CatKeyRec {
+        SInt8           ckrKeyLen;      key length (SignedByte)
+        SInt8           ckrResrv1;      reserved (SignedByte)
+        SInt32          ckrParID;       parent directory ID (LongInt)
+        UInt8           ckrCNameLen     length of catalog node name (part of Str31)
+        Char            ckrCName[31];   catalog node name (part of Str31)
+};

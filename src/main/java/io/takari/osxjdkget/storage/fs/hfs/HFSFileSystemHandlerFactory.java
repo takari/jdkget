@@ -1,0 +1,107 @@
+/*-
+ * Copyright (C) 2008-2014 Erik Larsson
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package io.takari.osxjdkget.storage.fs.hfs;
+
+import io.takari.osxjdkget.storage.fs.DefaultFileSystemHandlerInfo;
+import io.takari.osxjdkget.storage.fs.FileSystemCapability;
+import io.takari.osxjdkget.storage.fs.FileSystemHandler;
+import io.takari.osxjdkget.storage.fs.FileSystemHandlerFactory;
+import io.takari.osxjdkget.storage.fs.FileSystemHandlerInfo;
+import io.takari.osxjdkget.storage.fs.FileSystemRecognizer;
+import io.takari.osxjdkget.storage.fs.hfscommon.HFSCommonFileSystemHandler;
+import io.takari.osxjdkget.storage.fs.hfscommon.HFSCommonFileSystemHandlerFactory;
+import io.takari.osxjdkget.storage.io.DataLocator;
+import io.takari.osxjdkget.util.Util;
+
+/**
+ * @author <a href="http://www.catacombae.org/" target="_top">Erik Larsson</a>
+ */
+public class HFSFileSystemHandlerFactory extends HFSCommonFileSystemHandlerFactory {
+  private static final FileSystemRecognizer recognizer = new HFSFileSystemRecognizer();
+
+  private static final FileSystemHandlerInfo handlerInfo =
+    new DefaultFileSystemHandlerInfo("org.catacombae.hfs_handler",
+      "HFS file system handler", "1.0", 0, "Erik Larsson, Catacombae Software");
+
+
+  private static final CustomAttribute stringEncodingAttribute =
+    createCustomAttribute(AttributeType.STRING, "HFS_STRING_ENCODING",
+      "The string encoding for filenames in the current HFS file system",
+      "MacRoman");
+
+
+  @Override
+  public FileSystemCapability[] getCapabilities() {
+    return HFSCommonFileSystemHandler.getStaticCapabilities();
+  }
+
+  @Override
+  public FileSystemHandler createHandler(DataLocator data) {
+    boolean useCaching =
+      createAttributes.getBooleanAttribute(StandardAttribute.CACHING_ENABLED);
+    boolean posixFilenames =
+      createAttributes.getBooleanAttribute(posixFilenamesAttribute);
+    String encoding =
+      createAttributes.getStringAttribute(stringEncodingAttribute);
+
+    return createHandlerInternal(data, useCaching, posixFilenames,
+      encoding);
+  }
+
+  protected FileSystemHandler createHandlerInternal(DataLocator data,
+    boolean useCaching, boolean posixFilenames, String encoding) {
+    return new HFSFileSystemHandler(data, useCaching, posixFilenames,
+      encoding);
+  }
+
+  @Override
+  public FileSystemHandlerInfo getHandlerInfo() {
+    return handlerInfo;
+  }
+
+  @Override
+  public StandardAttribute[] getSupportedStandardAttributes() {
+    // Set default values for standard attributes
+    setStandardAttributeDefaultValue(StandardAttribute.CACHING_ENABLED, true);
+
+    return new StandardAttribute[] {StandardAttribute.CACHING_ENABLED};
+  }
+
+  @Override
+  public CustomAttribute[] getSupportedCustomAttributes() {
+    final CustomAttribute[] superAttributes =
+      super.getSupportedCustomAttributes();
+    final CustomAttribute[] result =
+      new CustomAttribute[superAttributes.length + 1];
+
+    Util.arrayCopy(superAttributes, result);
+    result[superAttributes.length + 0] = stringEncodingAttribute;
+
+    return result;
+  }
+
+  @Override
+  public FileSystemHandlerFactory newInstance() {
+    return new HFSFileSystemHandlerFactory();
+  }
+
+  @Override
+  public FileSystemRecognizer getRecognizer() {
+    return recognizer;
+  }
+}

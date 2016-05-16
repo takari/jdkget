@@ -1,0 +1,11 @@
+struct DriverDescriptorRecord {
+  be16                   sbSig;          // Device signature.
+  be16                   sbBlkSize;      // Block size of the device.
+  be32                   sbBlkCount;     // Number of blocks on the device.
+  be16                   sbDevType;      // Reserved.
+  be16                   sbDevId;        // Reserved.
+  be32                   dbData;         // Reserved.
+  be16                   sbDrvrCount;    // Number of driver descriptor entries.
+  DriverDescriptorEntry  entries[1];     // Drivers, if any.
+  u8                     ddPad[1];       // Reserved.
+};

@@ -1,0 +1,3 @@
+struct ExtDataRec {
+	ExtDescriptor 	extDataRec[3]; 	extent data record
+};
