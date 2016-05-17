@@ -2,6 +2,7 @@ package io.takari.osxjdkget;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,6 +11,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -52,17 +54,17 @@ public class OsxJdkGetter {
     if (!inProcessDirectory.exists()) {
       inProcessDirectory.mkdirs();
     }
-    if(!jdkDmg.exists()) {
+    if (!jdkDmg.exists()) {
       System.out.println("Downloading " + downloadUrl);
       downloadJdkDmg();
     } else {
       System.out.println("We already have a copy of " + jdkDmg);
-    }    
+    }
     processDmg(jdkDmg, jdkVersion);
   }
-  
+
   private void downloadJdkDmg() throws Exception {
-    
+
     // Oracle does some redirects so we have to follow a couple before we win the JDK prize
     String url = downloadUrl;
     URL jdkUrl;
@@ -107,7 +109,7 @@ public class OsxJdkGetter {
 
     files = FileUtils.getFiles(inProcessDirectory, "**/Payload", null, true);
     File jdkGz = files.get(0);
-    File cpio = new File(inProcessDirectory, "jdk18091.cpio");
+    File cpio = new File(inProcessDirectory, jdkVersion + ".cpio");
     try (GZIPInputStream is = new GZIPInputStream(new FileInputStream(jdkGz)); FileOutputStream os = new FileOutputStream(cpio)) {
       ByteStreams.copy(is, os);
     }
@@ -119,12 +121,19 @@ public class OsxJdkGetter {
         if (!e.isDirectory()) {
           File jdkFile = new File(outputDirectory, e.getName());
           jdkFile.getParentFile().mkdirs();
-          try (OutputStream cos = new FileOutputStream(jdkFile)) {
-            ByteStreams.copy(is, cos);
-            // The lower 9 bits specify read/write/execute permissions for world, group, and user following standard POSIX conventions.            
-            int mode = (int) e.getMode() & 0000777;
-            Files.setPosixFilePermissions(jdkFile.toPath(), PosixModes.intModeToPosix(mode));
+          if (e.isRegularFile()) {
+            try (OutputStream os = new FileOutputStream(jdkFile)) {
+              ByteStreams.copy(is, os);
+            }
+          } else if (e.isSymbolicLink()) {
+            try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+              ByteStreams.copy(is, os);
+              Files.createSymbolicLink(jdkFile.toPath(), Paths.get(new String(os.toByteArray())));
+            }            
           }
+          // The lower 9 bits specify read/write/execute permissions for world, group, and user following standard POSIX conventions.            
+          int mode = (int) e.getMode() & 0000777;
+          Files.setPosixFilePermissions(jdkFile.toPath(), PosixModes.intModeToPosix(mode));
         }
       }
     }
@@ -156,9 +165,8 @@ public class OsxJdkGetter {
 
   // DMG <-- XAR <-- GZ <-- CPIO
   public static void main(String[] args) throws Exception {
-    String version = "1.8.0_40-b26";
-    //String version = "1.8.0_5-b13";
-    File jdkDir = new File("/Users/jvanzyl/js/DEVPROD/TOOLS/jdks/jdk-8u40");
+    String version = "1.8.0_92-b14";
+    File jdkDir = new File("/Users/jvanzyl/js/DEVPROD/TOOLS/jdks/jdk-8u92");
     OsxJdkGetter getter = OsxJdkGetter.builder()
       .version(version)
       .outputDirectory(jdkDir)
