@@ -57,7 +57,7 @@
             <configuration>
               <rules>
                 <keep>
-                  <pattern>org.catacombae.OsxJdkGetter</pattern>
+                  <pattern>io.takari.osxjdkget.OsxJdkGetter</pattern>
                 </keep>
               </rules>
             </configuration>
