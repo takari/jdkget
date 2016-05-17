@@ -27,11 +27,10 @@ import java.util.zip.Inflater;
 
 import org.apache.tools.bzip2.CBZip2InputStream;
 
-import io.takari.osxjdkget.dmgextractor.DmgException;
-import io.takari.osxjdkget.dmgextractor.io.RandomAccessInputStream;
-import io.takari.osxjdkget.dmgextractor.io.SynchronizedRandomAccessStream;
+import io.takari.osxjdkget.io.RandomAccessInputStream;
 import io.takari.osxjdkget.io.ReadableRandomAccessStream;
 import io.takari.osxjdkget.io.RuntimeIOException;
+import io.takari.osxjdkget.io.SynchronizedRandomAccessStream;
 
 public abstract class UDIFBlockInputStream extends InputStream {
   protected ReadableRandomAccessStream raf;
@@ -271,8 +270,7 @@ public abstract class UDIFBlockInputStream extends InputStream {
           if (res >= 0)
             bytesInflated += res;
           else
-            throw new DmgException("Negative return value when " +
-              "inflating");
+            throw new RuntimeException("Negative return value when inflating");
         }
 
         // The fillBuffer method is responsible for updating bufferPos
@@ -280,7 +278,7 @@ public abstract class UDIFBlockInputStream extends InputStream {
         bufferPos = 0;
         bufferDataLength = bytesInflated;
       } catch (DataFormatException e) {
-        DmgException re = new DmgException("Invalid zlib data!");
+        RuntimeException re = new RuntimeException("Invalid zlib data!");
         re.initCause(e);
         throw re;
       }

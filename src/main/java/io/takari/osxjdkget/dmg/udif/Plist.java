@@ -23,7 +23,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 
-import io.takari.osxjdkget.dmgextractor.io.ReaderInputStream;
+import io.takari.osxjdkget.io.ReaderInputStream;
 import io.takari.osxjdkget.plist.PlistNode;
 import io.takari.osxjdkget.plist.XmlPlist;
 import net.iharder.Base64;

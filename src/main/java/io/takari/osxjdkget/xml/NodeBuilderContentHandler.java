@@ -20,7 +20,7 @@ package io.takari.osxjdkget.xml;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import io.takari.osxjdkget.dmgextractor.io.SynchronizedRandomAccessStream;
+import io.takari.osxjdkget.io.SynchronizedRandomAccessStream;
 
 public class NodeBuilderContentHandler extends XMLContentHandler {
   private NodeBuilder nodeBuilder;

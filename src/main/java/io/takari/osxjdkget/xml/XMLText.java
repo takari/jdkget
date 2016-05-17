@@ -25,10 +25,10 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 
-import io.takari.osxjdkget.dmgextractor.io.ByteCountInputStream;
-import io.takari.osxjdkget.dmgextractor.io.CharByCharReader;
-import io.takari.osxjdkget.dmgextractor.io.RandomAccessInputStream;
-import io.takari.osxjdkget.dmgextractor.io.SynchronizedRandomAccessStream;
+import io.takari.osxjdkget.io.ByteCountInputStream;
+import io.takari.osxjdkget.io.CharByCharReader;
+import io.takari.osxjdkget.io.RandomAccessInputStream;
+import io.takari.osxjdkget.io.SynchronizedRandomAccessStream;
 
 public class XMLText extends XMLElement {
   private static final char CR = '\r';

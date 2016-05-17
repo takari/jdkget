@@ -30,9 +30,9 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 
-import io.takari.osxjdkget.dmgextractor.io.RandomAccessInputStream;
-import io.takari.osxjdkget.dmgextractor.io.SynchronizedRandomAccessStream;
+import io.takari.osxjdkget.io.RandomAccessInputStream;
 import io.takari.osxjdkget.io.ReadableByteArrayStream;
+import io.takari.osxjdkget.io.SynchronizedRandomAccessStream;
 import io.takari.osxjdkget.xml.DebugXMLContentHandler;
 import io.takari.osxjdkget.xml.NodeBuilder;
 import io.takari.osxjdkget.xml.NodeBuilderContentHandler;

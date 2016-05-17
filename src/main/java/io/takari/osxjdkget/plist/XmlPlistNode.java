@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.LinkedList;
 
-import io.takari.osxjdkget.dmgextractor.io.ConcatenatedReader;
+import io.takari.osxjdkget.io.ConcatenatedReader;
 import io.takari.osxjdkget.io.RuntimeIOException;
 import io.takari.osxjdkget.util.Util;
 import io.takari.osxjdkget.xml.XMLElement;

@@ -23,7 +23,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import io.takari.osxjdkget.dmgextractor.io.SynchronizedRandomAccessStream;
+import io.takari.osxjdkget.io.SynchronizedRandomAccessStream;
 
 /**
  * Plugs into a SAXParser to build a tree of XMLElements representing the document.
