@@ -218,7 +218,7 @@ public class UDIFRandomAccessStream extends BasicReadableRandomAccessStream {
     }
     // 	System.out.println("</UDIFRandomAccessStream.repositionStream()>");
   }
-
+  /*
   public static void main(String[] args) throws IOException {
     System.out.println("UDIFRandomAccessStream simple test program");
     System.out.println("(Simply extracts the contents of a DMG file to a designated output file)");
@@ -242,4 +242,5 @@ public class UDIFRandomAccessStream extends BasicReadableRandomAccessStream {
       System.out.println("Length: " + dras.length() + " bytes");
     }
   }
+  */
 }

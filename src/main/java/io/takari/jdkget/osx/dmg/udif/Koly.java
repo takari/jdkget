@@ -207,6 +207,7 @@ public class Koly {
 
   /** Test main. Reads the last 512 bytes from the input file (args[0]), creates a
   Koly object and calls its print method to display the data. */
+  /*
   public static void main(String[] args) throws java.io.IOException {
     byte[] kolyData = new byte[512];
     java.io.RandomAccessFile raf = new java.io.RandomAccessFile(args[0], "r");
@@ -217,4 +218,5 @@ public class Koly {
     Koly k = new Koly(kolyData, 0);
     k.print(System.out, "");
   }
+  */
 }

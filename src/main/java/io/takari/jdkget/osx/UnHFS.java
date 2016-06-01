@@ -66,111 +66,15 @@ public class UnHFS {
   
   private static boolean debug = false;
 
-  /**
-   * UnHFS entry point. The main method's only responsibility is to parse and
-   * validate program arguments. It then passes them on to the static method
-   * unhfs(...), which contains the actual program logic.
-   *
-   * @param args program arguments.
-   */
-  public static void main(String[] args) {
-    String outputDirname = ".";
-    String fsRoot = "/";
-    boolean extractFolderDirectly = true;
-    boolean extractResourceForks = false;
-    boolean verbose = false;
-    int partitionNumber = -1; // -1 means search for first supported partition
-
-    int i;
-    for (i = 0; i < args.length; ++i) {
-      String curArg = args[i];
-
-      if (curArg.equals("-o")) {
-        if (i + 1 < args.length)
-          outputDirname = args[++i];
-        else {
-          //printUsage(System.err);
-          System.exit(1);
-        }
-      } else if (curArg.equals("-fsroot")) {
-        if (i + 1 < args.length)
-          fsRoot = args[++i];
-        else {
-          //printUsage(System.err);
-          System.exit(1);
-        }
-      } else if (curArg.equals("-create")) {
-        extractFolderDirectly = false;
-      } else if (curArg.equals("-resforks")) {
-        if (i + 1 < args.length) {
-          String value = args[++i];
-          if (value.equalsIgnoreCase("NONE")) {
-            extractResourceForks = false;
-          } else if (value.equalsIgnoreCase("APPLEDOUBLE")) {
-            extractResourceForks = true;
-          } else {
-            System.err.println("Error: Invalid value \"" + value +
-              "\" for -resforks!");
-            //printUsage(System.err);
-            System.exit(1);
-          }
-        } else {
-          //printUsage(System.err);
-          System.exit(1);
-        }
-      } else if (curArg.equals("-partition")) {
-        if (i + 1 < args.length) {
-          try {
-            partitionNumber = Integer.parseInt(args[++i]);
-          } catch (NumberFormatException nfe) {
-            System.err.println("Error: Invalid partition number \"" +
-              args[i] + "\"!");
-            //printUsage(System.err);
-            System.exit(1);
-          }
-        } else {
-          //printUsage(System.err);
-          System.exit(1);
-        }      
-      } else if (curArg.equals("-v")) {
-        verbose = true;
-      } else if (curArg.equals("--")) {
-        ++i;
-        break;
-      } else
-        break;
-    }
-
-    if (i != args.length - 1) {
-      //printUsage(System.err);
-      System.exit(1);
-    }
-
-    String inputFilename = args[i];
-    File inputFile = new File(inputFilename);
-    if (!inputFile.isDirectory() &&
-      !(inputFile.exists() && inputFile.canRead())) {
-      System.err.println("Error: Input file \"" + inputFilename + "\" can not be read!");
-      //printUsage(System.err);
-      System.exit(1);
-    }
-
-    File outputDir = new File(outputDirname);
-    if (!(outputDir.exists() && outputDir.isDirectory())) {
-      System.err.println("Error: Invalid output directory \"" + outputDirname + "\"!");
-      //printUsage(System.err);
-      System.exit(1);
-    }
-
-    ReadableRandomAccessStream inputStream = new ReadableFileStream(inputFilename);
-
+  public static void unhfs(File file, File outputDir) {
+    ReadableRandomAccessStream is = new ReadableFileStream(file);
     try {
       UnHFS unHfs = new UnHFS();
-      unHfs.unhfs(System.out, inputStream, outputDir, fsRoot, extractFolderDirectly, extractResourceForks, partitionNumber, verbose);
-    } catch (RuntimeIOException e) {
-      System.err.println("Exception while executing main routine:");
-      e.printStackTrace();
+      unHfs.unhfs(System.out, is, outputDir, "/", true, false, -1, false);
+    } finally {
+      is.close();
     }
+    
   }
 
   /**
@@ -203,15 +107,7 @@ public class UnHFS {
    
     logDebug("Trying to detect UDIF structure...");
     if (UDIFDetector.isUDIFEncoded(inFileStream)) {
-      UDIFRandomAccessStream stream = null;
-      try {
-        stream = new UDIFRandomAccessStream(inFileStream);
-        inFileStream = stream;
-      } catch (Exception e) {
-        e.printStackTrace();
-        System.err.println("Unhandled exception while trying to load UDIF wrapper.");
-        System.exit(1);
-      }
+      inFileStream = new UDIFRandomAccessStream(inFileStream);
     }    
 
     DataLocator inputDataLocator = new ReadableStreamDataLocator(inFileStream);
@@ -232,7 +128,6 @@ public class UnHFS {
             partitionsToProbe = psHandler.getPartitions();
           } else {
             System.err.println("Invalid partition number: " + partitionNumber);
-            System.exit(1);
             return;
           }
           for (Partition p : partitionsToProbe) {
@@ -263,13 +158,12 @@ public class UnHFS {
 
     if (fact == null) {
       System.err.println("No HFS file system found.");
-      System.exit(1);
+      return;
     }
 
     CustomAttribute posixFilenamesAttribute = fact.getCustomAttribute("POSIX_FILENAMES");
     if (posixFilenamesAttribute == null) {
       System.err.println("Unexpected: HFS-ish file system handler does " + "not support POSIX_FILENAMES attribute.");
-      System.exit(1);
       return;
     }
 
@@ -294,7 +188,7 @@ public class UnHFS {
       extractFile(file, outputDir, extractResourceForks, verbose);
     } else {
       System.err.println("Requested path is not a folder or a file!");
-      System.exit(1);
+      return;
     }
   }
 

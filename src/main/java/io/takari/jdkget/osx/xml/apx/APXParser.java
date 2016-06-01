@@ -40,6 +40,7 @@ public class APXParser implements APXParserConstants {
   private XMLContentHandler contentHandler;
 
   /** Test main method. The first and only argument denotes a file containing an XML document. */
+  /*
   public static void main(String[] args) throws Exception {
     InputStream is;
     if (args.length != 1)
@@ -64,6 +65,7 @@ public class APXParser implements APXParserConstants {
     APXParser a = create(usedReader, new DebugXMLContentHandler(Charset.forName(encoding))); //new NullXMLContentHandler(encoding));//
     a.xmlDocument();
   }
+  */
 
   /** This is the way to create an APXParser. Don't use the constructor even if it would be possible.
       @param misr the reader supplying the input data for the parser. Can not be null.
