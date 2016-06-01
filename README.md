@@ -1,11 +1,11 @@
-# OsxJdkGet
+# JdkGet
 
-OsxJdkGet is a Java utility that allows you to download OSX JDKs from Oracle, and install them in arbitrary directories in a fully automated way.
+JdkGet is a Java utility that allows you to download Linux/OSX/Windows JDKs from Oracle, and extract them in arbitrary directories in a fully automated way.
 
-To install an OSX JDK you can use something like the following:
+To install a JDK you can use something like the following:
 
 ```java
-OsxJdkGetter getter = OsxJdkGetter.builder()
+JdkGetter getter = JdkGetter.builder()
   .version("1.8.0_92-b14")
   .outputDirectory(jdkDirectory)
   .build();  
@@ -13,13 +13,20 @@ OsxJdkGetter getter = OsxJdkGetter.builder()
 getter.get();  
 ```
 
-This will retrieve the Java equivalent of a [turducken][2]: the GZipped CPIO files of the JDK, wrapped in an XAR file, inside an HFS disk image. Can't we just use TarGz files? No, no, that would be too easy.
-
 You can find a list of available JDKs [here](Jdks.md).
+
+By using this utilitiy you agree to the [Oracle Binary Code License Agreement for Java SE][1].
+
+## *nix and Solaris
+Downloads and extracts a .tar.gz, simple and easy
+
+## OSX
+This will retrieve the Java equivalent of a [turducken][2]: the GZipped CPIO files of the JDK, wrapped in an XAR file, inside an HFS disk image. Can't we just use TarGz files? No, no, that would be too easy.
 
 Once the XAR code is release, I will cut a release with an Uber JAR so it's easy to use.
 
-By using this utilitiy you agree to the [Oracle Binary Code License Agreement for Java SE][1].
+## Windows
+Similar to OSX, but with tools.zip (with some jars pack200'd) in CAB in EXE in EXE.
 
 ## TODO
 

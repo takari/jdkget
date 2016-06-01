@@ -105,14 +105,12 @@ public class JdkGetter {
     }
   }
 
-  // DMG <-- XAR <-- GZ <-- CPIO
   public static void main(String[] args) throws Exception {
     String version = "1.8.0_92-b14";
     File jdkDir = new File("./jdk-8u92");
     JdkGetter getter = JdkGetter.builder()
       .version(version)
       .outputDirectory(jdkDir)
-      .arch(Arch.OSX_64)
       .build();
 
     getter.get();

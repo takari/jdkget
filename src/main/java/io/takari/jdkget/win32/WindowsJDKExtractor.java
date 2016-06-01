@@ -36,6 +36,8 @@ public class WindowsJDKExtractor implements IJdkExtractor {
   
   @Override
   public boolean extractJdk(JdkVersion jdkVersion, File jdkImage, File outputDir, File workDir) throws IOException {
+    // <= 1.7: PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
+    // > 1.7:  PE EXE <- PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
     
     File tmptools = new File(workDir, "tools-" + System.currentTimeMillis() + ".zip");
     if(scanPE(jdkImage, tmptools, workDir)) {

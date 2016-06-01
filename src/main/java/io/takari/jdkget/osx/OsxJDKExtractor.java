@@ -28,7 +28,7 @@ public class OsxJDKExtractor implements IJdkExtractor {
 
   @Override
   public boolean extractJdk(JdkVersion jdkVersion, File jdkDmg, File outputDirectory, File inProcessDirectory) throws IOException {
-    
+    // DMG <-- XAR <-- GZ <-- CPIO
     UnHFS.unhfs(jdkDmg, inProcessDirectory);
 
     List<File> files = FileUtils.getFiles(inProcessDirectory, "**/*.pkg", null, true);
