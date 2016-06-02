@@ -7,6 +7,6 @@ import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public interface IJdkExtractor {
   
-  boolean extractJdk(JdkVersion version, File jdkImage, File outputDir, File workDir) throws IOException;
+  boolean extractJdk(JdkVersion version, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException;
   
 }

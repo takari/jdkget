@@ -27,6 +27,7 @@ import dorkbox.peParser.headers.resources.ResourceDirectoryHeader;
 import dorkbox.peParser.misc.DirEntry;
 import dorkbox.peParser.types.ImageDataDir;
 import io.takari.jdkget.IJdkExtractor;
+import io.takari.jdkget.IOutput;
 import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public class WindowsJDKExtractor implements IJdkExtractor {
@@ -35,7 +36,10 @@ public class WindowsJDKExtractor implements IJdkExtractor {
       "Icon", "Bitmap")));
   
   @Override
-  public boolean extractJdk(JdkVersion jdkVersion, File jdkImage, File outputDir, File workDir) throws IOException {
+  public boolean extractJdk(JdkVersion jdkVersion, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException {
+    
+    output.info("Extracting tools.zip from install executable into " + outputDir);
+    
     // <= 1.7: PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
     // > 1.7:  PE EXE <- PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
     

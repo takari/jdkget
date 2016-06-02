@@ -15,19 +15,23 @@ import java.util.zip.GZIPInputStream;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.cpio.CpioArchiveEntry;
 import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 import org.codehaus.plexus.util.FileUtils;
 
-import com.google.common.io.ByteStreams;
 import com.sprylab.xar.XarEntry;
 import com.sprylab.xar.XarFile;
 
 import io.takari.jdkget.IJdkExtractor;
+import io.takari.jdkget.IOutput;
 import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public class OsxJDKExtractor implements IJdkExtractor {
 
   @Override
-  public boolean extractJdk(JdkVersion jdkVersion, File jdkDmg, File outputDirectory, File inProcessDirectory) throws IOException {
+  public boolean extractJdk(JdkVersion jdkVersion, File jdkDmg, File outputDirectory, File inProcessDirectory, IOutput output) throws IOException {
+    
+    output.info("Extracting osx dmg image into " + outputDirectory);
+    
     // DMG <-- XAR <-- GZ <-- CPIO
     UnHFS.unhfs(jdkDmg, inProcessDirectory);
 
@@ -40,7 +44,7 @@ public class OsxJDKExtractor implements IJdkExtractor {
         File file = new File(inProcessDirectory, entry.getName());
         file.getParentFile().mkdirs();
         try (InputStream is = entry.getInputStream(); OutputStream os = new FileOutputStream(file)) {
-          ByteStreams.copy(is, os);
+          IOUtils.copy(is, os);
         }
       }
     }
@@ -49,7 +53,7 @@ public class OsxJDKExtractor implements IJdkExtractor {
     File jdkGz = files.get(0);
     File cpio = new File(inProcessDirectory, "temp" + System.currentTimeMillis() + ".cpio");
     try (GZIPInputStream is = new GZIPInputStream(new FileInputStream(jdkGz)); FileOutputStream os = new FileOutputStream(cpio)) {
-      ByteStreams.copy(is, os);
+      IOUtils.copy(is, os);
     }
 
     // https://people.freebsd.org/~kientzle/libarchive/man/cpio.5.txt
@@ -61,14 +65,14 @@ public class OsxJDKExtractor implements IJdkExtractor {
           jdkFile.getParentFile().mkdirs();
           if (e.isRegularFile()) {
             try (OutputStream os = new FileOutputStream(jdkFile)) {
-              ByteStreams.copy(is, os);
+              IOUtils.copy(is, os);
             }
           } else if (e.isSymbolicLink()) {
             try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-              ByteStreams.copy(is, os);
+              IOUtils.copy(is, os);
               String target = new String(os.toByteArray());
               if(File.pathSeparatorChar == ';') {
-                System.out.print("Not creating symbolic link " + e.getName() + " -> " + target);
+                output.info("Not creating symbolic link " + e.getName() + " -> " + target);
               } else {
 
                 Files.createSymbolicLink(jdkFile.toPath(), Paths.get(target));

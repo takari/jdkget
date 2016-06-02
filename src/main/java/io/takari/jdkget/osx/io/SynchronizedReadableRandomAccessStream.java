@@ -280,7 +280,8 @@ public class SynchronizedReadableRandomAccessStream
 
     tryCloseSource();
   }
-
+  
+  /*
   @Override
   public synchronized void finalize() throws Throwable {
     try {
@@ -301,6 +302,7 @@ public class SynchronizedReadableRandomAccessStream
       super.finalize();
     }
   }
+  */
 
   private class Reference {
     final Object referrer;

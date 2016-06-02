@@ -21,12 +21,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.LinkedList;
 
 import io.takari.jdkget.osx.io.ReaderInputStream;
 import io.takari.jdkget.osx.plist.PlistNode;
 import io.takari.jdkget.osx.plist.XmlPlist;
-import net.iharder.Base64;
 
 public class Plist extends XmlPlist {
 
@@ -65,7 +65,7 @@ public class Plist extends XmlPlist {
       String partitionID = io.takari.jdkget.osx.util.Util.readFully(pn.getKeyValue("ID"));
       String partitionAttributes = io.takari.jdkget.osx.util.Util.readFully(pn.getKeyValue("Attributes"));
       Reader base64Data = pn.getKeyValue("Data");
-      InputStream base64DataInputStream = new Base64.InputStream(new ReaderInputStream(base64Data, Charset.forName("US-ASCII")));
+      InputStream base64DataInputStream = Base64.getMimeDecoder().wrap(new ReaderInputStream(base64Data, Charset.forName("US-ASCII")));
       PlistPartition dpp = new PlistPartition(partitionName, partitionID, partitionAttributes, base64DataInputStream, previousOutOffset, previousInOffset);
       previousOutOffset = dpp.getFinalOutOffset();
       previousInOffset = dpp.getFinalInOffset();

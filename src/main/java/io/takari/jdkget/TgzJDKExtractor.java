@@ -20,7 +20,9 @@ import io.takari.jdkget.osx.PosixModes;
 public class TgzJDKExtractor implements IJdkExtractor {
 
   @Override
-  public boolean extractJdk(JdkVersion version, File jdkImage, File outputDir, File workDir) throws IOException {
+  public boolean extractJdk(JdkVersion version, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException {
+    
+    output.info("Extracting jdk image into " + outputDir);
     
     String versionPrefix = String.format("jdk1.%s.0_%s/", version.major, version.revision);
     
@@ -49,7 +51,7 @@ public class TgzJDKExtractor implements IJdkExtractor {
 
           if (te.isSymbolicLink()) {
             if(File.pathSeparatorChar == ';') {
-              System.out.println("Not creating symbolic link " + entryName + " -> " + te.getLinkName());
+              output.info("Not creating symbolic link " + entryName + " -> " + te.getLinkName());
             } else {
               Path p = f.toPath();
               Files.createSymbolicLink(p, p.getParent().resolve(te.getLinkName()));
