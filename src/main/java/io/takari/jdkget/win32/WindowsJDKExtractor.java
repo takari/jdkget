@@ -85,13 +85,16 @@ public class WindowsJDKExtractor implements IJdkExtractor {
           
           f.createNewFile();
           
-          try (OutputStream out = new FileOutputStream(f); InputStream in = zip.getInputStream(e)){
-            if(unpack200) {
-              Pack200.newUnpacker().unpack(in, new JarOutputStream(out));
-            } else {
+          if(unpack200) {
+            try (JarOutputStream out = new JarOutputStream(new FileOutputStream(f)); InputStream in = zip.getInputStream(e)){
+              Pack200.newUnpacker().unpack(in, out);
+            }
+          } else {
+            try (OutputStream out = new FileOutputStream(f); InputStream in = zip.getInputStream(e)){
               IOUtils.copy(in, out);
             }
           }
+          
         }
       }
       
