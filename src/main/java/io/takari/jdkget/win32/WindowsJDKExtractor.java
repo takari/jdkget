@@ -16,6 +16,8 @@ import java.util.jar.Pack200;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.compress.utils.IOUtils;
+
 import dorkbox.cabParser.CabException;
 import dorkbox.cabParser.CabParser;
 import dorkbox.cabParser.CabStreamSaver;
@@ -60,8 +62,7 @@ public class WindowsJDKExtractor implements IJdkExtractor {
   private void extractTools(File toolZip, File output) throws IOException {
     output.mkdirs();
     
-    ZipFile zip = new ZipFile(toolZip);
-    try {
+    try(ZipFile zip = new ZipFile(toolZip)) {
       
       Enumeration<? extends ZipEntry> en = zip.entries();
       while(en.hasMoreElements()) {
@@ -83,29 +84,17 @@ public class WindowsJDKExtractor implements IJdkExtractor {
         } else {
           
           f.createNewFile();
-          OutputStream out = new FileOutputStream(f);
-          InputStream in = zip.getInputStream(e);
           
-          try {
+          try (OutputStream out = new FileOutputStream(f); InputStream in = zip.getInputStream(e)){
             if(unpack200) {
               Pack200.newUnpacker().unpack(in, new JarOutputStream(out));
             } else {
-              byte[] buf = new byte[1024*128]; // 128k
-              int l;
-              while((l = in.read(buf)) != -1) {
-                out.write(buf, 0, l);
-              }
+              IOUtils.copy(in, out);
             }
-          } finally {
-            out.close();
-            in.close();
           }
-          
         }
       }
       
-    } finally {
-      zip.close();
     }
   }
 
@@ -162,11 +151,8 @@ public class WindowsJDKExtractor implements IJdkExtractor {
     File f = new File(workDir, "cabextract-" + System.currentTimeMillis() + ".tmp");
     f.createNewFile();
     try {
-      OutputStream out = new FileOutputStream(f);
-      try {
+      try(OutputStream out = new FileOutputStream(f)) {
         out.write(data);
-      } finally {
-        out.close();
       }
       if(scanPE(f, outputDir, workDir)) {
         return true;
