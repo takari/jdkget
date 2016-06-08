@@ -8,7 +8,7 @@
   </parent>
   <packaging>takari-jar</packaging>
   <artifactId>jdkget</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
   <properties>
     <takari.javaSourceVersion>1.8</takari.javaSourceVersion>
   </properties>
@@ -134,8 +134,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <scm>
-    <tag>jdkget-0.0.1</tag>
-  </scm>
 </project>
