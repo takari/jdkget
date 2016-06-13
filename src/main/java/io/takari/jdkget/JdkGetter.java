@@ -62,7 +62,10 @@ public class JdkGetter {
       inProcessDirectory.mkdirs();
     }
     if (!jdkImage.exists()) {
-      transport.downloadJdk(arch, jdkVersion, jdkImage, output);
+      if(!transport.downloadJdk(arch, jdkVersion, jdkImage, output)) {
+        output.error("Could not get jdk image");
+        return;
+      }
     } else {
       output.info("We already have a copy of " + jdkImage);
     }

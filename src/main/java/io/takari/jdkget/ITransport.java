@@ -7,6 +7,6 @@ import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public interface ITransport {
 
-  void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException;
+  boolean downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException;
 
 }

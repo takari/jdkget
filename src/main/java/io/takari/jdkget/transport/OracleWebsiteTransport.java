@@ -20,7 +20,7 @@ public class OracleWebsiteTransport implements ITransport {
   public static final String JDK_URL_FORMAT = "http://download.oracle.com/otn-pub/java/jdk/%su%s-%s/jdk-%su%s-%s.%s";
   public static final String OTN_COOKIE = "gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie";
 
-  public void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
+  public boolean downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
     
     String url = String.format(JDK_URL_FORMAT, jdkVersion.major, jdkVersion.revision, jdkVersion.buildNumber, jdkVersion.major, jdkVersion.revision, arch.getArch(), arch.getExtension());
     output.info("Downloading " + url);
@@ -38,11 +38,11 @@ public class OracleWebsiteTransport implements ITransport {
         try (InputStream is = connection.getInputStream(); OutputStream os = new FileOutputStream(jdkImage)) {
           IOUtils.copy(is, os);
         }
-        break;
+        return true;
       } else if (response == 302) {
         url = connection.getHeaderField("Location");
       }
     }
+    return false;
   }
-  
 }
