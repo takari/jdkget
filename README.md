@@ -23,18 +23,8 @@ Downloads and extracts a .tar.gz, simple and easy
 ## OSX
 This will retrieve the Java equivalent of a [turducken][2]: the GZipped CPIO files of the JDK, wrapped in an XAR file, inside an HFS disk image. Can't we just use TarGz files? No, no, that would be too easy.
 
-Once the XAR code is release, I will cut a release with an Uber JAR so it's easy to use.
-
 ## Windows
 Similar to OSX, but with tools.zip (with some jars pack200'd) in CAB in EXE in EXE.
-
-## TODO
-
-- replace internal XML code with dd-plist which is small and uses the JDK's XML classes
-- replace plexus-utils with JDK directory/file code
-- replace simpleframework XML in xar with JDK XML code: https://github.com/sprylab/xar/issues/1
-- ask xar guys to do a release so I can do a release
-- figure out how to get the <=1.6 JDKs from Apple automatically
 
 ## NOTES
 
