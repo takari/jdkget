@@ -17,6 +17,16 @@ You can find a list of available JDKs [here](Jdks.md).
 
 By using this utilitiy you agree to the [Oracle Binary Code License Agreement for Java SE][1].
 
+## Building
+
+To build JDKGet use the Maven Wrapper script provided with the project:
+
+```
+./mvnw clean install
+```
+
+The result will produce a shaded JAR in the `target/` directory which can we executued using `java -jar jdkget-${version}.jar`
+
 ## *nix and Solaris
 Downloads and extracts a .tar.gz, simple and easy
 
