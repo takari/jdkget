@@ -157,8 +157,7 @@ public class UnHFS {
     }
 
     if (fact == null) {
-      System.err.println("No HFS file system found.");
-      return;
+      throw new RuntimeIOException("No HFS file system found.");
     }
 
     CustomAttribute posixFilenamesAttribute = fact.getCustomAttribute("POSIX_FILENAMES");

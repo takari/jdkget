@@ -33,10 +33,16 @@ public class OsxJDKExtractor implements IJdkExtractor {
     output.info("Extracting osx dmg image into " + outputDirectory);
     
     // DMG <-- XAR <-- GZ <-- CPIO
-    UnHFS.unhfs(jdkDmg, inProcessDirectory);
+    try {
+      UnHFS.unhfs(jdkDmg, inProcessDirectory);
+    } catch (Exception e) {
+      output.error(e.getMessage());
+      return false;
+    }
 
     List<File> files = FileUtils.getFiles(inProcessDirectory, "**/*.pkg", null, true);
     // validate
+    
     File jdkPkg = files.get(0);
     XarFile xarFile = new XarFile(jdkPkg);
     for (XarEntry entry : xarFile.getEntries()) {

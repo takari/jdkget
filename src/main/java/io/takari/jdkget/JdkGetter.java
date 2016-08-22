@@ -70,7 +70,9 @@ public class JdkGetter {
       output.info("We already have a copy of " + jdkImage);
     }
     
-    getExtractor(arch).extractJdk(jdkVersion, jdkImage, outputDirectory, inProcessDirectory, output);
+    if (!getExtractor(arch).extractJdk(jdkVersion, jdkImage, outputDirectory, inProcessDirectory, output)) {
+      throw new IOException("Failed to extract JDK from " + jdkImage);
+    }
     
     FileUtils.deleteDirectory(inProcessDirectory);
   }
