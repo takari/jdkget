@@ -73,7 +73,7 @@ public class JdkGetter {
     if (!getExtractor(arch).extractJdk(jdkVersion, jdkImage, outputDirectory, inProcessDirectory, output)) {
       throw new IOException("Failed to extract JDK from " + jdkImage);
     }
-    
+
     FileUtils.deleteDirectory(inProcessDirectory);
   }
   
