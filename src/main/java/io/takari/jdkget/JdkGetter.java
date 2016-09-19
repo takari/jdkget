@@ -10,6 +10,7 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
 import io.takari.jdkget.osx.OsxJDKExtractor;
+import io.takari.jdkget.transport.OracleVersionList;
 import io.takari.jdkget.transport.OracleWebsiteTransport;
 import io.takari.jdkget.win32.WindowsJDKExtractor;
 
@@ -46,7 +47,7 @@ public class JdkGetter {
     this.outputDirectory = outputDirectory.getAbsoluteFile();
     this.inProcessDirectory = new File(outputDirectory.getPath() + ".in-process");
     this.jdkImage = new File(inProcessDirectory, String.format("jdk-%su%s-%s.%s", jdkVersion.major, jdkVersion.revision, 
-        this.arch.getArch(), this.arch.getExtension()));
+        this.arch.getArch(jdkVersion), this.arch.getExtension(jdkVersion)));
   }
   
   public Arch getArch() {
@@ -70,23 +71,35 @@ public class JdkGetter {
       output.info("We already have a copy of " + jdkImage);
     }
     
-    if (!getExtractor(arch).extractJdk(jdkVersion, jdkImage, outputDirectory, inProcessDirectory, output)) {
+    if(!jdkImage.exists()) {
+      output.error("Cannot download jdk " + jdkVersion.shortBuild() + " for " + arch);
+      return;
+    }
+    
+    if (!getExtractor(arch, jdkVersion).extractJdk(jdkVersion, jdkImage, outputDirectory, inProcessDirectory, output)) {
       throw new IOException("Failed to extract JDK from " + jdkImage);
     }
 
     FileUtils.deleteDirectory(inProcessDirectory);
   }
   
-  private static IJdkExtractor getExtractor(Arch arch) {
+  private static IJdkExtractor getExtractor(Arch arch, JdkVersion v) {
     
     switch(arch) {
     case OSX_64:
       return new OsxJDKExtractor();
-    case WIN_32:
     case WIN_64:
+      if(v.major == 6 && v.revision < 12) {
+        // 
+        throw new IllegalStateException("win64 versions of jdk6 prior to 6u12 are not PE executables");
+      }
+    case WIN_32:
       return new WindowsJDKExtractor();
     case NIX_32:
     case NIX_64:
+      if(v.major == 6) {
+        return new BinJDKExtractor();
+      }
     case SOL_64:
     case SOL_SPARC:
       return new TgzJDKExtractor();
@@ -138,31 +151,97 @@ public class JdkGetter {
 
   public static class JdkVersion {
     
-    public final String major;
+    public final int major;
     
-    public final String revision;
+    public final int revision;
     
     public final String buildNumber;
 
-    private JdkVersion(String major, String revision, String buildNumber) {
+    private JdkVersion(int major, int revision, String buildNumber) {
       this.major = major;
       this.revision = revision;
       this.buildNumber = buildNumber;
     }
     
     public String toString() {
-      return String.format("1.%s.0_%s-%s", major, revision, buildNumber);
+      return longBuild();
+    }
+    
+    public String longVersion() {
+      StringBuilder sb = new StringBuilder();
+      sb.append("1.").append(major).append(".0");
+      if(revision >= 0) sb.append('_').append(revision);
+      return sb.toString();
+    }
+    
+    public String longBuild() {
+      StringBuilder sb = new StringBuilder();
+      sb.append("1.").append(major).append(".0");
+      if(revision >= 0) sb.append('_').append(revision);
+      sb.append(buildNumber);
+      return sb.toString();
+    }
+    
+    public String shortVersion() {
+      StringBuilder sb = new StringBuilder();
+      sb.append(major);
+      if(revision >= 0) sb.append('u').append(revision);
+      return sb.toString();
+    }
+    
+    public String shortBuild() {
+      StringBuilder sb = new StringBuilder();
+      sb.append(major);
+      if(revision >= 0) sb.append('u').append(revision);
+      sb.append(buildNumber);
+      return sb.toString();
     }
     
     public static JdkVersion parse(String version) {
-      String[] p = StringUtils.split(version, "_");
-      String major = StringUtils.split(p[0], ".")[1];
-      String revisionWithBuildNumber = p[1];
-      String[] x = StringUtils.split(revisionWithBuildNumber, "-");
-      String revision = x[0];
-      String buildNumber = x[1];
+      if(version.startsWith("1.")) { // 1.8.0_91-b14
+        String[] p = StringUtils.split(version, "_");
+        String major = StringUtils.split(p[0], ".")[1];
+        
+        String revisionWithBuildNumber = p[1];
+        String[] x = StringUtils.split(revisionWithBuildNumber, "-");
+        String revision = x[0];
+        String buildNumber = x.length > 1 ? "-" + x[1] : "";
+        return new JdkVersion(i(major), i(revision), buildNumber);
+      }
       
-      return new JdkVersion(major, revision, buildNumber);
+      if(version.contains("u")) { // 8u91-b14
+        String[] p = StringUtils.split(version, "u");
+        String major = p[0];
+        
+        String revisionWithBuildNumber = p[1];
+        
+        String[] x = StringUtils.split(revisionWithBuildNumber, "-");
+        String revision = x[0];
+        
+        String buildNumber;
+        if(revision.endsWith("b")) { // 6u5b
+          buildNumber = revision.substring(revision.length() - 1);
+          revision = revision.substring(0, revision.length() - 1);
+        } else {
+          buildNumber = x.length > 1 ? "-" + x[1] : "";
+        }
+        return new JdkVersion(i(major), i(revision), buildNumber);
+      }
+      
+      if(version.contains("-")) { //8-b132
+        String[] x = StringUtils.split(version, "-");
+        String major = x[0];
+        String buildNumber = x.length > 1 ? "-" + x[1] : "";
+        return new JdkVersion(i(major), -1, buildNumber);
+      }
+      
+      return new JdkVersion(i(version), -1, ""); // 7
+      
+      //throw new IllegalArgumentException("Unsupported version format: " + version);
+    }
+    
+    private static int i(String s) {
+      return Integer.parseInt(s);
     }
     
   }
@@ -173,9 +252,20 @@ public class JdkGetter {
     options.addOption("o", true, "Output dir");
     options.addOption("v", true, "JDK Version");
     options.addOption("a", true, "Architecture");
+    options.addOption("l", false, "Lis versions");
     options.addOption("?", "help", false, "Help");
     
     CommandLine cli = new PosixParser().parse(options, args);
+    
+    if(cli.hasOption("l")) {
+      
+      System.out.println("Available JDK versions:");
+      for(JdkVersion v: new OracleVersionList().listVersions()) {
+        System.out.println("  " + v.longBuild() + " / " + v.shortBuild());
+      }
+      return;
+    }
+    
     
     String v = cli.getOptionValue("v");//"1.8.0_92-b14";
     String o = cli.getOptionValue("o");
@@ -234,7 +324,9 @@ public class JdkGetter {
   }
 
   private static void usage() {
-    System.out.println("Usage: java -jar jdkget.jar -o <outputDir> -v <jdkVersion> [-a <arch>]");
+    System.out.println("Usage:");
+    System.out.println("List versions: java -jar jdkget.jar -l");
+    System.out.println("Download and extract: java -jar jdkget.jar -o <outputDir> -v <jdkVersion> [-a <arch>]");
     System.out.println("  Version format: 1.<major>.0_<rev>-<build> (Ex. 1.8.0_92-b14)");
     System.out.println("  Available architectures:");
     for(Arch ar: Arch.values()) {

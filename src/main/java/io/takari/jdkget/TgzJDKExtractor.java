@@ -24,7 +24,7 @@ public class TgzJDKExtractor implements IJdkExtractor {
     
     output.info("Extracting jdk image into " + outputDir);
     
-    String versionPrefix = String.format("jdk1.%s.0_%s/", version.major, version.revision);
+    String versionPrefix = "jdk" + version.longVersion();
     
     InputStream in = new FileInputStream(jdkImage);
     TarArchiveInputStream t = null;
