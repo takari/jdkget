@@ -6,11 +6,11 @@ import java.io.IOException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 
+import io.takari.jdkget.JdkReleases.JdkRelease;
 import io.takari.jdkget.osx.OsxJDKExtractor;
-import io.takari.jdkget.transport.OracleVersionList;
 import io.takari.jdkget.transport.OracleWebsiteTransport;
 import io.takari.jdkget.win32.WindowsJDKExtractor;
 
@@ -32,7 +32,7 @@ public class JdkGetter {
       this.output = new StdOutput();
     }
     
-    this.jdkVersion = JdkVersion.parse(version);
+    this.jdkVersion = version == null || version.equals("latest") ? null : JdkVersion.parse(version);
     if(arch != null) {
       this.arch = arch;
     } else {
@@ -62,18 +62,27 @@ public class JdkGetter {
     if (!inProcessDirectory.exists()) {
       inProcessDirectory.mkdirs();
     }
-    if (!jdkImage.exists()) {
-      if(!transport.downloadJdk(arch, jdkVersion, jdkImage, output)) {
-        output.error("Could not get jdk image");
-        return;
+    
+    if(jdkImage.exists()) {
+      if(transport.validate(arch, jdkVersion, jdkImage)) {
+        output.info("We already have a valid copy of " + jdkImage);
+      } else {
+        output.info("Found existing invalid image");
+        FileUtils.forceDelete(jdkImage);
       }
-    } else {
-      output.info("We already have a copy of " + jdkImage);
+    }
+    
+    if (!jdkImage.exists()) {
+      transport.downloadJdk(arch, jdkVersion, jdkImage, output);
     }
     
     if(!jdkImage.exists()) {
       output.error("Cannot download jdk " + jdkVersion.shortBuild() + " for " + arch);
-      return;
+      throw new IOException("Transport failed to download jdk image");
+    }
+    
+    if(!transport.validate(arch, jdkVersion, jdkImage)) {
+      throw new IOException("Transport downloaded invalid image");
     }
     
     if (!getExtractor(arch, jdkVersion).extractJdk(jdkVersion, jdkImage, outputDirectory, inProcessDirectory, output)) {
@@ -149,7 +158,7 @@ public class JdkGetter {
     }
   }
 
-  public static class JdkVersion {
+  public static class JdkVersion implements Comparable<JdkVersion> {
     
     public final int major;
     
@@ -244,6 +253,47 @@ public class JdkGetter {
       return Integer.parseInt(s);
     }
     
+    int buildNum() {
+      String b = buildNumber;
+      if(b.startsWith("-")) {
+        b = b.substring(1);
+      }
+      if(b.startsWith("b")) {
+        b = b.substring(1);
+      }
+      if(b.isEmpty()) {
+        return 0;
+      }
+      return Integer.parseInt(b);
+    }
+
+    @Override
+    public int compareTo(JdkVersion o) {
+      int c = major - o.major;
+      if(c == 0) {
+        c = revision - o.revision;
+      }
+      if(c == 0) {
+        c = buildNum() - o.buildNum();
+      }
+      return c;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+      if(obj instanceof JdkVersion) {
+        JdkVersion that = (JdkVersion) obj;
+        return major == that.major && revision == that.revision;
+      }
+      return super.equals(obj);
+    }
+    
+    @Override
+    public int hashCode() {
+      // TODO Auto-generated method stub
+      return super.hashCode();
+    }
+    
   }
   
   public static void main(String[] args) throws Exception {
@@ -260,8 +310,9 @@ public class JdkGetter {
     if(cli.hasOption("l")) {
       
       System.out.println("Available JDK versions:");
-      for(JdkVersion v: new OracleVersionList().listVersions()) {
-        System.out.println("  " + v.longBuild() + " / " + v.shortBuild());
+      for(JdkRelease r: JdkReleases.get().getReleases()) {
+        JdkVersion v = r.getVersion();
+        System.out.println("  " + v.longBuild() + " / " + v.shortBuild() + (r.isPsu() ? " PSU" : ""));
       }
       return;
     }

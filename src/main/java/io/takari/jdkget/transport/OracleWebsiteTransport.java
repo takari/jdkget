@@ -7,14 +7,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
 import org.apache.commons.compress.utils.IOUtils;
+
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 
 import io.takari.jdkget.Arch;
 import io.takari.jdkget.IOutput;
 import io.takari.jdkget.ITransport;
 import io.takari.jdkget.JdkGetter.JdkVersion;
+import io.takari.jdkget.JdkReleases;
+import io.takari.jdkget.JdkReleases.JdkBinary;
+import io.takari.jdkget.JdkReleases.JdkRelease;
 
 public class OracleWebsiteTransport implements ITransport {
 
@@ -33,45 +38,85 @@ public class OracleWebsiteTransport implements ITransport {
     this.website = website;
   }
 
-  public boolean downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
+  private JdkBinary binary(Arch arch, JdkVersion jdkVersion) throws IOException {
+    JdkRelease rel;
+    if (jdkVersion == null) {
+      rel = JdkReleases.get().latest();
+    } else {
+      rel = JdkReleases.get().select(jdkVersion);
+    }
+
+    return rel.getBinary(arch);
+  }
+
+  private boolean isApple(Arch arch, JdkVersion jdkVersion) {
+    return arch == Arch.OSX_64 && jdkVersion != null && jdkVersion.major == 6 && website.equals(ORACLE_WEBSITE);
+  }
+
+  public void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
 
     String url;
     boolean cookie = true;
-    if (arch == Arch.OSX_64 && jdkVersion.major == 6 && website.equals(ORACLE_WEBSITE)) {
+    if (isApple(arch, jdkVersion)) {
       // for osx, jdk6* is only available from here
       url = "http://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg";
       cookie = false;
     } else {
-      String path = String.format(JDK_URL_FORMAT, jdkVersion.shortBuild(), jdkVersion.shortVersion(), arch.getArch(jdkVersion), arch.getExtension(jdkVersion));
-      url = website + path;
+      JdkBinary bin = binary(arch, jdkVersion);
+      url = website + "/" + bin.getPath();
     }
     output.info("Downloading " + url);
 
     // Oracle does some redirects so we have to follow a couple before we win the JDK prize
     URL jdkUrl;
-    int response = 0;
-    HttpURLConnection connection;
-    for (int retry = 0; retry < 10; retry++) {
+    HttpURLConnection con;
+    int retries = 10;
+    for (int retry = 0; retry < retries; retry++) {
       jdkUrl = new URL(url);
-      connection = (HttpURLConnection) jdkUrl.openConnection();
+      con = (HttpURLConnection) jdkUrl.openConnection();
       if (cookie) {
-        connection.setRequestProperty("Cookie", OTN_COOKIE);
+        con.setRequestProperty("Cookie", OTN_COOKIE);
       }
-      response = connection.getResponseCode();
-      if (response == 200) {
-        try (InputStream is = connection.getInputStream(); OutputStream os = new FileOutputStream(jdkImage)) {
+
+      int code = con.getResponseCode();
+      String msg = con.getResponseMessage();
+      if (code == 200) {
+
+        try (InputStream is = con.getInputStream(); OutputStream os = new FileOutputStream(jdkImage)) {
           IOUtils.copy(is, os);
         }
-        return true;
-      } else if (response == 301 || response == 302) {
-        url = connection.getHeaderField("Location");
+        return;
+
+      } else if (code == 301 || code == 302) {
+        url = con.getHeaderField("Location");
+        output.info("Redirecting to " + url);
+      } else {
+        output.error("Server responded with " + code + ": " + msg);
       }
     }
-    return false;
+
+    throw new IOException("Could not download jdk after " + retries + " attempts");
   }
 
-  public List<JdkVersion> listVersions() throws IOException {
-    return new OracleVersionList().listVersions();
+  @Override
+  public boolean validate(Arch arch, JdkVersion jdkVersion, File jdkImage) throws IOException {
+    if (isApple(arch, jdkVersion)) {
+      return jdkImage.length() == 66724162L;
+    } else {
+      JdkBinary bin = binary(arch, jdkVersion);
+      if (bin.getSha256() != null) {
+        String fileHash = Files.hash(jdkImage, Hashing.sha256()).toString();
+        if (!bin.getSha256().equals(fileHash)) {
+          return false;
+        }
+      } else if (bin.getMd5() != null) {
+        String fileHash = Files.hash(jdkImage, Hashing.md5()).toString();
+        if (!bin.getMd5().equals(fileHash)) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
 }
