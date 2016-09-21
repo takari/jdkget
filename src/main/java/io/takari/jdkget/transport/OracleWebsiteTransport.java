@@ -17,21 +17,36 @@ import io.takari.jdkget.ITransport;
 import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public class OracleWebsiteTransport implements ITransport {
-  
-  public static final String JDK_URL_FORMAT = "http://download.oracle.com/otn-pub/java/jdk/%s/jdk-%s-%s.%s";
+
+  public static final String ORACLE_WEBSITE = "http://download.oracle.com/otn-pub";
+
+  public static final String JDK_URL_FORMAT = "/java/jdk/%s/jdk-%s-%s.%s";
   public static final String OTN_COOKIE = "gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie";
 
+  private String website;
+
+  public OracleWebsiteTransport() {
+    this(ORACLE_WEBSITE);
+  }
+
+  public OracleWebsiteTransport(String website) {
+    this.website = website;
+  }
+
   public boolean downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
-    
+
+    String url;
     boolean cookie = true;
-    String url = String.format(JDK_URL_FORMAT, jdkVersion.shortBuild(), jdkVersion.shortVersion(), arch.getArch(jdkVersion), arch.getExtension(jdkVersion));
-    if(arch == Arch.OSX_64 && jdkVersion.major == 6) {
+    if (arch == Arch.OSX_64 && jdkVersion.major == 6 && website.equals(ORACLE_WEBSITE)) {
       // for osx, jdk6* is only available from here
       url = "http://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg";
       cookie = false;
+    } else {
+      String path = String.format(JDK_URL_FORMAT, jdkVersion.shortBuild(), jdkVersion.shortVersion(), arch.getArch(jdkVersion), arch.getExtension(jdkVersion));
+      url = website + path;
     }
     output.info("Downloading " + url);
-    
+
     // Oracle does some redirects so we have to follow a couple before we win the JDK prize
     URL jdkUrl;
     int response = 0;
@@ -39,7 +54,7 @@ public class OracleWebsiteTransport implements ITransport {
     for (int retry = 0; retry < 10; retry++) {
       jdkUrl = new URL(url);
       connection = (HttpURLConnection) jdkUrl.openConnection();
-      if(cookie) {
+      if (cookie) {
         connection.setRequestProperty("Cookie", OTN_COOKIE);
       }
       response = connection.getResponseCode();
@@ -54,10 +69,9 @@ public class OracleWebsiteTransport implements ITransport {
     }
     return false;
   }
-  
-  @Override
+
   public List<JdkVersion> listVersions() throws IOException {
     return new OracleVersionList().listVersions();
   }
-  
+
 }
