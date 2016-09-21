@@ -99,7 +99,7 @@ public class OracleWebsiteTransport implements ITransport {
   }
 
   @Override
-  public boolean validate(Arch arch, JdkVersion jdkVersion, File jdkImage) throws IOException {
+  public boolean validate(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
     if (isApple(arch, jdkVersion)) {
       return jdkImage.length() == 66724162L;
     } else {
@@ -107,11 +107,13 @@ public class OracleWebsiteTransport implements ITransport {
       if (bin.getSha256() != null) {
         String fileHash = Files.hash(jdkImage, Hashing.sha256()).toString();
         if (!bin.getSha256().equals(fileHash)) {
+          output.error("File sha256 `" + fileHash + "` differs from `" + bin.getSha256() + "`");
           return false;
         }
       } else if (bin.getMd5() != null) {
         String fileHash = Files.hash(jdkImage, Hashing.md5()).toString();
         if (!bin.getMd5().equals(fileHash)) {
+          output.error("File md5 `" + fileHash + "` differs from `" + bin.getMd5() + "`");
           return false;
         }
       }

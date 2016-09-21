@@ -64,7 +64,7 @@ public class JdkGetter {
     }
     
     if(jdkImage.exists()) {
-      if(transport.validate(arch, jdkVersion, jdkImage)) {
+      if(transport.validate(arch, jdkVersion, jdkImage, output)) {
         output.info("We already have a valid copy of " + jdkImage);
       } else {
         output.info("Found existing invalid image");
@@ -81,7 +81,7 @@ public class JdkGetter {
       throw new IOException("Transport failed to download jdk image");
     }
     
-    if(!transport.validate(arch, jdkVersion, jdkImage)) {
+    if(!transport.validate(arch, jdkVersion, jdkImage, output)) {
       throw new IOException("Transport downloaded invalid image");
     }
     
