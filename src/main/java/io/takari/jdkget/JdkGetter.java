@@ -63,7 +63,7 @@ public class JdkGetter {
     return jdkVersion;
   }
 
-  public long get() throws IOException {
+  public void get() throws IOException {
     if (!inProcessDirectory.exists()) {
       inProcessDirectory.mkdirs();
     }
@@ -118,9 +118,7 @@ public class JdkGetter {
     if (!extractor.extractJdk(jdkVersion, jdkImage, outputDirectory, inProcessDirectory, output)) {
       throw new IOException("Failed to extract JDK from " + jdkImage);
     }
-    long size = jdkImage.length();
     FileUtils.deleteDirectory(inProcessDirectory);
-    return size;
   }
 
   private static IJdkExtractor getExtractor(File jdkImage) {
