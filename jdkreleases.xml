@@ -1,0 +1,2277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jdks>
+  <defaults>
+    <url>java/jdk/${version}${build}/jdk-${version}-${arch}.${ext}</url>
+  </defaults>
+  <jdk version="8u102-b14" ext="tar.gz" psu="true">
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>ed08112bad8e63c1c102ab52fccef930849b6cbadc5e9a816e12a99ddcbb5eaf</sha256>
+      <md5>13ca2f1c15a71dde4e57436d5ce671f8</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>7cfbe0bc0391a4abe60b3e9eb2a541d2315b99b9cb3a24980e618a89229e04b7</sha256>
+      <md5>bac58dcec9bb85859810a2a6acba740b</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>07b528a12fd89777ba351b7d420ba0c3b325249c0d0ffab6580b357a34ca875c</sha256>
+      <md5>15f064b894765af4df8e58c440895119</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>57c9088c60c2a95c8cf86997a7cd51d6eaa86e048dec72b6184c237cc5b7b594</sha256>
+      <md5>e28268413fe901b46c40c56f4c0dbf88</md5>
+    </bin>
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>9f53b71af203502da4ff416b5ab1a217a655006786bcbb8f8d8ad501debda748</sha256>
+      <md5>9652fdf0b3387f1897369c7ec642f546</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>a3842c793a894beb0c836ffaf385e569b76d51a4efb9d0476cc26f0a02342684</sha256>
+      <md5>d997b1515ffe8465639b444d02584303</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>8a720552ee679b7a4d207b16c8fa5d30222f7be3f9a0081a71a913b73b4f35a5</sha256>
+      <md5>f96282ad50d4d47ab35ffe2521f87ff9</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u101-b13">
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>b11212ef06235296cad2f9b80a22f2d853a2d2f66ce55b993eb686e5a2da365d</sha256>
+      <md5>4f4600815aa1adb5294278d471e890e3</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>467f323ba38df2b87311a7818bcbf60fe0feb2139c455dfa0e08ba7ed8581328</sha256>
+      <md5>a7ab8014716b0dac3adcaf5342167699</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>5b9c0fcdd270f475a43f900346906b55b674cfd4f7744f032b65cb7cb4098d8c</sha256>
+      <md5>d48f342e55c66a4b7d0fcfccad036655</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>cbd29f09cc3c3320e300d7e587d2ffa5a3bd5fe0b9b7f70926909ab806ef0b1d</sha256>
+      <md5>a1eb90c4152787567ab2af80d3beb34c</md5>
+    </bin>
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>680de8ddead3867fc34e7ff380f437c7ddb8dc75eb606186a3e8ae7e3b8c7fbc</sha256>
+      <md5>1f05ea58128676d538318f9eb097b99f</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>6fb76c330b495d79d4f6686498b9683238ce9799f41992da7f448c935f2af437</sha256>
+      <md5>eb1b2b911071c7f41759cd79fb9eea43</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>d4536abe4400dccea7fa9bfc3c2f94857957f0f41886165678964304dfaa8c60</sha256>
+      <md5>9dc29504687d34ee143bc5065aed1f06</md5>
+    </bin>
+  </jdk>
+  
+  <jdk version="8u92-b14" psu="true">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>626c2d9478d07318e9e6b2c38707f73aeafc0f7a9ede575062749346a7d347ca</sha256>
+      <md5>906aa549d756e05b467acad6eedbaa0f</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>7203592329877735bb6259844a3a30640edc61920d132f952c40ab2e2014b224</sha256>
+      <md5>0f2839ff1066438123dac3404702a3ef</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>79a3f25e9b466cb9e969d1772ea38550de320c88e9119bf8aa11ce8547c39987</sha256>
+      <md5>65a1cc17ea362453a6e0eb4f13be76e4</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>9e5ddcbf9f6c967d38f0bfb6d602095874f29e6117929c7cf1206f561fafdf30</sha256>
+      <md5>c1f56bd1308b6de650bee222ee182adb</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>152eb662e7ede5966dfb42b2b7dfa3ba6d784eafb3f6ed22023997f30316bdd1</sha256>
+      <md5>d4ff7e90eadc8c08f3882535c7e63ecc</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>8111f301ac9e7ff60e8b2e7f7a9f67b5ce3a215e3ced128adb38c1692ccc71ff</sha256>
+      <md5>d5d7111cf49556665485bb4c29e0d92a</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>5598b53275ac55c9ca510e5d6bf7a9e0bb7d24958505a9f967bfad6cb71f92b5</sha256>
+      <md5>91c8f4f33aa754d692d017dc573fa5b0</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u91-b14">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>eebf9ef013d7f14ca6080da347eae2114587f8d10a0a7cecff21e47a71ff62b8</sha256>
+      <md5>1594cf475377c436fc68cefd813e3a74</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>5ecd05b5e566cbe688fc1e3159f04004ccad14d4faa3f50d15ffba1d50b4cd52</sha256>
+      <md5>f18cbe901f2c77630f1e301cea32b259</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>6f9b516addfc22907787896517e400a62f35e0de4a7b4d864b26b61dbe1b7552</sha256>
+      <md5>3f3d7d0cd70bfe0feab382ed4b0e45c0</md5>
+    </bin>
+    <bin cls="win_32" version="8u91-b15" arch="windows-i586" ext="exe">
+      <sha256>1293e7067dba04cb67da8a612a7877d1167f37ceecfb275ba0967a1bfa138992</sha256>
+      <md5>a1c0fe030e0801e88692e9e32db08a0a</md5>
+    </bin>
+    <bin cls="win_64" version="8u91-b15" arch="windows-x64" ext="exe">
+      <sha256>dd2ff1ee1ef9394f6a920aeb5fda0b5a460dcb9112d520240d60b8794893b484</sha256>
+      <md5>042db96059df0454afc9bac2914617a7</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>f7fa7ab7d15beb7b1ba7903ad0766a12d82c9c589d3b99847dc6940afbd0a40e</sha256>
+      <md5>606303bcd243b4ab22994313464b4c44</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>d43af436902e2ae52680ef70e0e62c34dda596be89f6aadc275cd47ff421e8a0</sha256>
+      <md5>94181d592f668fa38398e4cf0f971bdb</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u77-b03">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>b7464e3876b0b58b97288ce801a8317d71fca802fc1d3b2177e4b514ddc0088c</sha256>
+      <md5>160dcf3d165392ebd71e4aadc7f7644f</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>f2889b778538fe3d20b2d37d0de3c3204de86126aadb75c1bb38d11255b41e92</sha256>
+      <md5>e5bac32e2a7ab5cf9068ba92ba084472</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>a47dc0962a57b27a0cc00b9f11a53dc3add40c98633ba49a2419b845e4dedf43</sha256>
+      <md5>ee501bef73ba7fac255f0593e595d8eb</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>9b5790b2537c7be05344b9f53f805c1049eb82ae8fde5f119dee541c18d1baa3</sha256>
+      <md5>1339ce80ffad1daa898638f4308db083</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>97acbab89ad1367a28954be428953ab179aece763c319b88d979068762bf72be</sha256>
+      <md5>808853ecd14727153ec7a93a95441fbc</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>696782a0cff2db4c50977a77ce2612d5bbc9d9796e5a316b4286b6955dc54b64</sha256>
+      <md5>d433d9a170a8d032bba154e857e846fa</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>ed3d65f2fc3e2555ec26988d7a9bc4a25cb01e4de0fde4ea878ea84584dcf4ef</sha256>
+      <md5>9b5e00f02f439b227421623eb08df07b</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u74-b02" psu="true">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>52fc1bf96514553cd70e5dfa79b764f8522f23536c05ad413c5585755f08e998</sha256>
+      <md5>479e7c0d8792a9abc9db59883c2d650b</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>0805e407924eb6902d874412af397992c141827e05c205c2b2bfe6e5127a83ed</sha256>
+      <md5>5e73453a8b6fda591d99820eae293594</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>0bfd5d79f776d448efc64cb47075a52618ef76aabb31fde21c5c1018683cdddd</sha256>
+      <md5>4928d67633c5e5b397315b5cf5f8fa2e</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>8ae01bd2d1c6e947cd47dec0a0b33560a67649b6a3044f4effd7b652394c7163</sha256>
+      <md5>ea884540141c5115b89622d89223e3cd</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>a02623388258681c0e474d1b6598499ec1eb2bd5e4a32631e165f559d7b2389c</sha256>
+      <md5>fc45cc22ae7b45a80de176cf40c1cf61</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>214aa329f50a381bacfb0754b01eafb50360c71ac005e903d121724584595716</sha256>
+      <md5>e1e472e994e608be8dce526b3fa7c62e</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>feac2fbf698c5605721c713eec8f46819ab1d4433160cae3baf352983d502b63</sha256>
+      <md5>92b6c3e2358146a215417dc48439a75f</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u73-b02">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>a96efc6aad18e3b49dd41f4b7a955f9ef2e01ee390987c63f5a6347026fcc336</sha256>
+      <md5>f0e10d307749a1a722929c4b75a1a64a</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>f4f1f7ab1b5986aa2ee2a2f035a2d7a8ab57a673bdee4fc51d8127dd84f423ae</sha256>
+      <md5>b747c177ad616e2f23e679ea867ae15d</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>46a8149efaf9d87a147b244e503f1d7791ec8abbc35a5011c99ed909edb2e3e6</sha256>
+      <md5>1b0120970aa8bc182606a16bf848a686</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>c98792ea96512b03238a60616a5cefe936832718d6453fff2a545615fbdf0d87</sha256>
+      <md5>cef2f51f7904760403062ee681b29a72</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>a4e2f75ead7c5ab09a58b6d77ff98da4b1343caaab383c4b93479dd5866212ea</sha256>
+      <md5>c1e2a28bf4ed26d67d24b9f428a52012</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>8c212021cda35a7dae2f8b781956ad49a5cccc52b3153a987efb26eb57fb500f</sha256>
+      <md5>8a6cb14786fe1df7deb12e2eeb2cd984</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>3761626b8ea476d946fab505c0ff6a246bcf02bd626c7f1712753edce26d0790</sha256>
+      <md5>9c0e775c47ce6e1d2ad049fab9d87d53</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u72-b15" psu="true">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>ca8b92cde2e4fefc7a9b34853060e0e211529a4608a0981f20dc6d806ee57558</sha256>
+      <md5>9da0a69950f5f70c50390292f2b072c9</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>58456a9e6cf75f52069a405067f69a78870c24628abd751ae1a99d5d2ab57908</sha256>
+      <md5>19e3ad9a6c8dc6d4ff042f459c06b6c4</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>46e7f96271043009995f39f04a9e711cdc0cc5b6a5b67910451678a3d250ec98</sha256>
+      <md5>54cde24fc0596f0f05b5d0d8f329053d</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>d0e044b5582060defaf6c0cac7a0c614b181cdb886f5cb54ff8d6bf8a5df4aaf</sha256>
+      <md5>d7e215d15ca93326953f11652e827394</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>b32eeff6b4300d85c044d48287e99f750fdabe8a91f1cda81b890780bc92eaba</sha256>
+      <md5>12d1497d63645ac59e8d2875f4a504b7</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>e7d2aeceb4611dbda8dac4d83b7a99ed45f511cfe870117d4cbec3c7b748f782</sha256>
+      <md5>103b952cff6afbd04ed12d4a2e710d17</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>207e0c9f7265e574210f63e0bb4c1b0ffa5d04007c2de3df559673d12ea5ce33</sha256>
+      <md5>eceb25a37ec56d81973c973d6947026c</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u71-b15">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>72ccd63efb1775b3e4351f7b8c27d4f473d3c7bb098cb76c8d901517b3a7a506</sha256>
+      <md5>5756e6109d119d22d50ad278f95c91f9</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>1bcbafa0b8ae6d35cc965bbc1909e43d089cb97364482eec778eee47f68f8c87</sha256>
+      <md5>b794964aa840745235bac1409c90a9ac</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>9bdb947fccf31e6ad644b7c1e3c658291facf819e4560a856e4d93bd686e58a2</sha256>
+      <md5>12db05061f8816d01bb234bbdc40fefa</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>ed830249475d21b8c8e7d27032e1119195fc76b44078304398f53cca62b6e90f</sha256>
+      <md5>c2b72d93c54ede223cce5391657d15a8</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>637ce6fa292b17b5fdc5a7ed5d7092ba5fc3ad9c619591efba82321222271984</sha256>
+      <md5>2a3622b752a123693ef27ab46e58460e</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>268eb336cda5f27023348cbe53c0c97691576ac9ac5907d277197fa8b4e106c9</sha256>
+      <md5>6929046aec866e4a8a440a1d78f70095</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>83b70ad0cc0641e7be74dcb87c854d65014e53dca5201266d6b012ad46435083</sha256>
+      <md5>e8d6590e5eb627098708bab0804078e7</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u66-b17">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>cd416de4f41f9f0a6984c456481437681674a717da62259740c54732f174fa08</sha256>
+      <md5>aad7f13b1d6d173a04ce7cf75db30b35</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>21026a8d789f479d3905a4ead0c97fd5190aa9b4d1bfc66413e9136513ca84a2</sha256>
+      <md5>8a1f36b29152856a5dd2c3953a4c24a1</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>7e95ad5fa1c75bc65d54aaac9e9986063d0a442f39a53f77909b044cef63dc0a</sha256>
+      <md5>88f31f3d642c3287134297b8c10e61bf</md5>
+    </bin>
+    <bin cls="win_32" version="8u66-b18" arch="windows-i586" ext="exe">
+      <sha256>b7d438b935dcf2a144782701788f7bf1e0e00e2d5aa87a7bba5a9b26116ad258</sha256>
+      <md5>9f318d6773701d3695e91a9d36999467</md5>
+    </bin>
+    <bin cls="win_64" version="8u66-b18" arch="windows-x64" ext="exe">
+      <sha256>ce7775bb6322cf5f5576312a25c4a51b5be8cfffefed3295f15c6585e74fc5ae</sha256>
+      <md5>6342c91fdabfe33a02d12935d845d272</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>e35267b37de7cf6cbccaf4b428827d3cf47eaeff9521f807c683043f7ddba6d3</sha256>
+      <md5>b9b71704ab90eec556cdaaca91700328</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>277f8dce70d76e263adba969635e2b43386bc4f1337cdcb8b35e00b0b6319f28</sha256>
+      <md5>9b5fe2f7cd37de8f3210b9bf90f22e0a</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u65-b17">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>b19704809009045bbb27412aff6a853cb223499e7e7528ba5191291843aa3017</sha256>
+      <md5>677378042a45143427871d556ec15901</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>cf1903cfae652bea4f9ec94635cd0791e038f5bf2babeb778c1711c32b8a19ea</sha256>
+      <md5>7b715e1fe2316c94aaa968b23ce49c9a</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>88db2aacdc222c2add4d92822f528b7a2101552272db4487f33b38b0b47826e7</sha256>
+      <md5>196880a42c45ec9ab2f00868d69619c0</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>c57d582f18327870dab75bba6b28b6cc367897784af6439252db09945a2c921e</sha256>
+      <md5>3e49f4f5645449a40da06336dbc10cff</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>589633b8688ef7331a861a6d87487a82ed40bc6c287c4c567c4f91737c5011d5</sha256>
+      <md5>c497b2e943ab0c5486ec40becf9d7d96</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>d21221f744e5e9adff80ad1fbaf20d12a9be58a63251dd746c998e218970c06c</sha256>
+      <md5>e55c8ae5e423b93068e1076ceaabf76e</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>e33260733af2c30172fa3ec32728fb8fd6899c4c6188e427c3ccf56169156971</sha256>
+      <md5>b66d7a678494712b7019c0469d492b86</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u60-b27">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>554f4fef08a5ea5b5b6e90cacb62a7a390d94d96c27fa2a5d6b44fc73e45465e</sha256>
+      <md5>80e498643509e07fae99a94ed0650fb0</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>e6a36b458351ed35bd7943739ba93d9a246e08a86433e148ff68b1b40d74c2e5</sha256>
+      <md5>a46d706babbd63f459d7ca6d4057d80f</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>ebe51554d2f6c617a4ae8fc9a8742276e65af01bd273e96848b262b3c05424e5</sha256>
+      <md5>b8ca513d4f439782c019cb78cd7fd101</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>2c2eb85ca8db7853cf3a0b074268a4e9095b0126e9e5a3c4b57d030053b99061</sha256>
+      <md5>0936c6d4d7643e2df69abdade59b14ea</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>9c46a11f026f1c10bb38b10c511ccf4799420e967f57543b5e0e03c6d9390243</sha256>
+      <md5>07af23059897f9f64eaa332cc06a58c8</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>1e9c033fda2fc7c550965b21592bcd928990f60dc9a76f54ee7cb1c57814fa7e</sha256>
+      <md5>2c7a070f4a0c3248e084626c25b27557</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>5c274c13d5fcdb11aef7374c515a17381a1bddce5bb4dcb4c8ffd8c00bd71ce7</sha256>
+      <md5>0e5279b1f295c3834826ba9dd1d231b0</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u51-b16">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>85ee66d1fdce5244afcbfbfce8dc90582b8c7e3ec8ab4c21e0f4eb390af97832</sha256>
+      <md5>9e46b76e3b20b65481d7638ff6a77417</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>3fd43a5d88ea759bf12502980aa956c683d9df058ad25a94914c5890807e9f2b</sha256>
+      <md5>742b9151d9190a9ae7d8ed05c7d39850</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>d7149012cc51c2cdb8d3a1767825e0dfc36ca0419c3dae56d993cb2732cbeff1</sha256>
+      <md5>b34ff02c5d98b6f372288c17e96c51cf</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>2f2f184c2ec22dbe82a5ed03855c5240019788bdff62df9920bcbcbf4fed3a9f</sha256>
+      <md5>6764c96b08cce10ff1debeb735996cf1</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>f01fd26e6c0936a0f928385c61046d6f97eb32c79bf1ec7c11f105ba8147be87</sha256>
+      <md5>d90777f4743c62f994ecc7a88f784d5e</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>7afdda5f4310fce88e68f9c383bcc57451416471bb3af00cd1dfe323f2440932</sha256>
+      <md5>b68718186d0b50f8bc97a9d67e9cc30f</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>4bdfdae59ec62248ed893feff2fb4be8a8639330599f53f5b03208349ae91513</sha256>
+      <md5>a94c9be7adab8389f1348f76d27b3ff5</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u45-b14">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>7a6832087f0dfa08133bc4c9aff106eb</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>e68241caf30cb81ae4e985be7218bb6d</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>1ad9a5be748fb75b31cd3bd3aa339cac</md5>
+    </bin>
+    <bin cls="win_32" version="8u45-b15" arch="windows-i586" ext="exe">
+      <md5>2747e20e210bfd649e6087067f439d07</md5>
+    </bin>
+    <bin cls="win_64" version="8u45-b15" arch="windows-x64" ext="exe">
+      <md5>979ec7d6c93c6f36b32b8d532d736015</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>3bbffc17b1d2c0af319007167556a1cd</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>1e4a49f541c7623ac26c43c98580077e</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u40-b26">
+    <bin cls="osx_64" version="8u40-b27" arch="macosx-x64" ext="dmg">
+      <md5>d7461e2f9569bc87cec63e9cfc7399a9</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>1d8a9eea7dd93a7b18144b3c43c51d1c</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>3b3f74589539b8bbe5d78005e52f4f78</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>c592ec652a58b620d30feb220846bd06</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>6f3f45775acfbec2884b49e226dd0eb2</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>8b2a0c3a3c6af95c2e579492f3ebbca4</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>a19a70e01caf11fefcf800bafa4c2b77</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u31-b13">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>4be790882673653aac40d32992128d32</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>4e9aec24367672412c7d10105a2a2bbb</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>173e24bc2d5d5ca3469b8e34864a80da</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>627553b0a4e5f6882e60a71b7c0036b9</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>b499d326511aac7eea2f74d81b72e7f6</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>715045489cdd370a65b56a45719f1543</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>d264d2990fcbda3d1e9949a3af86f62b</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u25-b17">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>249a6e717b230fbe90e7d4692cf84622</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>b5b16247f66643727d9b6d4bc7c5efda</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>e145c03a7edc845215092786bcfba77e</md5>
+    </bin>
+    <bin cls="win_32" version="8u25-b18" arch="windows-i586" ext="exe">
+      <md5>d73ec953268159495ab1793dac9d674f</md5>
+    </bin>
+    <bin cls="win_64" version="8u25-b18" arch="windows-x64" ext="exe">
+      <md5>462542ffefd3b7822932a0f0d840e355</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>9cfa84dbb14bc1f653fafd8680368395</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>a5393271fb09b2e09160cfd015110c0d</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u20-b26">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>c7b29a5cc4ff0f51a847125e1d5ab58e</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>5dafdef064e18468f21c65051a6918d7</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>ec7f89dc3697b402e2c851d0488f6299</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>a32589ba83f3aa5a8b1737339604b609</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>2159e8e0a445e6acced9ee2e2c9a9196</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>db6f5439faea3440e81ec921f7f22ac8</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>06809e791695c8c6ce98a3e47bfd5a30</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u11-b12">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>5ab850029fc44b55e59d1c523080c54b</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>252bd6545d765ccf9d52ac3ef2ebf0aa</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>13ee1d0bf6baaf2b119115356f234a48</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>7a3cdd420628d999453dbec8660d0b6c</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>b279d4285e2c68393600aa7b73ebba05</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>03161d440414f3195fe51fbc1187d1df</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>67c5edcec9a831de38f064b1e2a0aaf2</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u5-b13">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>217882269</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>159910666</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>159008252</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>159077280</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>162717600</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>97716860</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>100180279</size>
+    </bin>
+  </jdk>
+  <jdk version="8-b132">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>238399440</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>183456778</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>181352138</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>197466680</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>203084344</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>101486264</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>103762193</size>
+    </bin>
+  </jdk>
+  <jdk version="7u80-b15" psu="true">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>f280136f455a53d65d9de420fc28f53d</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>0811a4045714bd8f1e1577e318528597</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>6152f8a7561acf795ca4701daa10a965</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>8c6c888993144fdbdec6f5d4e19b57a3</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>499b224f4da70312ddd47c4824e83adc</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>6390c3ca3ddcac1a8989189475b2603a</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>561f6e8420bfee57c2ce0bb284f0ccae</md5>
+    </bin>
+  </jdk>
+  <jdk version="7u79-b15">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>e085660e60ed1325143ac5e15391ebb9</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>b0ed59147c77a6d3e63a7b340e4e1d28</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>9222e097e624800fdd9bfb568169ccad</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>5dbd9dd32597278d5efce7426e2daf85</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>6c0ea86f9c2b3c1e7d95c513785f1f55</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>d9d3bffbf2e0643613a5c13f61e472aa</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>ea8c80dc03d553eda461d0dcdf6dd2cc</md5>
+    </bin>
+  </jdk>
+  <jdk version="7u76-b13" psu="true">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>e7465b88c0848a605b372028fc18c10d</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>566dcbcedbb9ec5a26f08bd65b14746b</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>5a98b1a3e4c48363d03f664f173bbb9a</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>f84bf4b2d6b17c66404fd6391e475e87</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>02365745a4a68a44d6b6f5130a4ad4da</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>dfb7f3f8cafef4eb624546d09eb5fc20</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>dfe27682e47c429ea2a096cf895d7525</md5>
+    </bin>
+  </jdk>
+  <jdk version="7u75-b13">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>fa861e11b0b70e5e2db2813aa5c10e3c</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>e4371a4fddc049eca3bfef293d812b8e</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>6f1f81030a34f7a9c987f8b68a24d139</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>b916d1724e29df886fc0858b72547212</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>ff2cb8fa5b9703741d2df35ea62e0009</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>ba8c5460905c39b9eab7ef70ddd9738a</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>063b64bb9a51a4db4e286ffd3b93b468</md5>
+    </bin>
+  </jdk>
+  <jdk version="7u72-b14" psu="true">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>c2fbcfa3db8637748634cf50d24af648</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>4a942a47a700e63e050dd66e8ca08a1f</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>cfa44b49e50ea06e5c6ab95ff79e5b2a</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>90dbdb9f6aeaddd47fe12c0c0dbc60f4</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>e012a5114e5df1186fec6e23b5297787</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>3fb0f345c730f67ca417eb344cb90514</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>78edaf05967c93e35bb17d259adc27be</md5>
+    </bin>
+  </jdk>
+  <jdk version="7u71-b14">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>1017faaa0b3e4ad6e72b5306de21b21d</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>54899d0733d9a8697da59de79a02cc8f</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>22761b214b1505f1a9671b124b0f44f4</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>68d7012cca47687e5b318f9b53969728</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>c5ace7df02c8e7129e494af7b4afbb7b</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>cba9febe64412f822e466e3abf8fe65d</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>083de81bd33d933cd69b23eb3c471e27</md5>
+    </bin>
+  </jdk>
+  <jdk version="7u67-b01">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <md5>10f27c5fc3d87b504fd901c0cf8f8921</md5>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <md5>715b0e8ba2a06bded75f6a92427e2701</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <md5>81e3e2df33e13781e5fac5756ed90e67</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <md5>dbe6f185f836cd43221827eae1dfff79</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <md5>031f3420a8f176f24c25b067fa7bcd25</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <md5>ad80ab0fd88aac68bd3d8109a05e33fb</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <md5>b433ef9b1a32cae2a0e8259acbc9a604</md5>
+    </bin>
+  </jdk>
+  <jdk version="7u65-b17">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>195045228</size>
+    
+      <size>195045228</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>143588167</size>
+    
+      <size>143588167</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>142384385</size>
+    
+      <size>142384385</size>
+    </bin>
+    <bin cls="win_32" version="7u65-b19" arch="windows-i586" ext="exe">
+      <size>134200736</size>
+    
+      <size>134200736</size>
+    </bin>
+    <bin cls="win_64" version="7u65-b19" arch="windows-x64" ext="exe">
+      <size>135994784</size>
+    
+      <size>135994784</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>17163099</size>
+    
+      <size>17163099</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>19270475</size>
+    
+      <size>19270475</size>
+    </bin>
+  </jdk>
+  <jdk version="7u60-b19">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>194971949</size>
+    
+      <size>194971949</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>143607445</size>
+    
+      <size>143607445</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>142362384</size>
+    
+      <size>142362384</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>134122400</size>
+    
+      <size>134122400</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>135944096</size>
+    
+      <size>135944096</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>17140189</size>
+    
+      <size>17140189</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>19291928</size>
+    
+      <size>19291928</size>
+    </bin>
+  </jdk>
+  <jdk version="7u55-b13">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>188286095</size>
+    
+      <size>188286095</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>139463702</size>
+    
+      <size>139463702</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>138220064</size>
+    
+      <size>138220064</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>129674656</size>
+    
+      <size>129674656</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>131581344</size>
+    
+      <size>131581344</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>17039750</size>
+    
+      <size>17039750</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>19231896</size>
+    
+      <size>19231896</size>
+    </bin>
+  </jdk>
+  <jdk version="7u51-b13">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>188212404</size>
+    
+      <size>188212404</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>139444114</size>
+    
+      <size>139444114</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>138199690</size>
+    
+      <size>138199690</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>129640864</size>
+    
+      <size>129640864</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>131557792</size>
+    
+      <size>131557792</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>17070697</size>
+    
+      <size>17070697</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>19225586</size>
+    
+      <size>19225586</size>
+    </bin>
+  </jdk>
+  <jdk version="7u45-b18">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>192766805</size>
+    
+      <size>192766805</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>139360512</size>
+    
+      <size>139360512</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>138094686</size>
+    
+      <size>138094686</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>129487776</size>
+    
+      <size>129487776</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>131396000</size>
+    
+      <size>131396000</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>17020495</size>
+    
+      <size>17020495</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>19145011</size>
+    
+      <size>19145011</size>
+    </bin>
+  </jdk>
+  <jdk version="7u40-b43">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>192256754</size>
+    
+      <size>192256754</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>139278165</size>
+    
+      <size>139278165</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>138021223</size>
+    
+      <size>138021223</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>129460128</size>
+    
+      <size>129460128</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>131337120</size>
+    
+      <size>131337120</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>16952414</size>
+    
+      <size>16952414</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>19066335</size>
+    
+      <size>19066335</size>
+    </bin>
+  </jdk>
+  <jdk version="7u25-b15">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>151448091</size>
+    
+      <size>151448091</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>97643815</size>
+    
+      <size>97643815</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>96316511</size>
+    
+      <size>96316511</size>
+    </bin>
+    <bin cls="win_32" version="7u25-b17" arch="windows-i586" ext="exe">
+      <size>93414304</size>
+    
+      <size>93414304</size>
+    </bin>
+    <bin cls="win_64" version="7u25-b17" arch="windows-x64" ext="exe">
+      <size>95060896</size>
+    
+      <size>95060896</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>15822924</size>
+    
+      <size>15822924</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>18529544</size>
+    
+      <size>18529544</size>
+    </bin>
+  </jdk>
+  <jdk version="7u21-b11">
+    <bin cls="osx_64" version="7u21-b12" arch="macosx-x64" ext="dmg">
+      <size>151184401</size>
+    
+      <size>151184401</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>97585097</size>
+    
+      <size>97585097</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>96272413</size>
+    
+      <size>96272413</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>93300120</size>
+    
+      <size>93300120</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>94973848</size>
+    
+      <size>94973848</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>15749823</size>
+    
+      <size>15749823</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>18434895</size>
+    
+      <size>18434895</size>
+    </bin>
+  </jdk>
+  <jdk version="7u17-b02">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>150759517</size>
+    
+      <size>150759517</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>97488905</size>
+    
+      <size>97488905</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>96160926</size>
+    
+      <size>96160926</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>93058456</size>
+    
+      <size>93058456</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>94813592</size>
+    
+      <size>94813592</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>15745261</size>
+    
+      <size>15745261</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>18444453</size>
+    
+      <size>18444453</size>
+    </bin>
+  </jdk>
+  <jdk version="7u15-b03">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>150735658</size>
+    
+      <size>150735658</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>97486991</size>
+    
+      <size>97486991</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>96131837</size>
+    
+      <size>96131837</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>93064600</size>
+    
+      <size>93064600</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>94795672</size>
+    
+      <size>94795672</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>15688278</size>
+    
+      <size>15688278</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>18445583</size>
+    
+      <size>18445583</size>
+    </bin>
+  </jdk>
+  <jdk version="7u13-b20">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>150693733</size>
+    
+      <size>150693733</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>97489971</size>
+    
+      <size>97489971</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>96146544</size>
+    
+      <size>96146544</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>93055384</size>
+    
+      <size>93055384</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>94797720</size>
+    
+      <size>94797720</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>15686120</size>
+    
+      <size>15686120</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>18429637</size>
+    
+      <size>18429637</size>
+    </bin>
+  </jdk>
+  <jdk version="7u11-b21">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>150724638</size>
+    
+      <size>150724638</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>97470187</size>
+    
+      <size>97470187</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>96158031</size>
+    
+      <size>96158031</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>93087128</size>
+    
+      <size>93087128</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>94800280</size>
+    
+      <size>94800280</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>15674980</size>
+    
+      <size>15674980</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>18335505</size>
+    
+      <size>18335505</size>
+    </bin>
+  </jdk>
+  <jdk version="7u9-b05">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>150435514</size>
+    
+      <size>150435514</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>97361259</size>
+    
+      <size>97361259</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>96043498</size>
+    
+      <size>96043498</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>92640736</size>
+    
+      <size>92640736</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>94398944</size>
+    
+      <size>94398944</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>15665771</size>
+    
+      <size>15665771</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>18356772</size>
+    
+      <size>18356772</size>
+    </bin>
+  </jdk>
+  <jdk version="7u7-b10">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>150427779</size>
+    
+      <size>150427779</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>97373835</size>
+    
+      <size>97373835</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>96039818</size>
+    
+      <size>96039818</size>
+    </bin>
+    <bin cls="win_32" version="7u7-b11" arch="windows-i586" ext="exe">
+      <size>92654560</size>
+    
+      <size>92654560</size>
+    </bin>
+    <bin cls="win_64" version="7u7-b11" arch="windows-x64" ext="exe">
+      <size>94372320</size>
+    
+      <size>94372320</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>15674358</size>
+    
+      <size>15674358</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>18322398</size>
+    
+      <size>18322398</size>
+    </bin>
+  </jdk>
+  <jdk version="7u6-b24">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>150429376</size>
+    
+      <size>150429376</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>97360299</size>
+    
+      <size>97360299</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>96036590</size>
+    
+      <size>96036590</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>92624352</size>
+    
+      <size>92624352</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>94385632</size>
+    
+      <size>94385632</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>15665967</size>
+    
+      <size>15665967</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>18453783</size>
+    
+      <size>18453783</size>
+    </bin>
+  </jdk>
+  <jdk version="7u5-b06">
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <size>101987987</size>
+    
+      <size>101987987</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>82947286</size>
+    
+      <size>82947286</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>81443471</size>
+    
+      <size>81443471</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>92227048</size>
+    
+      <size>92227048</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>96847848</size>
+    
+      <size>96847848</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>10006099</size>
+    
+      <size>10006099</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>13158719</size>
+    
+      <size>13158719</size>
+    </bin>
+  </jdk>
+  <jdk version="7u4-b20">
+    <bin cls="osx_64" version="7u4-b21" arch="macosx-x64" ext="dmg">
+      <size>102002567</size>
+    
+      <size>102002567</size>
+    </bin>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>82927766</size>
+    
+      <size>82927766</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>81439019</size>
+    
+      <size>81439019</size>
+    </bin>
+    <bin cls="win_32" version="7u4-b22" arch="windows-i586" ext="exe">
+      <size>92242888</size>
+    
+      <size>92242888</size>
+    </bin>
+    <bin cls="win_64" version="7u4-b22" arch="windows-x64" ext="exe">
+      <size>96813000</size>
+    
+      <size>96813000</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>10004792</size>
+    
+      <size>10004792</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>13159165</size>
+    
+      <size>13159165</size>
+    </bin>
+  </jdk>
+  <jdk version="7u3-b04">
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>82477042</size>
+    
+      <size>82477042</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>81056556</size>
+    
+      <size>81056556</size>
+    </bin>
+    <bin cls="win_32" version="7u3-b05" arch="windows-i586" ext="exe">
+      <size>88210392</size>
+    
+      <size>88210392</size>
+    </bin>
+    <bin cls="win_64" version="7u3-b05" arch="windows-x64" ext="exe">
+      <size>91662296</size>
+    
+      <size>91662296</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>9702437</size>
+    
+      <size>9702437</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>12904146</size>
+    
+      <size>12904146</size>
+    </bin>
+  </jdk>
+  <jdk version="7u2-b13">
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>82444118</size>
+    
+      <size>82444118</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>81225513</size>
+    
+      <size>81225513</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>88125328</size>
+    
+      <size>88125328</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>91590032</size>
+    
+      <size>91590032</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>9702243</size>
+    
+      <size>9702243</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>12904127</size>
+    
+      <size>12904127</size>
+    </bin>
+  </jdk>
+  <jdk version="7u1-b08">
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>96648208</size>
+    
+      <size>96648208</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>94972183</size>
+    
+      <size>94972183</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>83316104</size>
+    
+      <size>83316104</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>84132744</size>
+    
+      <size>84132744</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>9839985</size>
+    
+      <size>9839985</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>12975640</size>
+    
+      <size>12975640</size>
+    </bin>
+  </jdk>
+  <jdk version="7u0">
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <size>96645974</size>
+    
+      <size>154773078</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <size>94971634</size>
+    
+      <size>153512879</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>83345288</size>
+    
+      <size>145030048</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>84144520</size>
+    
+      <size>146861984</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <size>9845909</size>
+    
+      <size>17171897</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <size>12979380</size>
+    
+      <size>19289002</size>
+    </bin>
+  </jdk>
+  <jdk version="6u45-b06">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>71799552</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72087592</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>73247144</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>62866856</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12822251</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16245969</size>
+    </bin>
+  </jdk>
+  <jdk version="6u43-b01">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>71771602</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72039626</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>73152936</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>62735272</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12765351</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16189411</size>
+    </bin>
+  </jdk>
+  <jdk version="6u41-b02">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>71769939</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72041996</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>73136552</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>62738344</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12777189</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16182127</size>
+    </bin>
+  </jdk>
+  <jdk version="6u39-b04">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>71756435</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72037515</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>73116072</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>62731176</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12761861</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16174555</size>
+    </bin>
+  </jdk>
+  <jdk version="6u38-b05">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>71771782</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72058033</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>73123824</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>62709744</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12761432</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16163279</size>
+    </bin>
+  </jdk>
+  <jdk version="6u37-b06">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>71764073</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72048548</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>73103344</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>62626800</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12766610</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16166575</size>
+    </bin>
+  </jdk>
+  <jdk version="6u35-b10">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>71758261</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72039455</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>73099248</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>62609904</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12776416</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16160779</size>
+    </bin>
+  </jdk>
+  <jdk version="6u34-b04">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>71755291</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72036348</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>73086960</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>62622192</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12763399</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16261379</size>
+    </bin>
+  </jdk>
+  <jdk version="6u33-b04">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>71748681</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72029394</size>
+    </bin>
+    <bin cls="win_32" version="6u33-b05" arch="windows-i586" ext="exe">
+      <size>73049896</size>
+    </bin>
+    <bin cls="win_64" version="6u33-b05" arch="windows-x64" ext="exe">
+      <size>62569256</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12758131</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16242942</size>
+    </bin>
+  </jdk>
+  <jdk version="6u32-b05">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>71746385</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72033964</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>73053976</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>62560024</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12751003</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16249331</size>
+    </bin>
+  </jdk>
+  <jdk version="6u31-b04">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>85292206</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>85581913</size>
+    </bin>
+    <bin cls="win_32" version="6u31-b05" arch="windows-i586" ext="exe">
+      <size>82818840</size>
+    </bin>
+    <bin cls="win_64" version="6u31-b05" arch="windows-x64" ext="exe">
+      <size>72938776</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12849414</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16347958</size>
+    </bin>
+  </jdk>
+  <jdk version="6u30-b12">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>85282052</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>85570714</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>82761496</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>72963864</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12841257</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16351940</size>
+    </bin>
+  </jdk>
+  <jdk version="6u29-b11">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>85146345</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>85411605</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>80545560</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>70687000</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12847345</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16343148</size>
+    </bin>
+  </jdk>
+  <jdk version="6u27-b07">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>85147250</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>85418489</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>80541464</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>70678808</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12836119</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16332840</size>
+    </bin>
+  </jdk>
+  <jdk version="6u26-b03">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>85141056</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>85407904</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>80545560</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>70699288</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12839613</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16331785</size>
+    </bin>
+  </jdk>
+  <jdk version="6u25-b06">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>85052342</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>85315136</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>80381720</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>70541080</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12835751</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>16328266</size>
+    </bin>
+  </jdk>
+  <jdk version="6u24-b07">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>84927175</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>84909359</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>80307992</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>70092056</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12197197</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15651571</size>
+    </bin>
+  </jdk>
+  <jdk version="6u23-b05">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>84461758</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>84459425</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>80029464</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>70170392</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>12055071</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15503327</size>
+    </bin>
+  </jdk>
+  <jdk version="6u22-b04">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>83761756</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>83790617</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>79578904</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>69617944</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>11963221</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15552525</size>
+    </bin>
+  </jdk>
+  <jdk version="6u21-b07">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>83855932</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>83884465</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>79595288</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>69570840</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>11990569</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15575131</size>
+    </bin>
+  </jdk>
+  <jdk version="6u20-b02">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>84796967</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>84853474</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>80398104</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>70481176</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>11867802</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15386415</size>
+    </bin>
+  </jdk>
+  <jdk version="6u19-b04">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>84796753</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>84852515</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>80394008</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>70480664</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>11880254</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15392535</size>
+    </bin>
+  </jdk>
+  <jdk version="6u18-b07">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>84738557</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>84794182</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>79992600</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>70391576</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>11856287</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15393777</size>
+    </bin>
+  </jdk>
+  <jdk version="6u17-b04">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>81792634</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>81873605</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>77125400</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>68336920</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>11590827</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15183912</size>
+    </bin>
+  </jdk>
+  <jdk version="6u16-b01">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>81790339</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>81871260</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>77117208</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>68332312</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>11590313</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15174253</size>
+    </bin>
+  </jdk>
+  <jdk version="6u15-b03">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>81787792</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>81864052</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>77113112</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>68325144</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>11581409</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15193480</size>
+    </bin>
+  </jdk>
+  <jdk version="6u14-b08">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>81771117</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>81849212</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>77047184</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <size>68273552</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>11576609</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>15178627</size>
+    </bin>
+  </jdk>
+  <jdk version="6u13-b03">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>80129716</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>80255395</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>76658072</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64-p" ext="exe">
+      <size>67545496</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>10885943</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14533743</size>
+    </bin>
+  </jdk>
+  <jdk version="6u12-b04">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>80105323</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>80238916</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>76633496</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64-p" ext="exe">
+      <size>67515288</size>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>10867765</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14536988</size>
+    </bin>
+  </jdk>
+  <jdk version="6u11-b03">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>80028140</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72775198</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>76445080</size>
+    </bin>
+    <!--
+    <bin cls="win_64" arch="windows-x64" ext="exe"/>
+    -->
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>10856728</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14501805</size>
+    </bin>
+  </jdk>
+  <jdk version="6u10">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>80009636</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>72753411</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>76502424</size>
+    </bin>
+    <!--
+    <bin cls="win_64" arch="windows-x64" ext="exe"/>
+    -->
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>10850080</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14490729</size>
+    </bin>
+  </jdk>
+  <jdk version="6u7">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>78482905</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>71671121</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>81208728</size>
+    </bin>
+    <!--
+    <bin cls="win_64" arch="windows-x64" ext="exe"/>
+    -->
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>11019249</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14401727</size>
+    </bin>
+  </jdk>
+  <jdk version="6u6">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>70514910</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>63725602</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>74966424</size>
+    </bin>
+    <!--
+    <bin cls="win_64" arch="windows-x64" ext="exe"/>
+    -->
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>10941351</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14336231</size>
+    </bin>
+  </jdk>
+  <jdk version="6u5b">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>70504987</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>63724381</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>74868120</size>
+    </bin>
+    <!--
+    <bin cls="win_64" arch="windows-x64" ext="exe"/>
+    -->
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>10938398</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14325085</size>
+    </bin>
+  </jdk>
+  <jdk version="6u4-b12">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>70418455</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="bin">
+      <size>63678797</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>74745240</size>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe"/>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
+      <size>10940223</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14334393</size>
+    </bin>
+  </jdk>
+  <jdk version="6u3">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>68573254</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-amd64" ext="bin">
+      <size>62140783</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>68830616</size>
+    </bin>
+    <!--
+    <bin cls="win_64" arch="windows-amd64" ext="exe"/>
+    -->
+    <bin cls="sol_64" arch="solaris-amd64" ext="tar.Z">
+      <size>10704932</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14240127</size>
+    </bin>
+  </jdk>
+  <jdk version="6u2">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>58367939</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-amd64" ext="bin">
+      <size>51945670</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>68752792</size>
+    </bin>
+    <!--
+    <bin cls="win_64" arch="windows-amd64" ext="exe"/>
+    -->
+    <bin cls="sol_64" arch="solaris-amd64" ext="tar.Z">
+      <size>10684759</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14242563</size>
+    </bin>
+  </jdk>
+  <jdk version="6u1">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>62772481</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-amd64" ext="bin">
+      <size>56344628</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586-p" ext="exe">
+      <size>58779296</size>
+    </bin>
+    <!-- 
+    <bin cls="win_64" arch="windows-amd64" ext="exe"/>
+     -->
+    <bin cls="sol_64" arch="solaris-amd64" ext="tar.Z">
+      <size>10542089</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14079657</size>
+    </bin>
+  </jdk>
+  <jdk version="6u0">
+    <bin cls="nix_32" arch="linux-i586" ext="bin">
+      <size>62678298</size>
+    </bin>
+    <bin cls="nix_64" arch="linux-amd64" ext="bin">
+      <size>56307268</size>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <size>55740040</size>
+    </bin>
+    <!--
+    <bin cls="win_64" arch="windows-amd64" ext="exe"/>
+    -->
+    <bin cls="sol_64" arch="solaris-amd64" ext="tar.Z">
+      <size>10549995</size>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.Z">
+      <size>14069779</size>
+    </bin>
+  </jdk>
+</jdks>

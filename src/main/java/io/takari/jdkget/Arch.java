@@ -3,29 +3,13 @@ package io.takari.jdkget;
 import java.util.Locale;
 
 public enum Arch {
-  OSX_64("macosx-x64", "dmg"),
-  NIX_32("linux-i586", "tar.gz"),
-  NIX_64("linux-x64", "tar.gz"),
-  WIN_32("windows-i586", "exe"),
-  WIN_64("windows-x64", "exe"),
-  SOL_64("solaris-x64", "tar.gz"),
-  SOL_SPARC("solaris-sparcv9", "tar.gz");
-  
-  private String arch;
-  private String extension;
-
-  private Arch(String arch, String extension) {
-    this.arch = arch;
-    this.extension = extension;
-  }
-  
-  public String getArch() {
-    return arch;
-  }
-  
-  public String getExtension() {
-    return extension;
-  }
+  OSX_64,
+  NIX_32,
+  NIX_64,
+  WIN_32,
+  WIN_64,
+  SOL_64,
+  SOL_SPARC;
 
   public static Arch autodetect() {
     String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);

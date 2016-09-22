@@ -1,4 +1,4 @@
-package io.takari.jdkget.win32;
+package io.takari.jdkget.extract;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -33,71 +33,72 @@ import io.takari.jdkget.IOutput;
 import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public class WindowsJDKExtractor implements IJdkExtractor {
-  
+
   private static final Set<String> SKIP_DIRS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
-      "Icon", "Bitmap")));
-  
+    "Icon", "Bitmap")));
+
   @Override
   public boolean extractJdk(JdkVersion jdkVersion, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException {
-    
-    output.info("Extracting tools.zip from install executable into " + outputDir);
-    
+
     // <= 1.7: PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
     // > 1.7:  PE EXE <- PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
-    
+
     File tmptools = new File(workDir, "tools-" + System.currentTimeMillis() + ".zip");
-    if(scanPE(jdkImage, tmptools, workDir)) {
+    if (scanPE(jdkImage, tmptools, workDir)) {
       try {
+        output.info("Extracting tools.zip from install executable into " + outputDir);
         extractTools(tmptools, outputDir);
         return true;
       } finally {
-        if(!tmptools.delete()) {
+        if (!tmptools.delete()) {
           tmptools.deleteOnExit();
         }
       }
+    } else {
+      output.error("This doesn't seem to be a PE executable");
     }
     return false;
   }
-  
+
   private void extractTools(File toolZip, File output) throws IOException {
     output.mkdirs();
-    
-    try(ZipFile zip = new ZipFile(toolZip)) {
-      
+
+    try (ZipFile zip = new ZipFile(toolZip)) {
+
       Enumeration<? extends ZipEntry> en = zip.entries();
-      while(en.hasMoreElements()) {
+      while (en.hasMoreElements()) {
         ZipEntry e = en.nextElement();
-        
+
         boolean unpack200 = false;
         String name = e.getName();
-        
-        if(name.endsWith(".pack")) {
+
+        if (name.endsWith(".pack")) {
           name = name.substring(0, name.length() - 5) + ".jar";
           unpack200 = true;
         }
-        
+
         File f = new File(output, name);
-        if(e.isDirectory()) {
-          
+        if (e.isDirectory()) {
+
           f.mkdirs();
-          
+
         } else {
-          
+
           f.createNewFile();
-          
-          if(unpack200) {
-            try (JarOutputStream out = new JarOutputStream(new FileOutputStream(f)); InputStream in = zip.getInputStream(e)){
+
+          if (unpack200) {
+            try (JarOutputStream out = new JarOutputStream(new FileOutputStream(f)); InputStream in = zip.getInputStream(e)) {
               Pack200.newUnpacker().unpack(in, out);
             }
           } else {
-            try (OutputStream out = new FileOutputStream(f); InputStream in = zip.getInputStream(e)){
+            try (OutputStream out = new FileOutputStream(f); InputStream in = zip.getInputStream(e)) {
               IOUtils.copy(in, out);
             }
           }
-          
+
         }
       }
-      
+
     }
   }
 
@@ -105,37 +106,37 @@ public class WindowsJDKExtractor implements IJdkExtractor {
     PE pe;
     try {
       pe = new PE(f.getCanonicalPath());
-    } catch(Exception e) {
+    } catch (Exception e) {
       return false;
     }
-    
-    if(pe.isPE()) {
+
+    if (pe.isPE()) {
       for (ImageDataDir entry : pe.optionalHeader.tables) {
         if (entry.getType() == DirEntry.RESOURCE) {
-          
+
           ResourceDirectoryHeader root = (ResourceDirectoryHeader) entry.data;
-          if(scanPEDir(pe, root, outputDir, workDir)) {
+          if (scanPEDir(pe, root, outputDir, workDir)) {
             return true;
           }
-          
+
         }
       }
-      
+
     }
     return false;
   }
 
   private boolean scanPEDir(PE pe, ResourceDirectoryHeader dir, File outputDir, File workDir) throws IOException {
-    for(ResourceDirectoryEntry entry: dir.entries) {
-      if(entry.isDirectory) {
-        if(SKIP_DIRS.contains(entry.NAME.get())) {
+    for (ResourceDirectoryEntry entry : dir.entries) {
+      if (entry.isDirectory) {
+        if (SKIP_DIRS.contains(entry.NAME.get())) {
           continue;
         }
-        if(scanPEDir(pe, entry.directory, outputDir, workDir)) {
+        if (scanPEDir(pe, entry.directory, outputDir, workDir)) {
           return true;
         }
       } else {
-        if(scanPEEntry(pe, entry.resourceDataEntry, outputDir, workDir)) {
+        if (scanPEEntry(pe, entry.resourceDataEntry, outputDir, workDir)) {
           return true;
         }
       }
@@ -144,43 +145,45 @@ public class WindowsJDKExtractor implements IJdkExtractor {
   }
 
   private boolean scanPEEntry(PE pe, ResourceDataEntry resourceDataEntry, File outputDir, File workDir) throws IOException {
-    
+
     byte[] data = resourceDataEntry.getData(pe.fileBytes);
-    if(scanCab(outputDir, data)) {
+    if (scanCab(outputDir, data)) {
       return true;
     }
-    
+
     // try pe
     File f = new File(workDir, "cabextract-" + System.currentTimeMillis() + ".tmp");
     f.createNewFile();
     try {
-      try(OutputStream out = new FileOutputStream(f)) {
+      try (OutputStream out = new FileOutputStream(f)) {
         out.write(data);
       }
-      if(scanPE(f, outputDir, workDir)) {
+      if (scanPE(f, outputDir, workDir)) {
         return true;
       }
     } finally {
-      if(!f.delete()) {
+      if (!f.delete()) {
         f.deleteOnExit();
       }
     }
-    
+
     return false;
   }
 
   private boolean scanCab(final File output, byte[] data) throws IOException {
-    final boolean[] res = new boolean[]{ false };
+    final boolean[] res = new boolean[] {false};
     InputStream in = new ByteArrayInputStream(data);
     try {
       new CabParser(in, new CabStreamSaver() {
         public boolean saveReservedAreaData(byte[] data, int dataLength) {
           return false;
         }
+
         public OutputStream openOutputStream(CabFileEntry entry) {
-          if(res[0]) return null;
-          
-          if(entry.getName().equals("tools.zip")) {
+          if (res[0])
+            return null;
+
+          if (entry.getName().equals("tools.zip")) {
             res[0] = true;
             try {
               output.createNewFile();
@@ -191,8 +194,12 @@ public class WindowsJDKExtractor implements IJdkExtractor {
           }
           return null;
         }
+
         public void closeOutputStream(OutputStream os, CabFileEntry entry) {
-          try{ os.close(); } catch(IOException e){}
+          try {
+            os.close();
+          } catch (IOException e) {
+          }
         }
       }).extractStream();
     } catch (CabException e) {
