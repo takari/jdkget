@@ -22,7 +22,7 @@ import io.takari.jdkget.JdkGetter.JdkVersion;
 public class BinJDKExtractor implements IJdkExtractor {
 
   private static final int[] ZIP_PREFIX = new int[] {0x50, 0x4b, 0x03, 0x04};
-  private static final int MAX_ZIP_READ = 0x10000;
+  private static final int MAX_ZIP_READ = 0x20000;
 
   @Override
   public boolean extractJdk(JdkVersion version, File jdkImage, File outputDir, File workDir, IOutput output)

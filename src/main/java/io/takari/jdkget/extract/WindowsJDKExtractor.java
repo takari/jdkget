@@ -40,14 +40,13 @@ public class WindowsJDKExtractor implements IJdkExtractor {
   @Override
   public boolean extractJdk(JdkVersion jdkVersion, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException {
 
-    output.info("Extracting tools.zip from install executable into " + outputDir);
-
     // <= 1.7: PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
     // > 1.7:  PE EXE <- PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
 
     File tmptools = new File(workDir, "tools-" + System.currentTimeMillis() + ".zip");
     if (scanPE(jdkImage, tmptools, workDir)) {
       try {
+        output.info("Extracting tools.zip from install executable into " + outputDir);
         extractTools(tmptools, outputDir);
         return true;
       } finally {
@@ -55,6 +54,8 @@ public class WindowsJDKExtractor implements IJdkExtractor {
           tmptools.deleteOnExit();
         }
       }
+    } else {
+      output.error("This doesn't seem to be a PE executable");
     }
     return false;
   }

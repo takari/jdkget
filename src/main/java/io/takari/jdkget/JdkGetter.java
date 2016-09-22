@@ -25,14 +25,18 @@ public class JdkGetter {
   private IOutput output;
 
   public JdkGetter(String version, Arch arch, File outputDirectory, ITransport transport, IOutput output) {
+    this(version == null || version.equals("latest") ? null : JdkVersion.parse(version), arch, outputDirectory, transport, output);
+  }
 
+  public JdkGetter(JdkVersion jdkVersion, Arch arch, File outputDirectory, ITransport transport, IOutput output) {
+
+    this.jdkVersion = jdkVersion;
     if (output != null) {
       this.output = output;
     } else {
       this.output = new StdOutput();
     }
 
-    this.jdkVersion = version == null || version.equals("latest") ? null : JdkVersion.parse(version);
     if (arch != null) {
       this.arch = arch;
     } else {
@@ -60,7 +64,7 @@ public class JdkGetter {
     if (!inProcessDirectory.exists()) {
       inProcessDirectory.mkdirs();
     }
-    
+
     File jdkImage = transport.getImageFile(inProcessDirectory, arch, jdkVersion);
 
     if (jdkImage.exists()) {
@@ -120,6 +124,7 @@ public class JdkGetter {
   }
 
   public static class Builder {
+    private JdkVersion jdkVersion;
     private String version;
     private Arch arch;
     private File outputDirectory;
@@ -127,11 +132,19 @@ public class JdkGetter {
     private IOutput output;
 
     public JdkGetter build() {
+      if (jdkVersion != null) {
+        return new JdkGetter(jdkVersion, arch, outputDirectory, transport, output);
+      }
       return new JdkGetter(version, arch, outputDirectory, transport, output);
     }
 
     public Builder version(String version) {
       this.version = version;
+      return this;
+    }
+
+    public Builder version(JdkVersion version) {
+      this.jdkVersion = version;
       return this;
     }
 
@@ -177,7 +190,7 @@ public class JdkGetter {
     public String longVersion() {
       StringBuilder sb = new StringBuilder();
       sb.append("1.").append(major).append(".0");
-      if (revision >= 0)
+      if (revision > 0)
         sb.append('_').append(revision);
       return sb.toString();
     }
@@ -185,7 +198,7 @@ public class JdkGetter {
     public String longBuild() {
       StringBuilder sb = new StringBuilder();
       sb.append("1.").append(major).append(".0");
-      if (revision >= 0)
+      if (revision > 0)
         sb.append('_').append(revision);
       sb.append(buildNumber);
       return sb.toString();
@@ -194,7 +207,7 @@ public class JdkGetter {
     public String shortVersion() {
       StringBuilder sb = new StringBuilder();
       sb.append(major);
-      if (revision >= 0)
+      if (revision > 0)
         sb.append('u').append(revision);
       return sb.toString();
     }
@@ -202,7 +215,7 @@ public class JdkGetter {
     public String shortBuild() {
       StringBuilder sb = new StringBuilder();
       sb.append(major);
-      if (revision >= 0)
+      if (revision > 0)
         sb.append('u').append(revision);
       sb.append(buildNumber);
       return sb.toString();
