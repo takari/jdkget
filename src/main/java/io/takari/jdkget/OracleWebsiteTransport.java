@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import org.apache.commons.io.IOUtils;
 
@@ -71,25 +72,27 @@ public class OracleWebsiteTransport implements ITransport {
     output.info("Downloading " + url);
 
     // Oracle does some redirects so we have to follow a couple before we win the JDK prize
-    URL jdkUrl;
-    HttpURLConnection con;
+    URLConnection con;
     int retries = 10;
     for (int retry = 0; retry < retries; retry++) {
-      jdkUrl = new URL(url);
-      con = (HttpURLConnection) jdkUrl.openConnection();
-      if (cookie) {
-        con.setRequestProperty("Cookie", OTN_COOKIE);
+      con = new URL(url).openConnection();
+      int code = 200;
+      String msg = null;
+      
+      if(con instanceof HttpURLConnection) {
+        HttpURLConnection httpCon = (HttpURLConnection) con;
+        if (cookie) {
+          httpCon.setRequestProperty("Cookie", OTN_COOKIE);
+        }
+  
+        code = httpCon.getResponseCode();
+        msg = httpCon.getResponseMessage();
       }
-
-      int code = con.getResponseCode();
-      String msg = con.getResponseMessage();
       if (code == 200) {
-
         try (InputStream is = con.getInputStream(); OutputStream os = new FileOutputStream(jdkImage)) {
           IOUtils.copy(is, os);
         }
         return;
-
       } else if (code == 301 || code == 302) {
         url = con.getHeaderField("Location");
         output.info("Redirecting to " + url);
