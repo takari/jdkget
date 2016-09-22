@@ -61,7 +61,8 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
               IOUtils.copy(t, out);
             }
             if (File.pathSeparatorChar != ';') {
-              Files.setPosixFilePermissions(f.toPath(), PosixModes.intModeToPosix(te.getMode()));
+              int mode = (int) te.getMode() & 0000777;
+              Files.setPosixFilePermissions(f.toPath(), PosixModes.intModeToPosix(mode));
             }
             f.setLastModified(te.getModTime().getTime());
           }
