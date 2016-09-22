@@ -132,13 +132,15 @@ public class JdkReleases {
     private final String path;
     private final String md5;
     private final String sha256;
+    private final long size;
 
-    public JdkBinary(JdkRelease release, Arch arch, String path, String md5, String sha256) {
+    public JdkBinary(JdkRelease release, Arch arch, String path, String md5, String sha256, long size) {
       this.release = release;
       this.arch = arch;
       this.path = path;
       this.md5 = md5;
       this.sha256 = sha256;
+      this.size = size;
     }
 
     public JdkRelease getRelease() {
@@ -159,6 +161,10 @@ public class JdkReleases {
 
     public String getSha256() {
       return sha256;
+    }
+    
+    public long getSize() {
+      return size;
     }
   }
 }

@@ -41,7 +41,7 @@
     <dependency>
       <groupId>io.takari</groupId>
       <artifactId>xar</artifactId>
-      <version>0.8.7-SNAPSHOT</version>
+      <version>0.8.8-SNAPSHOT</version>
       <exclusions>
         <!-- stax provided by jdk -->
         <exclusion>

@@ -10,5 +10,7 @@ public interface ITransport {
   void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException;
 
   boolean validate(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException;
+
+  File getImageFile(File parent, Arch arch, JdkVersion version) throws IOException;
   
 }

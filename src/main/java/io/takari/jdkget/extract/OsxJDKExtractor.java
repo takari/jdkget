@@ -1,4 +1,4 @@
-package io.takari.jdkget.osx;
+package io.takari.jdkget.extract;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -25,6 +25,8 @@ import com.sprylab.xar.XarFile;
 import io.takari.jdkget.IJdkExtractor;
 import io.takari.jdkget.IOutput;
 import io.takari.jdkget.JdkGetter.JdkVersion;
+import io.takari.jdkget.osx.PosixModes;
+import io.takari.jdkget.osx.UnHFS;
 
 public class OsxJDKExtractor implements IJdkExtractor {
   

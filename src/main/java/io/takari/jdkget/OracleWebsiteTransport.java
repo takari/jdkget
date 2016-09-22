@@ -1,4 +1,4 @@
-package io.takari.jdkget.transport;
+package io.takari.jdkget;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,11 +13,7 @@ import org.apache.commons.compress.utils.IOUtils;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 
-import io.takari.jdkget.Arch;
-import io.takari.jdkget.IOutput;
-import io.takari.jdkget.ITransport;
 import io.takari.jdkget.JdkGetter.JdkVersion;
-import io.takari.jdkget.JdkReleases;
 import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;
 
@@ -50,7 +46,18 @@ public class OracleWebsiteTransport implements ITransport {
   }
 
   private boolean isApple(Arch arch, JdkVersion jdkVersion) {
-    return arch == Arch.OSX_64 && jdkVersion != null && jdkVersion.major == 6 && website.equals(ORACLE_WEBSITE);
+    // osx jdk6 image really wants to be installed globally and would not work in a separate dir
+    //return arch == Arch.OSX_64 && jdkVersion != null && jdkVersion.major == 6 && website.equals(ORACLE_WEBSITE);
+    return false;
+  }
+
+  @Override
+  public File getImageFile(File parent, Arch arch, JdkVersion jdkVersion) throws IOException {
+    if (isApple(arch, jdkVersion)) {
+      return new File(parent, "javaforosx.dmg");
+    }
+    JdkBinary bin = binary(arch, jdkVersion);
+    return new File(parent, new File(bin.getPath()).getName());
   }
 
   public void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
@@ -104,18 +111,36 @@ public class OracleWebsiteTransport implements ITransport {
       return jdkImage.length() == 66724162L;
     } else {
       JdkBinary bin = binary(arch, jdkVersion);
+
+      int checks = 0;
+      int failed = 0;
+
       if (bin.getSha256() != null) {
+        checks++;
         String fileHash = Files.hash(jdkImage, Hashing.sha256()).toString();
         if (!bin.getSha256().equals(fileHash)) {
+          failed++;
           output.error("File sha256 `" + fileHash + "` differs from `" + bin.getSha256() + "`");
-          return false;
         }
-      } else if (bin.getMd5() != null) {
+      }
+      if (bin.getMd5() != null) {
+        checks++;
         String fileHash = Files.hash(jdkImage, Hashing.md5()).toString();
         if (!bin.getMd5().equals(fileHash)) {
+          failed++;
           output.error("File md5 `" + fileHash + "` differs from `" + bin.getMd5() + "`");
-          return false;
         }
+      }
+      if (bin.getSize() != -1) {
+        checks++;
+        if (bin.getSize() != jdkImage.length()) {
+          failed++;
+          output.error("File size `" + jdkImage.length() + "` differs from `" + bin.getSize() + "`");
+        }
+      }
+
+      if (checks != 0 && failed > 0) {
+        return false;
       }
     }
     return true;

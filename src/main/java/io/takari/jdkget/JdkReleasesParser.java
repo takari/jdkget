@@ -41,13 +41,23 @@ public class JdkReleasesParser {
   private void parseBin(JdkRelease rel, String urlTemplate, List<Element> children) {
     for (Element binElem : children) {
       Arch cls = Arch.valueOf(binElem.getAttributeValue("cls").toUpperCase());
+      String binVersion = binElem.getAttributeValue("version");
       String arch = binElem.getAttributeValue("arch");
       String ext = binElem.getAttributeValue("ext");
       String md5 = getText(binElem, "md5");
       String sha256 = getText(binElem, "sha256");
+      String size = getText(binElem, "size");
+      long sz = size == null ? -1 : Long.parseLong(size);
+      
+      JdkVersion pathVersion;
+      if(binVersion != null) {
+        pathVersion = JdkVersion.parse(binVersion);
+      } else {
+        pathVersion = rel.getVersion();
+      }
 
-      String path = path(urlTemplate, rel.getVersion(), arch, ext);
-      rel.addBinary(new JdkBinary(rel, cls, path, md5, sha256));
+      String path = path(urlTemplate, pathVersion, arch, ext);
+      rel.addBinary(new JdkBinary(rel, cls, path, md5, sha256, sz));
     }
   }
 
