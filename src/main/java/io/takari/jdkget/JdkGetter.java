@@ -9,6 +9,8 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.google.common.base.Throwables;
+
 import io.takari.jdkget.JdkReleases.JdkRelease;
 import io.takari.jdkget.extract.BinJDKExtractor;
 import io.takari.jdkget.extract.OsxJDKExtractor;
@@ -21,16 +23,17 @@ public class JdkGetter {
   private final Arch arch;
   private final File outputDirectory;
   private final File inProcessDirectory;
+  private final int retries;
   private ITransport transport;
   private IOutput output;
 
-  public JdkGetter(String version, Arch arch, File outputDirectory, ITransport transport, IOutput output) {
-    this(version == null || version.equals("latest") ? null : JdkVersion.parse(version), arch, outputDirectory, transport, output);
+  public JdkGetter(String version, Arch arch, File outputDirectory, int retries, ITransport transport, IOutput output) {
+    this(version == null || version.equals("latest") ? null : JdkVersion.parse(version), arch, outputDirectory, retries, transport, output);
   }
 
-  public JdkGetter(JdkVersion jdkVersion, Arch arch, File outputDirectory, ITransport transport, IOutput output) {
-
+  public JdkGetter(JdkVersion jdkVersion, Arch arch, File outputDirectory, int retries, ITransport transport, IOutput output) {
     this.jdkVersion = jdkVersion;
+    this.retries = retries;
     if (output != null) {
       this.output = output;
     } else {
@@ -67,25 +70,46 @@ public class JdkGetter {
 
     File jdkImage = transport.getImageFile(inProcessDirectory, arch, jdkVersion);
 
-    if (jdkImage.exists()) {
-      if (transport.validate(arch, jdkVersion, jdkImage, output)) {
-        output.info("We already have a valid copy of " + jdkImage);
-      } else {
-        output.info("Found existing invalid image");
-        FileUtils.forceDelete(jdkImage);
+    boolean valid = false;
+    int retr = retries;
+
+    while (!valid) {
+      boolean dontRetry = retr <= 0;
+      try {
+        if (jdkImage.exists()) {
+          if (transport.validate(arch, jdkVersion, jdkImage, output)) {
+            output.info("We already have a valid copy of " + jdkImage);
+          } else {
+            output.info("Found existing invalid image");
+            FileUtils.forceDelete(jdkImage);
+          }
+        }
+
+        if (!jdkImage.exists()) {
+          transport.downloadJdk(arch, jdkVersion, jdkImage, output);
+        }
+
+        if (!jdkImage.exists()) {
+          output.error("Cannot download jdk " + jdkVersion.shortBuild() + " for " + arch);
+          throw new IOException("Transport failed to download jdk image");
+        }
+
+        valid = transport.validate(arch, jdkVersion, jdkImage, output);
+      } catch (Exception e) {
+        if (dontRetry) {
+          Throwables.propagateIfPossible(e, IOException.class);
+          throw Throwables.propagate(e);
+        }
+        output.error("Error getting jdk: " + e.toString() + ", retrying..");
+        valid = false;
       }
-    }
 
-    if (!jdkImage.exists()) {
-      transport.downloadJdk(arch, jdkVersion, jdkImage, output);
+      if (!valid && dontRetry) {
+        break;
+      }
+      retr--;
     }
-
-    if (!jdkImage.exists()) {
-      output.error("Cannot download jdk " + jdkVersion.shortBuild() + " for " + arch);
-      throw new IOException("Transport failed to download jdk image");
-    }
-
-    if (!transport.validate(arch, jdkVersion, jdkImage, output)) {
+    if (!valid) {
       throw new IOException("Transport downloaded invalid image");
     }
 
@@ -128,14 +152,15 @@ public class JdkGetter {
     private String version;
     private Arch arch;
     private File outputDirectory;
+    private int retries = 0;
     private ITransport transport;
     private IOutput output;
 
     public JdkGetter build() {
       if (jdkVersion != null) {
-        return new JdkGetter(jdkVersion, arch, outputDirectory, transport, output);
+        return new JdkGetter(jdkVersion, arch, outputDirectory, retries, transport, output);
       }
-      return new JdkGetter(version, arch, outputDirectory, transport, output);
+      return new JdkGetter(version, arch, outputDirectory, retries, transport, output);
     }
 
     public Builder version(String version) {
@@ -155,6 +180,11 @@ public class JdkGetter {
 
     public Builder outputDirectory(File outputDirectory) {
       this.outputDirectory = outputDirectory;
+      return this;
+    }
+
+    public Builder retries(int retries) {
+      this.retries = retries;
       return this;
     }
 
