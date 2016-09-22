@@ -1,6 +1,7 @@
 package io.takari.jdkget;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,10 +9,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-import com.google.common.io.Files;
 
 import io.takari.jdkget.JdkGetter.JdkVersion;
 import io.takari.jdkget.JdkReleases.JdkBinary;
@@ -111,7 +113,7 @@ public class OracleWebsiteTransport implements ITransport {
 
       if (bin.getSha256() != null) {
         checks++;
-        String fileHash = Files.hash(jdkImage, Hashing.sha256()).toString();
+        String fileHash = hash(jdkImage, Hashing.sha256());
         if (!bin.getSha256().equals(fileHash)) {
           failed++;
           output.error("File sha256 `" + fileHash + "` differs from `" + bin.getSha256() + "`");
@@ -119,7 +121,7 @@ public class OracleWebsiteTransport implements ITransport {
       }
       if (bin.getMd5() != null) {
         checks++;
-        String fileHash = Files.hash(jdkImage, Hashing.md5()).toString();
+        String fileHash = hash(jdkImage, Hashing.md5());
         if (!bin.getMd5().equals(fileHash)) {
           failed++;
           output.error("File md5 `" + fileHash + "` differs from `" + bin.getMd5() + "`");
@@ -138,6 +140,18 @@ public class OracleWebsiteTransport implements ITransport {
       }
     }
     return true;
+  }
+
+  private static String hash(File f, HashFunction hf) throws IOException {
+    Hasher h = hf.newHasher();
+    try (InputStream in = new FileInputStream(f)) {
+      byte[] buf = new byte[8192];
+      int l;
+      while ((l = in.read(buf)) != -1) {
+        h.putBytes(buf, 0, l);
+      }
+    }
+    return h.hash().toString();
   }
 
 }
