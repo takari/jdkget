@@ -1,5 +1,7 @@
 package io.takari.jdkget.it;
 
+import static org.junit.Assert.assertFalse;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ public class LoadAllIT {
   
   @Test
   public void testDownloadAndUnpackAll() throws IOException {
+    
+    boolean[] failed = new boolean[]{ false };
     
     for (JdkRelease r : JdkReleases.get().getReleases()) {
 
@@ -45,6 +49,7 @@ public class LoadAllIT {
 
           System.out.println("  " + arch + " >> OK");
         } catch (Exception e) {
+          failed[0] = true;
           System.err.println("  " + arch + " >> FAIL");
           o.output();
           e.printStackTrace();
@@ -63,7 +68,8 @@ public class LoadAllIT {
       long occ = total - free;
       System.out.println("    MEM: " + (occ / 1024L / 1024L));
     }
-
+    
+    assertFalse(failed[0]);
   }
 
   private static class O implements IOutput {

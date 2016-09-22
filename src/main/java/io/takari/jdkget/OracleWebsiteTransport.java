@@ -35,13 +35,7 @@ public class OracleWebsiteTransport implements ITransport {
   }
 
   private JdkBinary binary(Arch arch, JdkVersion jdkVersion) throws IOException {
-    JdkRelease rel;
-    if (jdkVersion == null) {
-      rel = JdkReleases.get().latest();
-    } else {
-      rel = JdkReleases.get().select(jdkVersion);
-    }
-
+    JdkRelease rel = JdkReleases.get().select(jdkVersion);
     return rel.getBinary(arch);
   }
 

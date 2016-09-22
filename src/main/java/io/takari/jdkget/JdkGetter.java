@@ -67,8 +67,15 @@ public class JdkGetter {
     if (!inProcessDirectory.exists()) {
       inProcessDirectory.mkdirs();
     }
+    
+    JdkVersion theVersion;
+    if(jdkVersion != null) {
+      theVersion = JdkReleases.get().select(jdkVersion).getVersion();
+    } else {
+      theVersion = JdkReleases.get().latest().getVersion();
+    }
 
-    File jdkImage = transport.getImageFile(inProcessDirectory, arch, jdkVersion);
+    File jdkImage = transport.getImageFile(inProcessDirectory, arch, theVersion);
 
     boolean valid = false;
     int retr = retries;
@@ -77,7 +84,7 @@ public class JdkGetter {
       boolean dontRetry = retr <= 0;
       try {
         if (jdkImage.exists()) {
-          if (transport.validate(arch, jdkVersion, jdkImage, output)) {
+          if (transport.validate(arch, theVersion, jdkImage, output)) {
             output.info("We already have a valid copy of " + jdkImage);
           } else {
             output.info("Found existing invalid image");
@@ -86,15 +93,15 @@ public class JdkGetter {
         }
 
         if (!jdkImage.exists()) {
-          transport.downloadJdk(arch, jdkVersion, jdkImage, output);
+          transport.downloadJdk(arch, theVersion, jdkImage, output);
         }
 
         if (!jdkImage.exists()) {
-          output.error("Cannot download jdk " + jdkVersion.shortBuild() + " for " + arch);
+          output.error("Cannot download jdk " + theVersion.shortBuild() + " for " + arch);
           throw new IOException("Transport failed to download jdk image");
         }
 
-        valid = transport.validate(arch, jdkVersion, jdkImage, output);
+        valid = transport.validate(arch, theVersion, jdkImage, output);
       } catch (Exception e) {
         if (dontRetry) {
           Throwables.propagateIfPossible(e, IOException.class);
@@ -115,7 +122,7 @@ public class JdkGetter {
 
     IJdkExtractor extractor = getExtractor(jdkImage);
     output.info("Using extractor " + extractor.getClass().getSimpleName());
-    if (!extractor.extractJdk(jdkVersion, jdkImage, outputDirectory, inProcessDirectory, output)) {
+    if (!extractor.extractJdk(theVersion, jdkImage, outputDirectory, inProcessDirectory, output)) {
       throw new IOException("Failed to extract JDK from " + jdkImage);
     }
     FileUtils.deleteDirectory(inProcessDirectory);

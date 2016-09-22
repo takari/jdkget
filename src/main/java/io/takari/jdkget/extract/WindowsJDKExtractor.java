@@ -11,12 +11,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import org.apache.commons.compress.utils.IOUtils;
 
 import dorkbox.cabParser.CabException;
 import dorkbox.cabParser.CabParser;
@@ -28,11 +24,10 @@ import dorkbox.peParser.headers.resources.ResourceDirectoryEntry;
 import dorkbox.peParser.headers.resources.ResourceDirectoryHeader;
 import dorkbox.peParser.misc.DirEntry;
 import dorkbox.peParser.types.ImageDataDir;
-import io.takari.jdkget.IJdkExtractor;
 import io.takari.jdkget.IOutput;
 import io.takari.jdkget.JdkGetter.JdkVersion;
 
-public class WindowsJDKExtractor implements IJdkExtractor {
+public class WindowsJDKExtractor extends AbstractZipExtractor {
 
   private static final Set<String> SKIP_DIRS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
     "Icon", "Bitmap")));
@@ -64,41 +59,14 @@ public class WindowsJDKExtractor implements IJdkExtractor {
     output.mkdirs();
 
     try (ZipFile zip = new ZipFile(toolZip)) {
-
       Enumeration<? extends ZipEntry> en = zip.entries();
       while (en.hasMoreElements()) {
         ZipEntry e = en.nextElement();
 
-        boolean unpack200 = false;
-        String name = e.getName();
-
-        if (name.endsWith(".pack")) {
-          name = name.substring(0, name.length() - 5) + ".jar";
-          unpack200 = true;
-        }
-
-        File f = new File(output, name);
-        if (e.isDirectory()) {
-
-          f.mkdirs();
-
-        } else {
-
-          f.createNewFile();
-
-          if (unpack200) {
-            try (JarOutputStream out = new JarOutputStream(new FileOutputStream(f)); InputStream in = zip.getInputStream(e)) {
-              Pack200.newUnpacker().unpack(in, out);
-            }
-          } else {
-            try (OutputStream out = new FileOutputStream(f); InputStream in = zip.getInputStream(e)) {
-              IOUtils.copy(in, out);
-            }
-          }
-
+        try (InputStream ein = zip.getInputStream(e)) {
+          extractEntry(output, null, e, ein);
         }
       }
-
     }
   }
 
