@@ -74,7 +74,9 @@ public class JdkGetter {
     } else {
       theVersion = JdkReleases.get().latest().getVersion();
     }
-
+    
+    output.info("Getting jdk " + theVersion.shortBuild() + " for " + arch.toString().toLowerCase().replace("_", ""));
+    
     File jdkImage = transport.getImageFile(inProcessDirectory, arch, theVersion);
 
     boolean valid = false;
@@ -100,7 +102,8 @@ public class JdkGetter {
           output.error("Cannot download jdk " + theVersion.shortBuild() + " for " + arch);
           throw new IOException("Transport failed to download jdk image");
         }
-
+        
+        output.info("Validating downloaded image");
         valid = transport.validate(arch, theVersion, jdkImage, output);
       } catch (Exception e) {
         if (dontRetry) {
