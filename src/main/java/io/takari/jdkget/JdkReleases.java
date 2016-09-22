@@ -15,7 +15,7 @@ import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public class JdkReleases {
 
-  private static final String REMOTE_XML = "https://github.com/takari/jdkget/blob/master/jdkreleases.xml";
+  private static final String REMOTE_XML = "https://raw.githubusercontent.com/takari/jdkget/master/jdkreleases.xml";
   private static final long MAX_CACHE = 24L * 60L * 60L * 1000L; // cache it for a day
 
   private static final Object mutex = new Object();
