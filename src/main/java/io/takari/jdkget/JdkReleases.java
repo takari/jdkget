@@ -5,9 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.takari.jdkget.JdkGetter.JdkVersion;
 
@@ -57,6 +59,9 @@ public class JdkReleases {
   }
 
   public JdkRelease latest() {
+    return releases.stream().filter(r -> !r.isPsu()).findAny().get();
+  }
+  public JdkRelease latestInclPSU() {
     return releases.get(0);
   }
 
@@ -82,9 +87,6 @@ public class JdkReleases {
         break;
       }
       if (ver.buildNumber.isEmpty()) {
-        if (rel.isPsu()) {
-          continue;
-        }
         return rel;
       }
       if (o.buildNumber.equals(ver.buildNumber)) {
@@ -123,6 +125,10 @@ public class JdkReleases {
         throw new IllegalStateException("No binary for " + arch + " in " + version);
       }
       return b;
+    }
+    
+    public Set<Arch> getArchs() {
+      return Collections.unmodifiableSet(binaries.keySet());
     }
   }
 
