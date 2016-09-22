@@ -2186,7 +2186,9 @@
     <bin cls="win_32" arch="windows-i586-p" ext="exe">
       <size>74745240</size>
     </bin>
+    <!-- 
     <bin cls="win_64" arch="windows-x64" ext="exe"/>
+     -->
     <bin cls="sol_64" arch="solaris-x64" ext="tar.Z">
       <size>10940223</size>
     </bin>
