@@ -13,7 +13,7 @@ import io.takari.jdkget.JdkGetter.JdkVersion;
 public class JdkGetterTest {
 
   @Test
-  public void testRetries() throws IOException {
+  public void testRetries() throws IOException, InterruptedException {
 
     DumbTransport t = new DumbTransport(false);
     try {

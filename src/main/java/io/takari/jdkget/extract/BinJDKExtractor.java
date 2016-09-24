@@ -18,7 +18,7 @@ public class BinJDKExtractor extends AbstractZipExtractor {
 
   @Override
   public boolean extractJdk(JdkVersion version, File jdkImage, File outputDir, File workDir, IOutput output)
-    throws IOException {
+    throws IOException, InterruptedException {
 
     output.info("Extracting jdk image into " + outputDir);
 

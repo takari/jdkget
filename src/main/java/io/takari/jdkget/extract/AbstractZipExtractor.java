@@ -1,7 +1,6 @@
 package io.takari.jdkget.extract;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -11,13 +10,14 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Pack200;
 import java.util.zip.ZipEntry;
 
-import org.apache.commons.compress.utils.IOUtils;
-
 import io.takari.jdkget.IJdkExtractor;
+import io.takari.jdkget.Util;
 
 public abstract class AbstractZipExtractor implements IJdkExtractor {
 
-  protected void extractEntry(File outputDir, String versionPrefix, ZipEntry e, InputStream zip) throws IOException, FileNotFoundException {
+  protected void extractEntry(File outputDir, String versionPrefix, ZipEntry e, InputStream zip) throws IOException, InterruptedException {
+    Util.checkInterrupt();
+
     boolean unpack200 = false;
     String name = e.getName();
 
@@ -50,7 +50,7 @@ public abstract class AbstractZipExtractor implements IJdkExtractor {
         }
       } else {
         try (OutputStream out = new FileOutputStream(f)) {
-          IOUtils.copy(zip, out);
+          Util.copyInterruptibly(zip, out);
         }
       }
 

@@ -25,6 +25,7 @@ import dorkbox.peParser.headers.resources.ResourceDirectoryHeader;
 import dorkbox.peParser.misc.DirEntry;
 import dorkbox.peParser.types.ImageDataDir;
 import io.takari.jdkget.IOutput;
+import io.takari.jdkget.Util;
 import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public class WindowsJDKExtractor extends AbstractZipExtractor {
@@ -33,13 +34,14 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
     "Icon", "Bitmap")));
 
   @Override
-  public boolean extractJdk(JdkVersion jdkVersion, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException {
+  public boolean extractJdk(JdkVersion jdkVersion, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException, InterruptedException {
 
     // <= 1.7: PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
     // > 1.7:  PE EXE <- PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
 
     File tmptools = new File(workDir, "tools-" + System.currentTimeMillis() + ".zip");
     if (scanPE(jdkImage, tmptools, workDir)) {
+      Util.checkInterrupt();
       try {
         output.info("Extracting tools.zip from install executable into " + outputDir);
         extractTools(tmptools, outputDir);
@@ -55,7 +57,7 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
     return false;
   }
 
-  private void extractTools(File toolZip, File output) throws IOException {
+  private void extractTools(File toolZip, File output) throws IOException, InterruptedException {
     output.mkdirs();
 
     try (ZipFile zip = new ZipFile(toolZip)) {
@@ -70,7 +72,7 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
     }
   }
 
-  private boolean scanPE(File f, File outputDir, File workDir) throws IOException {
+  private boolean scanPE(File f, File outputDir, File workDir) throws IOException, InterruptedException {
     PE pe;
     try {
       pe = new PE(f.getCanonicalPath());
@@ -80,6 +82,7 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
 
     if (pe.isPE()) {
       for (ImageDataDir entry : pe.optionalHeader.tables) {
+        Util.checkInterrupt();
         if (entry.getType() == DirEntry.RESOURCE) {
 
           ResourceDirectoryHeader root = (ResourceDirectoryHeader) entry.data;
@@ -94,8 +97,9 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
     return false;
   }
 
-  private boolean scanPEDir(PE pe, ResourceDirectoryHeader dir, File outputDir, File workDir) throws IOException {
+  private boolean scanPEDir(PE pe, ResourceDirectoryHeader dir, File outputDir, File workDir) throws IOException, InterruptedException {
     for (ResourceDirectoryEntry entry : dir.entries) {
+      Util.checkInterrupt();
       if (entry.isDirectory) {
         if (SKIP_DIRS.contains(entry.NAME.get())) {
           continue;
@@ -112,7 +116,7 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
     return false;
   }
 
-  private boolean scanPEEntry(PE pe, ResourceDataEntry resourceDataEntry, File outputDir, File workDir) throws IOException {
+  private boolean scanPEEntry(PE pe, ResourceDataEntry resourceDataEntry, File outputDir, File workDir) throws IOException, InterruptedException {
 
     byte[] data = resourceDataEntry.getData(pe.fileBytes);
     if (scanCab(outputDir, data)) {
