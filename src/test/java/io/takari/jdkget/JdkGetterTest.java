@@ -8,12 +8,10 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import io.takari.jdkget.JdkGetter.JdkVersion;
-
 public class JdkGetterTest {
 
   @Test
-  public void testRetries() throws IOException, InterruptedException {
+  public void testRetries() throws Exception {
 
     DumbTransport t = new DumbTransport(false);
     try {
@@ -30,37 +28,33 @@ public class JdkGetterTest {
     }
   }
 
-  public static class DumbTransport implements ITransport {
-    private boolean valid;
-    private int tries;
+  @Test
+  public void testInterrupts() throws Exception {
 
-    public DumbTransport(boolean valid) {
-      this.valid = valid;
-      tries = 0;
+    JdkGetter b = JdkGetter.builder()
+      .output(new NullOutput())
+      .retries(3)
+      .transport(new SleepingTransport())
+      .arch(Arch.NIX_64)
+      .outputDirectory(new File(""))
+      .build();
+
+    Thread cur = Thread.currentThread();
+
+    new Thread() {
+      public void run() {
+        try {
+          Thread.sleep(300L);
+        } catch (InterruptedException e) {
+        }
+        cur.interrupt();
+      }
+    }.start();
+
+    try {
+      b.get();
+      fail();
+    } catch (InterruptedException e) {
     }
-
-    @Override
-    public void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
-      jdkImage.createNewFile();
-      tries++;
-    }
-
-    @Override
-    public boolean validate(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
-      return valid;
-    }
-
-    @Override
-    public File getImageFile(File parent, Arch arch, JdkVersion version) throws IOException {
-      return new File("image");
-    }
-  }
-
-  public static class NullOutput implements IOutput {
-    @Override
-    public void info(String message) {}
-
-    @Override
-    public void error(String message) {}
   }
 }
