@@ -15,6 +15,7 @@ import io.takari.jdkget.JdkReleases.JdkRelease;
 import io.takari.jdkget.extract.BinJDKExtractor;
 import io.takari.jdkget.extract.OsxJDKExtractor;
 import io.takari.jdkget.extract.TZJDKExtractor;
+import io.takari.jdkget.extract.TgzJDKExtractor;
 import io.takari.jdkget.extract.WindowsJDKExtractor;
 
 public class JdkGetter {
@@ -63,20 +64,20 @@ public class JdkGetter {
     return jdkVersion;
   }
 
-  public void get() throws IOException {
+  public void get() throws IOException, InterruptedException {
     if (!inProcessDirectory.exists()) {
       inProcessDirectory.mkdirs();
     }
-    
+
     JdkVersion theVersion;
-    if(jdkVersion != null) {
+    if (jdkVersion != null) {
       theVersion = JdkReleases.get().select(jdkVersion).getVersion();
     } else {
       theVersion = JdkReleases.get().latest().getVersion();
     }
-    
+
     output.info("Getting jdk " + theVersion.shortBuild() + " for " + arch.toString().toLowerCase().replace("_", ""));
-    
+
     File jdkImage = transport.getImageFile(inProcessDirectory, arch, theVersion);
 
     boolean valid = false;
@@ -102,9 +103,13 @@ public class JdkGetter {
           output.error("Cannot download jdk " + theVersion.shortBuild() + " for " + arch);
           throw new IOException("Transport failed to download jdk image");
         }
-        
+
         output.info("Validating downloaded image");
+
+        Util.checkInterrupt();
         valid = transport.validate(arch, theVersion, jdkImage, output);
+      } catch (InterruptedException e) {
+        throw e;
       } catch (Exception e) {
         if (dontRetry) {
           Throwables.propagateIfPossible(e, IOException.class);

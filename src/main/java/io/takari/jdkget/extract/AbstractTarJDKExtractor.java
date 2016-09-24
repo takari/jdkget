@@ -11,10 +11,10 @@ import java.nio.file.Path;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.utils.IOUtils;
 
 import io.takari.jdkget.IJdkExtractor;
 import io.takari.jdkget.IOutput;
+import io.takari.jdkget.Util;
 import io.takari.jdkget.JdkGetter.JdkVersion;
 import io.takari.jdkget.osx.PosixModes;
 
@@ -23,7 +23,7 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
   protected abstract InputStream wrap(InputStream in) throws IOException;
 
   @Override
-  public boolean extractJdk(JdkVersion version, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException {
+  public boolean extractJdk(JdkVersion version, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException, InterruptedException {
 
     output.info("Extracting jdk image into " + outputDir);
 
@@ -33,6 +33,8 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
       TarArchiveInputStream t = new TarArchiveInputStream(wrap(in));
       TarArchiveEntry te;
       while ((te = t.getNextTarEntry()) != null) {
+
+        Util.checkInterrupt();
 
         String entryName = te.getName();
 
@@ -58,7 +60,7 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
             }
           } else {
             try (OutputStream out = new FileOutputStream(f)) {
-              IOUtils.copy(t, out);
+              Util.copyInterruptibly(t, out);
             }
             if (File.pathSeparatorChar != ';') {
               int mode = (int) te.getMode() & 0000777;

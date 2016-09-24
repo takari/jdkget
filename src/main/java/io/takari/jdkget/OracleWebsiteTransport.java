@@ -10,8 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.commons.io.IOUtils;
-
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
@@ -57,7 +55,7 @@ public class OracleWebsiteTransport implements ITransport {
     return new File(parent, new File(bin.getPath()).getName());
   }
 
-  public void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
+  public void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException, InterruptedException {
 
     String url;
     boolean cookie = true;
@@ -78,19 +76,18 @@ public class OracleWebsiteTransport implements ITransport {
       con = new URL(url).openConnection();
       int code = 200;
       String msg = null;
-      
-      if(con instanceof HttpURLConnection) {
+
+      if (con instanceof HttpURLConnection) {
         HttpURLConnection httpCon = (HttpURLConnection) con;
         if (cookie) {
           httpCon.setRequestProperty("Cookie", OTN_COOKIE);
         }
-  
         code = httpCon.getResponseCode();
         msg = httpCon.getResponseMessage();
       }
       if (code == 200) {
         try (InputStream is = con.getInputStream(); OutputStream os = new FileOutputStream(jdkImage)) {
-          IOUtils.copy(is, os);
+          Util.copyInterruptibly(is, os);
         }
         return;
       } else if (code == 301 || code == 302) {
