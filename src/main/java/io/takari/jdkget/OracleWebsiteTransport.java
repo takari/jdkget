@@ -86,8 +86,17 @@ public class OracleWebsiteTransport implements ITransport {
         msg = httpCon.getResponseMessage();
       }
       if (code == 200) {
+        String contentLength = con.getHeaderField("Content-Length");
+        long totalHint = -1;
+        if (contentLength != null) {
+          try {
+            totalHint = Long.parseLong(contentLength);
+          } catch (NumberFormatException e) {
+          }
+        }
+        
         try (InputStream is = con.getInputStream(); OutputStream os = new FileOutputStream(jdkImage)) {
-          Util.copyInterruptibly(is, os);
+          Util.copyWithProgress(is, os, totalHint, output);
         }
         return;
       } else if (code == 301 || code == 302) {
