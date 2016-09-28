@@ -23,7 +23,7 @@ public class OracleWebsiteTransport implements ITransport {
   public static final String ORACLE_WEBSITE = "http://download.oracle.com/otn-pub";
 
   public static final String JDK_URL_FORMAT = "/java/jdk/%s/jdk-%s-%s.%s";
-  public static final String OTN_COOKIE = "gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie";
+  public static final String OTN_COOKIE = "oraclelicense=accept-securebackup-cookie";
 
   private String website;
 
