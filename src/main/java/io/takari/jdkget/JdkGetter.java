@@ -269,11 +269,17 @@ public class JdkGetter {
         String[] p = StringUtils.split(version, "_");
         String major = StringUtils.split(p[0], ".")[1];
 
-        String revisionWithBuildNumber = p[1];
-        String[] x = StringUtils.split(revisionWithBuildNumber, "-");
-        String revision = x[0];
-        String buildNumber = x.length > 1 ? "-" + x[1] : "";
-        return new JdkVersion(i(major), i(revision), buildNumber);
+        int revision = -1;
+        String buildNumber = "";
+        if (p.length > 1) {
+          String revisionWithBuildNumber = p[1];
+          String[] x = StringUtils.split(revisionWithBuildNumber, "-");
+          revision = i(x[0]);
+          if (x.length > 1) {
+            buildNumber = "-" + x[1];
+          }
+        }
+        return new JdkVersion(i(major), revision, buildNumber);
       }
 
       if (version.contains("u")) { // 8u91-b14
@@ -308,7 +314,7 @@ public class JdkGetter {
     }
 
     private static int i(String s) {
-      return Integer.parseInt(s);
+      return s == null ? -1 : Integer.parseInt(s);
     }
 
     int buildNum() {
