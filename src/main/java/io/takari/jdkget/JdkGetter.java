@@ -366,7 +366,8 @@ public class JdkGetter {
     options.addOption("o", true, "Output dir");
     options.addOption("v", true, "JDK Version");
     options.addOption("a", true, "Architecture");
-    options.addOption("l", false, "Lis versions");
+    options.addOption("l", false, "List versions");
+    options.addOption("u", true, "Alternate url to oracle.com/otn-pub");
     options.addOption("?", "help", false, "Help");
 
     CommandLine cli = new PosixParser().parse(options, args);
@@ -385,6 +386,7 @@ public class JdkGetter {
     String v = cli.getOptionValue("v");//"1.8.0_92-b14";
     String o = cli.getOptionValue("o");
     String a = cli.getOptionValue("a");
+    String u = cli.getOptionValue("u");
 
     if (cli.hasOption('?')) {
       usage();
@@ -413,13 +415,16 @@ public class JdkGetter {
     }
 
     File jdkDir = new File(o);
-    JdkGetter getter = JdkGetter.builder()
+    JdkGetter.Builder b = JdkGetter.builder()
       .version(v)
       .outputDirectory(jdkDir)
-      .arch(arch)
-      .build();
+      .arch(arch);
+    
+    if(u != null) {
+        b = b.transport(new OracleWebsiteTransport(u));
+    }
 
-    getter.get();
+    b.build().get();
   }
 
   private static Arch parseArch(String a) {
