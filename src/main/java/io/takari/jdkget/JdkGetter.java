@@ -269,11 +269,17 @@ public class JdkGetter {
         String[] p = StringUtils.split(version, "_");
         String major = StringUtils.split(p[0], ".")[1];
 
-        String revisionWithBuildNumber = p[1];
-        String[] x = StringUtils.split(revisionWithBuildNumber, "-");
-        String revision = x[0];
-        String buildNumber = x.length > 1 ? "-" + x[1] : "";
-        return new JdkVersion(i(major), i(revision), buildNumber);
+        int revision = -1;
+        String buildNumber = "";
+        if (p.length > 1) {
+          String revisionWithBuildNumber = p[1];
+          String[] x = StringUtils.split(revisionWithBuildNumber, "-");
+          revision = i(x[0]);
+          if (x.length > 1) {
+            buildNumber = "-" + x[1];
+          }
+        }
+        return new JdkVersion(i(major), revision, buildNumber);
       }
 
       if (version.contains("u")) { // 8u91-b14
@@ -308,7 +314,7 @@ public class JdkGetter {
     }
 
     private static int i(String s) {
-      return Integer.parseInt(s);
+      return s == null ? -1 : Integer.parseInt(s);
     }
 
     int buildNum() {
@@ -360,7 +366,8 @@ public class JdkGetter {
     options.addOption("o", true, "Output dir");
     options.addOption("v", true, "JDK Version");
     options.addOption("a", true, "Architecture");
-    options.addOption("l", false, "Lis versions");
+    options.addOption("l", false, "List versions");
+    options.addOption("u", true, "Alternate url to oracle.com/otn-pub");
     options.addOption("?", "help", false, "Help");
 
     CommandLine cli = new PosixParser().parse(options, args);
@@ -379,6 +386,7 @@ public class JdkGetter {
     String v = cli.getOptionValue("v");//"1.8.0_92-b14";
     String o = cli.getOptionValue("o");
     String a = cli.getOptionValue("a");
+    String u = cli.getOptionValue("u");
 
     if (cli.hasOption('?')) {
       usage();
@@ -407,13 +415,16 @@ public class JdkGetter {
     }
 
     File jdkDir = new File(o);
-    JdkGetter getter = JdkGetter.builder()
+    JdkGetter.Builder b = JdkGetter.builder()
       .version(v)
       .outputDirectory(jdkDir)
-      .arch(arch)
-      .build();
+      .arch(arch);
+    
+    if(u != null) {
+        b = b.transport(new OracleWebsiteTransport(u));
+    }
 
-    getter.get();
+    b.build().get();
   }
 
   private static Arch parseArch(String a) {
