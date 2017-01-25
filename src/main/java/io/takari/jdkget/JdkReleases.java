@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import javax.net.ssl.HttpsURLConnection;
 import io.takari.jdkget.JdkGetter.JdkVersion;
 
