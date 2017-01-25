@@ -35,14 +35,12 @@ public class JdkReleases {
   }
 
   private static final JdkReleases read() throws IOException {
-    File local = new File("jdkreleases.xml");
-    if (local.exists()) {
-      try (InputStream in = new FileInputStream(local)) {
-        return new JdkReleasesParser().parse(in);
-      }
-    }
     try (InputStream in = new URL(REMOTE_XML).openStream()) {
       return new JdkReleasesParser().parse(in);
+    }
+    catch (Exception ex) {
+        InputStream in = JdkReleases.class.getClassLoader().getResourceAsStream("jdkreleases.xml");
+        return new JdkReleasesParser().parse(in);
     }
   }
 
