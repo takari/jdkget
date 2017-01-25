@@ -10,13 +10,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import javax.net.ssl.HttpsURLConnection;
 import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public class JdkReleases {
 
   private static final String REMOTE_XML = "https://raw.githubusercontent.com/takari/jdkget/master/src/main/resources/jdkreleases.xml";
   private static final long MAX_CACHE = 24L * 60L * 60L * 1000L; // cache it for a day
+  private static final int TIMEOUT_VALUE = 10000;
 
   private static final Object mutex = new Object();
   private static volatile JdkReleases cached;
@@ -35,13 +38,24 @@ public class JdkReleases {
   }
 
   private static final JdkReleases read() throws IOException {
-    try (InputStream in = new URL(REMOTE_XML).openStream()) {
-      return new JdkReleasesParser().parse(in);
+    try {
+        HttpsURLConnection conn = (HttpsURLConnection) new URL(REMOTE_XML).openConnection();
+        conn.setAllowUserInteraction( false );
+        conn.setDoInput( true );
+        conn.setDoOutput( false );
+        conn.setUseCaches( true );
+        conn.setRequestMethod("GET");
+        conn.setConnectTimeout(TIMEOUT_VALUE);
+        conn.setReadTimeout(TIMEOUT_VALUE);
+        conn.connect();
+
+        return new JdkReleasesParser().parse(conn.getInputStream());
     }
     catch (Exception e) {
         System.err.println("Warning: Unable to retreive jdkreleases.xml from Github. Using default JDK list.");
         e.printStackTrace();
         InputStream in = JdkReleases.class.getClassLoader().getResourceAsStream("jdkreleases.xml");
+
         return new JdkReleasesParser().parse(in);
     }
   }
