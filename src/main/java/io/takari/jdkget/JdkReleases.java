@@ -15,7 +15,7 @@ import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public class JdkReleases {
 
-  private static final String REMOTE_XML = "https://raw.githubusercontent.com/takari/jdkget/master/jdkreleases.xml";
+  private static final String REMOTE_XML = "https://raw.githubusercontent.com/takari/jdkget/master/src/main/resources/jdkreleases.xml";
   private static final long MAX_CACHE = 24L * 60L * 60L * 1000L; // cache it for a day
 
   private static final Object mutex = new Object();
@@ -38,7 +38,9 @@ public class JdkReleases {
     try (InputStream in = new URL(REMOTE_XML).openStream()) {
       return new JdkReleasesParser().parse(in);
     }
-    catch (Exception ex) {
+    catch (Exception e) {
+        System.err.println("Warning: Unable to retreive jdkreleases.xml from Github. Using default JDK list.");
+        e.printStackTrace();
         InputStream in = JdkReleases.class.getClassLoader().getResourceAsStream("jdkreleases.xml");
         return new JdkReleasesParser().parse(in);
     }
