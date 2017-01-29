@@ -30,11 +30,16 @@ public class JdkReleasesParser {
     for (Element relElem : doc.getRootElement().getChildren("jdk")) {
       JdkVersion v = JdkVersion.parse(relElem.getAttributeValue("version"));
       boolean psu = Boolean.parseBoolean(relElem.getAttributeValue("psu"));
+      String url = getText(relElem, "url");
+
+      if (url == null) {
+        url = urlTemplate;
+      }
 
       JdkRelease rel = new JdkRelease(v, psu);
       releases.add(rel);
 
-      parseBin(rel, urlTemplate, relElem.getChildren("bin"));
+      parseBin(rel, url, relElem.getChildren("bin"));
     }
   }
 
@@ -47,16 +52,21 @@ public class JdkReleasesParser {
       String md5 = getText(binElem, "md5");
       String sha256 = getText(binElem, "sha256");
       String size = getText(binElem, "size");
+      String url = getText(binElem, "url");
       long sz = size == null ? -1 : Long.parseLong(size);
-      
+
       JdkVersion pathVersion;
-      if(binVersion != null) {
+      if (binVersion != null) {
         pathVersion = JdkVersion.parse(binVersion);
       } else {
         pathVersion = rel.getVersion();
       }
 
-      String path = path(urlTemplate, pathVersion, arch, ext);
+      if (url == null) {
+        url = urlTemplate;
+      }
+
+      String path = path(url, pathVersion, arch, ext);
       rel.addBinary(new JdkBinary(rel, cls, path, md5, sha256, sz));
     }
   }

@@ -3,7 +3,38 @@
   <defaults>
     <url>java/jdk/${version}${build}/jdk-${version}-${arch}.${ext}</url>
   </defaults>
-  <jdk version="8u112-b15" ext="tar.gz" psu="true">
+  <jdk version="8u121-b13">
+    <url>java/jdk/${version}${build}/e9e7ea248e2c4826b92b3f075a80e441/jdk-${version}-${arch}.${ext}</url>
+    <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
+      <sha256>f7d6cf1468c5e71ff097bec0189caccdd8e709a2a88a2c9849ad6200c0f33d4c</sha256>
+      <md5>9e0e84f36427ce258abfca35fbeb0c55</md5>
+    </bin>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>97e30203f1aef324a07c94d9d078f5d19bb6c50e638e4492722debca588210bc</sha256>
+      <md5>91972fb4e753f1b6674c2b952d974320</md5>
+    </bin>
+    <bin cls="win_32" arch="windows-i586" ext="exe">
+      <sha256>b57abcfbcdd42d15626775fb214811328f614a9a9e623d4904bbfd6bb2aac79f</sha256>
+      <md5>e20c7989978374f37534563948125dcb</md5>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>3e39f87441841a152cd327e95d09755fbe4b443316dac94a0494d68910b0994e</sha256>
+      <md5>63dafed9eb86fd7be52bc3fc09f5a571</md5>
+    </bin>
+    <bin cls="osx_64" arch="macosx-x64" ext="dmg">
+      <sha256>82ff2493cd4b9ebdaeb9135abaffc9a37b71d341b007a83f73aa6ff3df1b6a3a</sha256>
+      <md5>053951fc1fa47569ff42a99d147cfa07</md5>
+    </bin>
+    <bin cls="sol_64" arch="solaris-x64" ext="tar.gz">
+      <sha256>eb5d6f7d7804b3e8bc6dc46676a017368e402724f9a5747b6145e1e305c9ffa6</sha256>
+      <md5>f1d545c52b9c9a8caf1b98ee6b833609</md5>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>6c9ff068e2c6e0c0d41cc18b7ac5ec88a4e45285aa2eed3158287df017aecf81</sha256>
+      <md5>6e3087d03df90dfd35b87c6fc48c6bd7</md5>
+    </bin>
+  </jdk>
+  <jdk version="8u112-b15" psu="true">
     <bin cls="nix_32" arch="linux-i586" ext="tar.gz">
       <sha256>1e7c2fb80b339dd65f261d37e26ffd5f3136e5ff8778026ed227b47516df69a5</sha256>
       <md5>66ccf8e7c28969d56863034d030134bf</md5>
