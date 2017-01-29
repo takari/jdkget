@@ -163,7 +163,15 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.19.1</version>
+          <configuration>
+            <systemPropertyVariables>
+              <io.takari.jdkget.releaseList>builtin</io.takari.jdkget.releaseList>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+        <plugin>
           <artifactId>maven-failsafe-plugin</artifactId>
           <version>2.19.1</version>
           <configuration>
@@ -175,6 +183,7 @@
             <systemPropertyVariables>
               <java.awt.headless>true</java.awt.headless>
               <java.io.tmpdir>${java.io.tmpdir}</java.io.tmpdir>
+              <io.takari.jdkget.releaseList>builtin</io.takari.jdkget.releaseList>
             </systemPropertyVariables>
           </configuration>
         </plugin>

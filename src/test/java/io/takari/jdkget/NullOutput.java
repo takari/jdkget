@@ -6,4 +6,7 @@ public class NullOutput implements IOutput {
 
   @Override
   public void error(String message) {}
+
+  @Override
+  public void error(String message, Throwable t) {}
 }

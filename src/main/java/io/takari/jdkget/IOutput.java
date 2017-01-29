@@ -6,4 +6,6 @@ public interface IOutput {
   
   void error(String message);
   
+  void error(String message, Throwable t);
+  
 }

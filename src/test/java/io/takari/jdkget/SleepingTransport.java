@@ -20,7 +20,7 @@ public class SleepingTransport implements ITransport {
   }
 
   @Override
-  public File getImageFile(File parent, Arch arch, JdkVersion version) throws IOException {
+  public File getImageFile(File parent, Arch arch, JdkVersion version, IOutput output) throws IOException {
     return new File(parent, "image");
   }
 

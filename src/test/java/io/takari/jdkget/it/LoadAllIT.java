@@ -87,6 +87,11 @@ public class LoadAllIT {
       msgs.add("[ERROR] " + message);
     }
 
+    @Override
+    public void error(String message, Throwable t) {
+      error(message + ": " + t);
+    }
+
     public void output() {
       for (String msg : msgs) {
         System.err.println(msg);

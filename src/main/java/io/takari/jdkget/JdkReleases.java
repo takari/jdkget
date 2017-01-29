@@ -1,7 +1,5 @@
 package io.takari.jdkget;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -23,39 +21,47 @@ public class JdkReleases {
   private static volatile JdkReleases cached;
 
   public static JdkReleases get() throws IOException {
+    return get(StdOutput.INSTANCE);
+  }
+
+  public static JdkReleases get(IOutput output) throws IOException {
     JdkReleases c = cached;
     long t = System.currentTimeMillis() - MAX_CACHE;
     if (c == null || t > c.time) {
       synchronized (mutex) {
         if (c == null || t > c.time) {
-          cached = c = read();
+          cached = c = read(output);
         }
       }
     }
     return c;
   }
 
-  private static final JdkReleases read() throws IOException {
+  private static final JdkReleases read(IOutput output) throws IOException {
+    if ("builtin".equals(System.getProperty("io.takari.jdkget.releaseList"))) {
+      return readFromClasspath();
+    }
+
     try {
-        HttpsURLConnection conn = (HttpsURLConnection) new URL(REMOTE_XML).openConnection();
-        conn.setAllowUserInteraction( false );
-        conn.setDoInput( true );
-        conn.setDoOutput( false );
-        conn.setUseCaches( true );
-        conn.setRequestMethod("GET");
-        conn.setConnectTimeout(TIMEOUT_VALUE);
-        conn.setReadTimeout(TIMEOUT_VALUE);
-        conn.connect();
-
-        return new JdkReleasesParser().parse(conn.getInputStream());
+      HttpsURLConnection conn = (HttpsURLConnection) new URL(REMOTE_XML).openConnection();
+      conn.setAllowUserInteraction(false);
+      conn.setDoInput(true);
+      conn.setDoOutput(false);
+      conn.setUseCaches(true);
+      conn.setRequestMethod("GET");
+      conn.setConnectTimeout(TIMEOUT_VALUE);
+      conn.setReadTimeout(TIMEOUT_VALUE);
+      conn.connect();
+      return new JdkReleasesParser().parse(conn.getInputStream());
+    } catch (Exception e) {
+      output.error("Warning: Unable to retreive jdkreleases.xml from Github. Using built-in JDK list.");
+      return readFromClasspath();
     }
-    catch (Exception e) {
-        System.err.println("Warning: Unable to retreive jdkreleases.xml from Github. Using default JDK list.");
-        e.printStackTrace();
-        InputStream in = JdkReleases.class.getClassLoader().getResourceAsStream("jdkreleases.xml");
+  }
 
-        return new JdkReleasesParser().parse(in);
-    }
+  private static final JdkReleases readFromClasspath() throws IOException {
+    InputStream in = JdkReleases.class.getClassLoader().getResourceAsStream("jdkreleases.xml");
+    return new JdkReleasesParser().parse(in);
   }
 
   private List<JdkRelease> releases;
@@ -73,6 +79,7 @@ public class JdkReleases {
   public JdkRelease latest() {
     return releases.stream().filter(r -> !r.isPsu()).findAny().get();
   }
+
   public JdkRelease latestInclPSU() {
     return releases.get(0);
   }
@@ -133,12 +140,12 @@ public class JdkReleases {
 
     public JdkBinary getBinary(Arch arch) {
       JdkBinary b = binaries.get(arch);
-      if(b == null) {
+      if (b == null) {
         throw new IllegalStateException("No binary for " + arch + " in " + version);
       }
       return b;
     }
-    
+
     public Set<Arch> getArchs() {
       return Collections.unmodifiableSet(binaries.keySet());
     }
@@ -180,7 +187,7 @@ public class JdkReleases {
     public String getSha256() {
       return sha256;
     }
-    
+
     public long getSize() {
       return size;
     }

@@ -38,7 +38,7 @@ public class JdkGetter {
     if (output != null) {
       this.output = output;
     } else {
-      this.output = new StdOutput();
+      this.output = StdOutput.INSTANCE;
     }
 
     if (arch != null) {
@@ -71,14 +71,14 @@ public class JdkGetter {
 
     JdkVersion theVersion;
     if (jdkVersion != null) {
-      theVersion = JdkReleases.get().select(jdkVersion).getVersion();
+      theVersion = JdkReleases.get(output).select(jdkVersion).getVersion();
     } else {
-      theVersion = JdkReleases.get().latest().getVersion();
+      theVersion = JdkReleases.get(output).latest().getVersion();
     }
 
     output.info("Getting jdk " + theVersion.shortBuild() + " for " + arch.toString().toLowerCase().replace("_", ""));
 
-    File jdkImage = transport.getImageFile(inProcessDirectory, arch, theVersion);
+    File jdkImage = transport.getImageFile(inProcessDirectory, arch, theVersion, output);
 
     boolean valid = false;
     int retr = retries;

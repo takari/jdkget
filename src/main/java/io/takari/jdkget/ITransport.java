@@ -11,6 +11,6 @@ public interface ITransport {
 
   boolean validate(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException, InterruptedException;
 
-  File getImageFile(File parent, Arch arch, JdkVersion version) throws IOException;
+  File getImageFile(File parent, Arch arch, JdkVersion version, IOutput output) throws IOException;
   
 }

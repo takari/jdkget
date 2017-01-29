@@ -35,8 +35,8 @@ public class OracleWebsiteTransport implements ITransport {
     this.website = website;
   }
 
-  private JdkBinary binary(Arch arch, JdkVersion jdkVersion) throws IOException {
-    JdkRelease rel = JdkReleases.get().select(jdkVersion);
+  private JdkBinary binary(Arch arch, JdkVersion jdkVersion, IOutput output) throws IOException {
+    JdkRelease rel = JdkReleases.get(output).select(jdkVersion);
     return rel.getBinary(arch);
   }
 
@@ -47,11 +47,11 @@ public class OracleWebsiteTransport implements ITransport {
   }
 
   @Override
-  public File getImageFile(File parent, Arch arch, JdkVersion jdkVersion) throws IOException {
+  public File getImageFile(File parent, Arch arch, JdkVersion jdkVersion, IOutput output) throws IOException {
     if (isApple(arch, jdkVersion)) {
       return new File(parent, "javaforosx.dmg");
     }
-    JdkBinary bin = binary(arch, jdkVersion);
+    JdkBinary bin = binary(arch, jdkVersion, output);
     return new File(parent, new File(bin.getPath()).getName());
   }
 
@@ -64,7 +64,7 @@ public class OracleWebsiteTransport implements ITransport {
       url = "http://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg";
       cookie = false;
     } else {
-      JdkBinary bin = binary(arch, jdkVersion);
+      JdkBinary bin = binary(arch, jdkVersion, output);
       url = website + "/" + bin.getPath();
     }
     output.info("Downloading " + url);
@@ -115,7 +115,7 @@ public class OracleWebsiteTransport implements ITransport {
     if (isApple(arch, jdkVersion)) {
       return jdkImage.length() == 66724162L;
     } else {
-      JdkBinary bin = binary(arch, jdkVersion);
+      JdkBinary bin = binary(arch, jdkVersion, output);
 
       int checks = 0;
       int failed = 0;
