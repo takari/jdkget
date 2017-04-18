@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.takari</groupId>
     <artifactId>takari</artifactId>
-    <version>21</version>
+    <version>25</version>
   </parent>
   <packaging>takari-jar</packaging>
   <artifactId>jdkget</artifactId>
