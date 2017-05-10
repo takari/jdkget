@@ -21,6 +21,7 @@ import io.takari.jdkget.extract.WindowsJDKExtractor;
 public class JdkGetter {
 
   private final JdkVersion jdkVersion;
+  private final boolean unrestrictedJCE;
   private final Arch arch;
   private final File outputDirectory;
   private final File inProcessDirectory;
@@ -29,11 +30,16 @@ public class JdkGetter {
   private IOutput output;
 
   public JdkGetter(String version, Arch arch, File outputDirectory, int retries, ITransport transport, IOutput output) {
-    this(version == null || version.equals("latest") ? null : JdkVersion.parse(version), arch, outputDirectory, retries, transport, output);
+    this(version, false, arch, outputDirectory, retries, transport, output);
   }
 
-  public JdkGetter(JdkVersion jdkVersion, Arch arch, File outputDirectory, int retries, ITransport transport, IOutput output) {
+  public JdkGetter(String version, boolean unrestrictedJCE, Arch arch, File outputDirectory, int retries, ITransport transport, IOutput output) {
+    this(version == null || version.equals("latest") ? null : JdkVersion.parse(version), unrestrictedJCE, arch, outputDirectory, retries, transport, output);
+  }
+
+  public JdkGetter(JdkVersion jdkVersion, boolean unrestrictedJCE, Arch arch, File outputDirectory, int retries, ITransport transport, IOutput output) {
     this.jdkVersion = jdkVersion;
+    this.unrestrictedJCE = unrestrictedJCE;
     this.retries = retries;
     if (output != null) {
       this.output = output;
@@ -79,6 +85,10 @@ public class JdkGetter {
     output.info("Getting jdk " + theVersion.shortBuild() + " for " + arch.toString().toLowerCase().replace("_", ""));
 
     File jdkImage = transport.getImageFile(inProcessDirectory, arch, theVersion, output);
+    File jceImage = null;
+    if (unrestrictedJCE) {
+      jceImage = new File(jdkImage.getParentFile(), jdkImage.getName() + "-jce.zip");
+    }
 
     boolean valid = false;
     int retr = retries;
@@ -133,6 +143,12 @@ public class JdkGetter {
     if (!extractor.extractJdk(theVersion, jdkImage, outputDirectory, inProcessDirectory, output)) {
       throw new IOException("Failed to extract JDK from " + jdkImage);
     }
+
+    if (jceImage != null) {
+      transport.downloadJce(theVersion, jceImage, output);
+      new JCEExtractor().extractJCE(jceImage, outputDirectory, inProcessDirectory, output);
+    }
+
     FileUtils.deleteDirectory(inProcessDirectory);
   }
 
@@ -162,6 +178,7 @@ public class JdkGetter {
 
   public static class Builder {
     private JdkVersion jdkVersion;
+    private boolean unrestrictedJCE;
     private String version;
     private Arch arch;
     private File outputDirectory;
@@ -171,9 +188,9 @@ public class JdkGetter {
 
     public JdkGetter build() {
       if (jdkVersion != null) {
-        return new JdkGetter(jdkVersion, arch, outputDirectory, retries, transport, output);
+        return new JdkGetter(jdkVersion, unrestrictedJCE, arch, outputDirectory, retries, transport, output);
       }
-      return new JdkGetter(version, arch, outputDirectory, retries, transport, output);
+      return new JdkGetter(version, unrestrictedJCE, arch, outputDirectory, retries, transport, output);
     }
 
     public Builder version(String version) {
@@ -183,6 +200,11 @@ public class JdkGetter {
 
     public Builder version(JdkVersion version) {
       this.jdkVersion = version;
+      return this;
+    }
+
+    public Builder unrestrictedJCE() {
+      this.unrestrictedJCE = true;
       return this;
     }
 
@@ -419,9 +441,9 @@ public class JdkGetter {
       .version(v)
       .outputDirectory(jdkDir)
       .arch(arch);
-    
-    if(u != null) {
-        b = b.transport(new OracleWebsiteTransport(u));
+
+    if (u != null) {
+      b = b.transport(new OracleWebsiteTransport(u));
     }
 
     b.build().get();

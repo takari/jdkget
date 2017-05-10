@@ -9,8 +9,12 @@ public interface ITransport {
 
   void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException, InterruptedException;
 
+  default void downloadJce(JdkVersion jdkVersion, File jceImage, IOutput output) throws IOException, InterruptedException {
+    throw new UnsupportedOperationException();
+  }
+
   boolean validate(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException, InterruptedException;
 
   File getImageFile(File parent, Arch arch, JdkVersion version, IOutput output) throws IOException;
-  
+
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -19,12 +20,12 @@ import io.takari.jdkget.JdkGetter.JdkVersion;
 import io.takari.jdkget.JdkReleases.JdkRelease;
 
 public class LoadAllIT {
-  
+
   @Test
   public void testDownloadAndUnpackAll() throws IOException {
-    
-    boolean[] failed = new boolean[]{ false };
-    
+
+    boolean[] failed = new boolean[] {false};
+
     for (JdkRelease r : JdkReleases.get().getReleases()) {
 
       JdkVersion v = r.getVersion();
@@ -42,16 +43,20 @@ public class LoadAllIT {
 
           JdkGetter.builder()
             .version(r.getVersion())
+            .unrestrictedJCE()
             .arch(arch)
             .outputDirectory(jdktmp)
             .output(o)
             .build().get();
 
           System.out.println("  " + arch + " >> OK");
+          try (PrintStream out = new PrintStream(new File("target/tmp/" + v.toString() + "_" + arch + ".log"))) {
+            o.output(out);
+          }
         } catch (Exception e) {
           failed[0] = true;
           System.err.println("  " + arch + " >> FAIL");
-          o.output();
+          o.output(System.err);
           e.printStackTrace();
         }
         try {
@@ -68,7 +73,7 @@ public class LoadAllIT {
       long occ = total - free;
       System.out.println("    MEM: " + (occ / 1024L / 1024L));
     }
-    
+
     assertFalse(failed[0]);
   }
 
@@ -92,9 +97,9 @@ public class LoadAllIT {
       error(message + ": " + t);
     }
 
-    public void output() {
+    public void output(PrintStream out) {
       for (String msg : msgs) {
-        System.err.println(msg);
+        out.println(msg);
       }
     }
 

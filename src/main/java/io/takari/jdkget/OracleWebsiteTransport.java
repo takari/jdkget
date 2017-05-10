@@ -15,6 +15,7 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 
 import io.takari.jdkget.JdkGetter.JdkVersion;
+import io.takari.jdkget.JdkReleases.JCE;
 import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;
 
@@ -67,6 +68,21 @@ public class OracleWebsiteTransport implements ITransport {
       JdkBinary bin = binary(arch, jdkVersion, output);
       url = website + "/" + bin.getPath();
     }
+
+    doDownload(url, cookie, jdkImage, output);
+  }
+
+  @Override
+  public void downloadJce(JdkVersion jdkVersion, File jceImage, IOutput output) throws IOException, InterruptedException {
+    JCE jce = JdkReleases.get(output).getJCE(jdkVersion);
+    if (jce == null) {
+      throw new IllegalStateException("No JCE for JDK " + jdkVersion);
+    }
+
+    doDownload(website + "/" + jce.getPath(), true, jceImage, output);
+  }
+
+  private void doDownload(String url, boolean cookie, File target, IOutput output) throws IOException, InterruptedException {
     output.info("Downloading " + url);
 
     // Oracle does some redirects so we have to follow a couple before we win the JDK prize
@@ -94,8 +110,8 @@ public class OracleWebsiteTransport implements ITransport {
           } catch (NumberFormatException e) {
           }
         }
-        
-        try (InputStream is = con.getInputStream(); OutputStream os = new FileOutputStream(jdkImage)) {
+
+        try (InputStream is = con.getInputStream(); OutputStream os = new FileOutputStream(target)) {
           Util.copyWithProgress(is, os, totalHint, output);
         }
         return;

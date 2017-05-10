@@ -10,6 +10,7 @@ import de.pdark.decentxml.Element;
 import de.pdark.decentxml.XMLIOSource;
 import de.pdark.decentxml.XMLParser;
 import io.takari.jdkget.JdkGetter.JdkVersion;
+import io.takari.jdkget.JdkReleases.JCE;
 import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;
 
@@ -18,14 +19,21 @@ public class JdkReleasesParser {
   public JdkReleases parse(InputStream in) throws IOException {
     Document doc = new XMLParser().parse(new XMLIOSource(in));
     List<JdkRelease> releases = new ArrayList<>();
-    parseDoc(doc, releases);
+    List<JCE> jces = new ArrayList<>();
+    parseDoc(doc, releases, jces);
     releases.sort((r1, r2) -> r2.getVersion().compareTo(r1.getVersion()));
-    return new JdkReleases(releases);
+    return new JdkReleases(releases, jces);
   }
 
-  private void parseDoc(Document doc, List<JdkRelease> releases) {
+  private void parseDoc(Document doc, List<JdkRelease> releases, List<JCE> jces) {
     Element defElem = doc.getRootElement().getChild("defaults");
     String urlTemplate = defElem.getChild("url").getText();
+
+    for (Element jceElem : doc.getRootElement().getChildren("jce")) {
+      String ver = jceElem.getAttributeValue("version");
+      String url = getText(jceElem, "url");
+      jces.add(new JCE(Integer.parseInt(ver), url));
+    }
 
     for (Element relElem : doc.getRootElement().getChildren("jdk")) {
       JdkVersion v = JdkVersion.parse(relElem.getAttributeValue("version"));

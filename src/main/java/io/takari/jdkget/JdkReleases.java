@@ -65,11 +65,24 @@ public class JdkReleases {
   }
 
   private List<JdkRelease> releases;
+  private List<JCE> jces;
   private long time;
 
-  JdkReleases(List<JdkRelease> releases) {
+  JdkReleases(List<JdkRelease> releases, List<JCE> jces) {
     this.releases = releases;
+    this.jces = jces;
     time = System.currentTimeMillis();
+  }
+
+  public JCE getJCE(JdkVersion ver) {
+    if (jces != null) {
+      for (JCE jce : jces) {
+        if (jce.getMajorVersion() == ver.major) {
+          return jce;
+        }
+      }
+    }
+    return null;
   }
 
   public List<JdkRelease> getReleases() {
@@ -113,6 +126,25 @@ public class JdkReleases {
       }
     }
     throw new IllegalStateException("Unable to find jdk release for version " + ver);
+  }
+
+  public static class JCE {
+    private final int majorVersion;
+    private final String path;
+
+    public JCE(int majorVersion, String path) {
+      this.majorVersion = majorVersion;
+      this.path = path;
+    }
+
+    public int getMajorVersion() {
+      return majorVersion;
+    }
+
+    public String getPath() {
+      return path;
+    }
+
   }
 
   public static class JdkRelease {
