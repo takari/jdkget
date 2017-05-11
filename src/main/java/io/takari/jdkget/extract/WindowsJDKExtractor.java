@@ -24,9 +24,8 @@ import dorkbox.peParser.headers.resources.ResourceDirectoryEntry;
 import dorkbox.peParser.headers.resources.ResourceDirectoryHeader;
 import dorkbox.peParser.misc.DirEntry;
 import dorkbox.peParser.types.ImageDataDir;
-import io.takari.jdkget.IOutput;
+import io.takari.jdkget.JdkContext;
 import io.takari.jdkget.Util;
-import io.takari.jdkget.JdkGetter.JdkVersion;
 
 public class WindowsJDKExtractor extends AbstractZipExtractor {
 
@@ -34,7 +33,7 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
     "Icon", "Bitmap")));
 
   @Override
-  public boolean extractJdk(JdkVersion jdkVersion, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException, InterruptedException {
+  public boolean extractJdk(JdkContext context, File jdkImage, File outputDir, File workDir) throws IOException, InterruptedException {
 
     // <= 1.7: PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
     // > 1.7:  PE EXE <- PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
@@ -43,7 +42,7 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
     if (scanPE(jdkImage, tmptools, workDir)) {
       Util.checkInterrupt();
       try {
-        output.info("Extracting tools.zip from install executable into " + outputDir);
+        context.getOutput().info("Extracting tools.zip from install executable into " + outputDir);
         extractTools(tmptools, outputDir);
         return true;
       } finally {
@@ -52,7 +51,7 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
         }
       }
     } else {
-      output.error("This doesn't seem to be a PE executable");
+      context.getOutput().error("This doesn't seem to be a PE executable");
     }
     return false;
   }

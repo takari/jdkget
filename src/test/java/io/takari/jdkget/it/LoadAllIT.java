@@ -16,8 +16,8 @@ import io.takari.jdkget.Arch;
 import io.takari.jdkget.IOutput;
 import io.takari.jdkget.JdkGetter;
 import io.takari.jdkget.JdkReleases;
-import io.takari.jdkget.JdkGetter.JdkVersion;
 import io.takari.jdkget.JdkReleases.JdkRelease;
+import io.takari.jdkget.JdkVersion;
 
 public class LoadAllIT {
 

@@ -13,9 +13,8 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 
 import io.takari.jdkget.IJdkExtractor;
-import io.takari.jdkget.IOutput;
+import io.takari.jdkget.JdkContext;
 import io.takari.jdkget.Util;
-import io.takari.jdkget.JdkGetter.JdkVersion;
 import io.takari.jdkget.osx.PosixModes;
 
 public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
@@ -23,11 +22,11 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
   protected abstract InputStream wrap(InputStream in) throws IOException;
 
   @Override
-  public boolean extractJdk(JdkVersion version, File jdkImage, File outputDir, File workDir, IOutput output) throws IOException, InterruptedException {
+  public boolean extractJdk(JdkContext context, File jdkImage, File outputDir, File workDir) throws IOException, InterruptedException {
 
-    output.info("Extracting jdk image into " + outputDir);
+    context.getOutput().info("Extracting jdk image into " + outputDir);
 
-    String versionPrefix = "jdk" + version.longVersion();
+    String versionPrefix = "jdk" + context.getVersion().longVersion();
 
     try (InputStream in = new FileInputStream(jdkImage)) {
       TarArchiveInputStream t = new TarArchiveInputStream(wrap(in));
@@ -53,7 +52,7 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
 
           if (te.isSymbolicLink()) {
             if (File.pathSeparatorChar == ';') {
-              output.info("Not creating symbolic link " + entryName + " -> " + te.getLinkName());
+              context.getOutput().info("Not creating symbolic link " + entryName + " -> " + te.getLinkName());
             } else {
               Path p = f.toPath();
               Files.createSymbolicLink(p, p.getParent().resolve(te.getLinkName()));

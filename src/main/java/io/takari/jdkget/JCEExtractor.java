@@ -13,19 +13,19 @@ import org.apache.commons.io.FileUtils;
 
 public class JCEExtractor {
 
-  public void extractJCE(File jceImage, File outputDirectory, File inProcessDirectory, IOutput output) throws IOException, InterruptedException {
-    File secDir = new File(outputDirectory, "jre/lib/security");
+  public void extractJCE(JdkContext context, File jceImage, File outputDir, File workDir) throws IOException, InterruptedException {
+    File secDir = new File(outputDir, "jre/lib/security");
     if (!secDir.exists()) {
       // osx
-      secDir = new File(outputDirectory, "Contents/Home/jre/lib/security");
+      secDir = new File(outputDir, "Contents/Home/jre/lib/security");
     }
 
     if (!secDir.exists()) {
       throw new IllegalStateException("Cannot find JCE target dir");
     }
 
-    output.info("Installing unrestricted JCE policy files");
-    unzip(jceImage, secDir, output);
+    context.getOutput().info("Installing unrestricted JCE policy files");
+    unzip(jceImage, secDir, context.getOutput());
   }
 
   private void unzip(File file, File dir, IOutput output) throws IOException, InterruptedException {

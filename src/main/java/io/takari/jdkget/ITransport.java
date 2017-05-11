@@ -3,18 +3,16 @@ package io.takari.jdkget;
 import java.io.File;
 import java.io.IOException;
 
-import io.takari.jdkget.JdkGetter.JdkVersion;
-
 public interface ITransport {
 
-  void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException, InterruptedException;
+  void downloadJdk(JdkContext context, File jdkImage) throws IOException, InterruptedException;
 
-  default void downloadJce(JdkVersion jdkVersion, File jceImage, IOutput output) throws IOException, InterruptedException {
+  default void downloadJce(JdkContext context, File jceImage) throws IOException, InterruptedException {
     throw new UnsupportedOperationException();
   }
 
-  boolean validate(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException, InterruptedException;
+  boolean validate(JdkContext context, File jdkImage) throws IOException, InterruptedException;
 
-  File getImageFile(File parent, Arch arch, JdkVersion version, IOutput output) throws IOException;
+  File getImageFile(JdkContext context, File parent) throws IOException;
 
 }

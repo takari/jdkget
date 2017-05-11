@@ -2,6 +2,7 @@ package io.takari.jdkget;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,9 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
-import io.takari.jdkget.JdkGetter.JdkVersion;
 
-public class JdkReleases {
+public class JdkReleases implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   private static final String REMOTE_XML = "https://raw.githubusercontent.com/takari/jdkget/master/src/main/resources/jdkreleases.xml";
   private static final long MAX_CACHE = 24L * 60L * 60L * 1000L; // cache it for a day
@@ -19,6 +21,7 @@ public class JdkReleases {
 
   private static final Object mutex = new Object();
   private static volatile JdkReleases cached;
+  private static volatile long time;
 
   public static JdkReleases get() throws IOException {
     return get(StdOutput.INSTANCE);
@@ -27,17 +30,18 @@ public class JdkReleases {
   public static JdkReleases get(IOutput output) throws IOException {
     JdkReleases c = cached;
     long t = System.currentTimeMillis() - MAX_CACHE;
-    if (c == null || t > c.time) {
+    if (c == null || t > time) {
       synchronized (mutex) {
-        if (c == null || t > c.time) {
-          cached = c = read(output);
+        if (c == null || t > time) {
+          cached = c = readCached(output);
+          time = System.currentTimeMillis();
         }
       }
     }
     return c;
   }
 
-  private static final JdkReleases read(IOutput output) throws IOException {
+  private static final JdkReleases readCached(IOutput output) throws IOException {
     if ("builtin".equals(System.getProperty("io.takari.jdkget.releaseList"))) {
       return readFromClasspath();
     }
@@ -52,7 +56,7 @@ public class JdkReleases {
       conn.setConnectTimeout(TIMEOUT_VALUE);
       conn.setReadTimeout(TIMEOUT_VALUE);
       conn.connect();
-      return new JdkReleasesParser().parse(conn.getInputStream());
+      return read(conn.getInputStream());
     } catch (Exception e) {
       output.error("Warning: Unable to retreive jdkreleases.xml from Github. Using built-in JDK list.");
       return readFromClasspath();
@@ -60,18 +64,21 @@ public class JdkReleases {
   }
 
   private static final JdkReleases readFromClasspath() throws IOException {
-    InputStream in = JdkReleases.class.getClassLoader().getResourceAsStream("jdkreleases.xml");
-    return new JdkReleasesParser().parse(in);
+    try(InputStream in = JdkReleases.class.getClassLoader().getResourceAsStream("jdkreleases.xml")) {
+      return new JdkReleasesParser().parse(in);
+    }
+  }
+
+  public static JdkReleases read(InputStream inputStream) throws IOException {
+    return new JdkReleasesParser().parse(inputStream);
   }
 
   private List<JdkRelease> releases;
   private List<JCE> jces;
-  private long time;
 
   JdkReleases(List<JdkRelease> releases, List<JCE> jces) {
     this.releases = releases;
     this.jces = jces;
-    time = System.currentTimeMillis();
   }
 
   public JCE getJCE(JdkVersion ver) {
@@ -128,7 +135,9 @@ public class JdkReleases {
     throw new IllegalStateException("Unable to find jdk release for version " + ver);
   }
 
-  public static class JCE {
+  public static class JCE implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final int majorVersion;
     private final String path;
 
@@ -147,7 +156,9 @@ public class JdkReleases {
 
   }
 
-  public static class JdkRelease {
+  public static class JdkRelease implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final JdkVersion version;
     private final boolean psu;
     private final Map<Arch, JdkBinary> binaries;
@@ -183,7 +194,9 @@ public class JdkReleases {
     }
   }
 
-  public static class JdkBinary {
+  public static class JdkBinary implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final JdkRelease release;
     private final Arch arch;
     private final String path;

@@ -9,7 +9,6 @@ import de.pdark.decentxml.Document;
 import de.pdark.decentxml.Element;
 import de.pdark.decentxml.XMLIOSource;
 import de.pdark.decentxml.XMLParser;
-import io.takari.jdkget.JdkGetter.JdkVersion;
 import io.takari.jdkget.JdkReleases.JCE;
 import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;

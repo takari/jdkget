@@ -14,7 +14,6 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 
-import io.takari.jdkget.JdkGetter.JdkVersion;
 import io.takari.jdkget.JdkReleases.JCE;
 import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;
@@ -36,50 +35,51 @@ public class OracleWebsiteTransport implements ITransport {
     this.website = website;
   }
 
-  private JdkBinary binary(Arch arch, JdkVersion jdkVersion, IOutput output) throws IOException {
-    JdkRelease rel = JdkReleases.get(output).select(jdkVersion);
-    return rel.getBinary(arch);
+  private JdkBinary binary(JdkContext context) throws IOException {
+    JdkRelease rel = context.getReleases().select(context.getVersion());
+    return rel.getBinary(context.getArch());
   }
 
-  private boolean isApple(Arch arch, JdkVersion jdkVersion) {
+  private boolean isApple(JdkContext context) {
     // osx jdk6 image really wants to be installed globally and would not work in a separate dir
     //return arch == Arch.OSX_64 && jdkVersion != null && jdkVersion.major == 6 && website.equals(ORACLE_WEBSITE);
     return false;
   }
 
   @Override
-  public File getImageFile(File parent, Arch arch, JdkVersion jdkVersion, IOutput output) throws IOException {
-    if (isApple(arch, jdkVersion)) {
+  public File getImageFile(JdkContext context, File parent) throws IOException {
+    if (isApple(context)) {
       return new File(parent, "javaforosx.dmg");
     }
-    JdkBinary bin = binary(arch, jdkVersion, output);
+    JdkBinary bin = binary(context);
     return new File(parent, new File(bin.getPath()).getName());
   }
 
-  public void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException, InterruptedException {
+  @Override
+  public void downloadJdk(JdkContext context, File jdkImage) throws IOException, InterruptedException {
 
     String url;
     boolean cookie = true;
-    if (isApple(arch, jdkVersion)) {
+    if (isApple(context)) {
       // for osx, jdk6* is only available from here
       url = "http://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg";
       cookie = false;
     } else {
-      JdkBinary bin = binary(arch, jdkVersion, output);
+      JdkBinary bin = binary(context);
       url = website + "/" + bin.getPath();
     }
 
-    doDownload(url, cookie, jdkImage, output);
+    doDownload(url, cookie, jdkImage, context.getOutput());
   }
 
   @Override
-  public void downloadJce(JdkVersion jdkVersion, File jceImage, IOutput output) throws IOException, InterruptedException {
-    JCE jce = JdkReleases.get(output).getJCE(jdkVersion);
+  public void downloadJce(JdkContext context, File jceImage) throws IOException, InterruptedException {
+    JCE jce = context.getReleases().getJCE(context.getVersion());
     if (jce == null) {
-      throw new IllegalStateException("No JCE for JDK " + jdkVersion);
+      throw new IllegalStateException("No JCE for JDK " + context.getVersion());
     }
 
-    doDownload(website + "/" + jce.getPath(), true, jceImage, output);
+    doDownload(website + "/" + jce.getPath(), true, jceImage, context.getOutput());
   }
 
   private void doDownload(String url, boolean cookie, File target, IOutput output) throws IOException, InterruptedException {
@@ -127,11 +127,13 @@ public class OracleWebsiteTransport implements ITransport {
   }
 
   @Override
-  public boolean validate(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException {
-    if (isApple(arch, jdkVersion)) {
+  public boolean validate(JdkContext context, File jdkImage) throws IOException, InterruptedException {
+    if (isApple(context)) {
       return jdkImage.length() == 66724162L;
     } else {
-      JdkBinary bin = binary(arch, jdkVersion, output);
+      JdkBinary bin = binary(context);
+
+      IOutput output = context.getOutput();
 
       int checks = 0;
       int failed = 0;

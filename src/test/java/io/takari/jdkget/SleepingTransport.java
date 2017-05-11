@@ -3,24 +3,22 @@ package io.takari.jdkget;
 import java.io.File;
 import java.io.IOException;
 
-import io.takari.jdkget.JdkGetter.JdkVersion;
-
 public class SleepingTransport implements ITransport {
 
   @Override
-  public void downloadJdk(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException, InterruptedException {
+  public void downloadJdk(JdkContext context, File jdkImage) throws IOException, InterruptedException {
     synchronized (this) {
       this.wait();
     }
   }
 
   @Override
-  public boolean validate(Arch arch, JdkVersion jdkVersion, File jdkImage, IOutput output) throws IOException, InterruptedException {
+  public boolean validate(JdkContext context, File jdkImage) throws IOException, InterruptedException {
     return true;
   }
 
   @Override
-  public File getImageFile(File parent, Arch arch, JdkVersion version, IOutput output) throws IOException {
+  public File getImageFile(JdkContext context, File parent) throws IOException {
     return new File(parent, "image");
   }
 

@@ -8,8 +8,7 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import io.takari.jdkget.IOutput;
-import io.takari.jdkget.JdkGetter.JdkVersion;
+import io.takari.jdkget.JdkContext;
 
 public class BinJDKExtractor extends AbstractZipExtractor {
 
@@ -17,12 +16,11 @@ public class BinJDKExtractor extends AbstractZipExtractor {
   private static final int MAX_ZIP_READ = 0x20000;
 
   @Override
-  public boolean extractJdk(JdkVersion version, File jdkImage, File outputDir, File workDir, IOutput output)
-    throws IOException, InterruptedException {
+  public boolean extractJdk(JdkContext context, File jdkImage, File outputDir, File workDir) throws IOException, InterruptedException {
 
-    output.info("Extracting jdk image into " + outputDir);
+    context.getOutput().info("Extracting jdk image into " + outputDir);
 
-    String versionPrefix = "jdk" + version.longVersion();
+    String versionPrefix = "jdk" + context.getVersion().longVersion();
     outputDir.mkdir();
 
     try (InputStream in = new BufferedInputStream(new FileInputStream(jdkImage))) {

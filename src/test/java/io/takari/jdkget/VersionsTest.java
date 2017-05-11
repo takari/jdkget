@@ -3,8 +3,6 @@ package io.takari.jdkget;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-import io.takari.jdkget.JdkGetter.JdkVersion;
-
 public class VersionsTest {
 
   @Test
