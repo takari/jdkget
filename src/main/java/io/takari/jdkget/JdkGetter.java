@@ -258,6 +258,9 @@ public class JdkGetter {
     options.addOption("a", true, "Architecture");
     options.addOption("l", false, "List versions");
     options.addOption("u", true, "Alternate url to oracle.com/otn-pub");
+    options.addOption("jce", false, "Also configure unlimited jce policy");
+    options.addOption("otnUser", true, "OTN username");
+    options.addOption("otnPassword", true, "OTN password");
     options.addOption("?", "help", false, "Help");
 
     CommandLine cli = new PosixParser().parse(options, args);
@@ -277,6 +280,9 @@ public class JdkGetter {
     String o = cli.getOptionValue("o");
     String a = cli.getOptionValue("a");
     String u = cli.getOptionValue("u");
+    boolean jce = cli.hasOption("jce");
+    String otnu = cli.getOptionValue("otnUser");
+    String otnp = cli.getOptionValue("otnPassword");
 
     if (cli.hasOption('?')) {
       usage();
@@ -311,7 +317,13 @@ public class JdkGetter {
       .arch(arch);
 
     if (u != null) {
-      b = b.transport(new OracleWebsiteTransport(u));
+      b = b.transport(new OracleWebsiteTransport(u, otnu, otnp));
+    } else if(otnu != null || otnp != null) {
+      b = b.transport(new OracleWebsiteTransport(OracleWebsiteTransport.ORACLE_WEBSITE, otnu, otnp));
+    }
+
+    if(jce) {
+      b = b.unrestrictedJCE();
     }
 
     b.build().get();

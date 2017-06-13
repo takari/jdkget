@@ -35,9 +35,24 @@
       <version>2.4</version>
     </dependency>
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.6</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+      <version>4.4.6</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
     </dependency>
     <dependency>
       <groupId>io.takari</groupId>
@@ -125,6 +140,14 @@
                   <mainClass>io.takari.jdkget.JdkGetter</mainClass>
                 </transformer>
               </transformers>
+              <filters> 
+                <filter>
+                  <artifact>commons-logging:commons-logging</artifact>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </filter>
+              </filters>
               <relocations>
                 <relocation>
                   <pattern>com.sprylab</pattern>
