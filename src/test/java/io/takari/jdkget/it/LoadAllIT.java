@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.junit.Test;
 
 import io.takari.jdkget.Arch;
@@ -18,6 +19,7 @@ import io.takari.jdkget.JdkGetter;
 import io.takari.jdkget.JdkReleases;
 import io.takari.jdkget.JdkReleases.JdkRelease;
 import io.takari.jdkget.JdkVersion;
+import io.takari.jdkget.OracleWebsiteTransport;
 
 public class LoadAllIT {
 
@@ -26,7 +28,20 @@ public class LoadAllIT {
 
     boolean[] failed = new boolean[] {false};
 
-    for (JdkRelease r : JdkReleases.get().getReleases()) {
+    JdkReleases releases = JdkReleases.get();
+    String startWith = System.getProperty("io.takari.jdkget.startWith");
+    String otnu = System.getProperty("io.takari.jdkget.otn.username");
+    String otnp = System.getProperty("io.takari.jdkget.otn.password");
+
+    JdkVersion start = null;
+    if(StringUtils.isNotBlank(startWith)) {
+      start = releases.select(JdkVersion.parse(startWith)).getVersion();
+    }
+
+    for (JdkRelease r : releases.getReleases()) {
+      if(start != null && r.getVersion().compareTo(start) > 0) {
+        continue;
+      }
 
       JdkVersion v = r.getVersion();
       System.out.println(v.longBuild() + " / " + v.shortBuild() + (r.isPsu() ? " PSU" : ""));
@@ -42,6 +57,7 @@ public class LoadAllIT {
           FileUtils.forceMkdir(jdktmp);
 
           JdkGetter.builder()
+            .transport(new OracleWebsiteTransport(OracleWebsiteTransport.ORACLE_WEBSITE, otnu, otnp))
             .version(r.getVersion())
             .unrestrictedJCE()
             .arch(arch)

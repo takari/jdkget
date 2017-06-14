@@ -198,6 +198,7 @@
           <artifactId>maven-failsafe-plugin</artifactId>
           <version>2.19.1</version>
           <configuration>
+            <argLine>-Xmx1024m</argLine>
             <forkCount>1</forkCount>
             <reuseForks>false</reuseForks>
             <redirectTestOutputToFile>${maven.test.redirectTestOutputToFile}</redirectTestOutputToFile>
@@ -207,6 +208,9 @@
               <java.awt.headless>true</java.awt.headless>
               <java.io.tmpdir>${java.io.tmpdir}</java.io.tmpdir>
               <io.takari.jdkget.releaseList>builtin</io.takari.jdkget.releaseList>
+              <io.takari.jdkget.otn.username>${otn.username}</io.takari.jdkget.otn.username>
+              <io.takari.jdkget.otn.password>${otn.password}</io.takari.jdkget.otn.password>
+              <io.takari.jdkget.startWith>${startWith}</io.takari.jdkget.startWith>
             </systemPropertyVariables>
           </configuration>
         </plugin>
@@ -235,9 +239,6 @@
                   <goal>integration-test</goal>
                   <goal>verify</goal>
                 </goals>
-                <configuration>
-                  <argLine>-Xmx1024m</argLine>
-                </configuration>
               </execution>
             </executions>
           </plugin>

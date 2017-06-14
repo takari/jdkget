@@ -2,18 +2,22 @@ package io.takari.jdkget;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -111,11 +115,7 @@ public class OracleWebsiteTransport implements ITransport {
     output.info("Downloading " + url);
 
     BasicCookieStore cookieStore = new BasicCookieStore();
-    CloseableHttpClient cl = HttpClientBuilder.create()
-        .setDefaultCookieStore(cookieStore)
-        .disableRedirectHandling()
-        .setUserAgent("Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)")
-        .build();
+    CloseableHttpClient cl = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).disableRedirectHandling().setUserAgent("Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)").build();
 
     if (cookie) {
       cookieStore.addCookie(new BasicClientCookie("oraclelicense", "accept-securebackup-cookie"));
@@ -128,112 +128,49 @@ public class OracleWebsiteTransport implements ITransport {
       bc.setAttribute(ClientCookie.PATH_ATTR, bc.getPath());
       bc.setAttribute(ClientCookie.DOMAIN_ATTR, bc.getDomain());
     });
-    
 
-    // m.getURI().getHost().equals("login.oracle.com")
+
+    boolean hasOtnCredentials = StringUtils.isNotBlank(otnUsername) && StringUtils.isNotBlank(otnPassword);
 
     HttpRequestBase req = new HttpGet(url);
 
     // Oracle does some redirects so we have to follow a couple before we win the JDK prize
     int retries = 20;
     for (int retry = 0; retry < retries; retry++) {
-      
+
       CloseableHttpResponse res = cl.execute(req);
       try {
         int code = res.getStatusLine().getStatusCode();
         String msg = res.getStatusLine().getReasonPhrase();
 
-        if ((code == 200 || code == 401) && req.getURI().getHost().equals("login.oracle.com")) {
+        boolean shouldTryLogin = hasOtnCredentials && req.getURI().getHost().equals("login.oracle.com");
 
-          String pageData;
-          HttpEntity entity = res.getEntity();
-          String enc = entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue();
-          try (InputStream content = entity.getContent()) {
-            pageData = IOUtils.toString(content, enc);
-          }
+        if ((code == 200 || code == 401) && shouldTryLogin) {
 
-          int formStart = pageData.indexOf("<form ");
-          if (formStart == -1) {
-            throw new IOException("No form found at login page " + req.getURI());
-          }
-          int formStartEnd = pageData.indexOf(">", formStart);
-          if (formStartEnd == -1) {
-            throw new IOException("Form tag not closed at login page " + req.getURI());
-          }
-          int formEnd = pageData.indexOf("</form>", formStartEnd);
-          if (formStartEnd == -1) {
-            throw new IOException("Form tag not closed at login page " + req.getURI());
-          }
-
-          String action = findAttr(pageData.substring(formStart, formStartEnd), "action");
-          if(action.startsWith("/")) {
-            String scheme = req.getURI().getScheme();
-            int p = req.getURI().getPort();
-            String port = p >= 0 ? ":" + p : "";
-            action = scheme + "://" + req.getURI().getHost() + port + action;
-          }
-          HttpPost post = new HttpPost(action);
-
-          List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-
-          int nextInput = formStartEnd + 1;
-          while (nextInput < formEnd) {
-            int inputStart = pageData.indexOf("<input ", nextInput);
-            if (inputStart == -1) {
-              break;
-            }
-            int inputEnd = pageData.indexOf('>', inputStart);
-            if (inputEnd == -1) {
-              break;
-            }
-            
-
-            String n = findAttr(pageData.substring(inputStart, inputEnd), "name");
-            if(n != null) {
-              String v = findAttr(pageData.substring(inputStart, inputEnd), "value");
-  
-              if (n.equals("ssousername")) {
-                v = otnUsername;
-              } else if (n.equals("password")) {
-                v = otnPassword;
-              }
-  
-              formparams.add(new BasicNameValuePair(n, v));
-            }
-            
-            nextInput = inputEnd + 1;
-          }
-          post.setEntity(new UrlEncodedFormEntity(formparams, Consts.UTF_8));
-          req = post;
-          output.info("Submitting form to " + action);
+          req = createLoginPost(req.getURI(), res);
+          output.info("Submitting form to " + req.getURI());
 
         } else if (code == 200) {
-          Header contentLength = res.getFirstHeader("Content-Length");
-          long totalHint = -1;
-          if (contentLength != null) {
-            try {
-              totalHint = Long.parseLong(contentLength.getValue());
-            } catch (NumberFormatException e) {
-            }
-          }
 
-          try (InputStream is = res.getEntity().getContent(); OutputStream os = new FileOutputStream(target)) {
-            Util.copyWithProgress(is, os, totalHint, output);
-          }
+          downloadResponse(res, target, output);
           return;
 
         } else if (code == 301 || code == 302) {
+
           String newUrl = res.getFirstHeader("Location").getValue();
           output.info("Redirecting to " + newUrl);
           req = new HttpGet(newUrl);
-        } else if(code == 404) {
-          if(otnUsername != null && otnPassword != null && url.contains("/otn-pub/")) {
-            output.info("Server responded with " + code + ": " + msg + ", retrying with OTN");
+
+        } else if (code == 404) {
+
+          if (hasOtnCredentials && url.contains("/otn-pub/")) {
+            output.info("Server responded with " + code + ": " + msg + ", retrying with OTN credentials");
             req = new HttpGet(url.replace("/otn-pub/", "/otn/"));
           } else {
             output.error("Server responded with " + code + ": " + msg);
             throw new IOException("Could not download jdk");
           }
+
         } else {
           output.error("Server responded with " + code + ": " + msg + ", retrying");
           req = new HttpGet(req.getURI());
@@ -244,6 +181,84 @@ public class OracleWebsiteTransport implements ITransport {
     }
 
     throw new IOException("Could not download jdk after " + retries + " attempts");
+  }
+
+  private void downloadResponse(HttpResponse res, File target, IOutput output) throws IOException, InterruptedException, FileNotFoundException {
+    Header contentLength = res.getFirstHeader("Content-Length");
+    long totalHint = -1;
+    if (contentLength != null) {
+      try {
+        totalHint = Long.parseLong(contentLength.getValue());
+      } catch (NumberFormatException e) {
+      }
+    }
+
+    try (InputStream is = res.getEntity().getContent(); OutputStream os = new FileOutputStream(target)) {
+      Util.copyWithProgress(is, os, totalHint, output);
+    }
+  }
+
+  private HttpRequestBase createLoginPost(URI uri, HttpResponse res) throws IOException {
+    String pageData;
+    HttpEntity entity = res.getEntity();
+    String enc = entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue();
+    try (InputStream content = entity.getContent()) {
+      pageData = IOUtils.toString(content, enc);
+    }
+
+    int formStart = pageData.indexOf("<form ");
+    if (formStart == -1) {
+      throw new IOException("No form found at login page " + uri);
+    }
+    int formStartEnd = pageData.indexOf(">", formStart);
+    if (formStartEnd == -1) {
+      throw new IOException("Form tag not closed at login page " + uri);
+    }
+    int formEnd = pageData.indexOf("</form>", formStartEnd);
+    if (formStartEnd == -1) {
+      throw new IOException("Form tag not closed at login page " + uri);
+    }
+
+    String action = findAttr(pageData.substring(formStart, formStartEnd), "action");
+    if (action.startsWith("/")) {
+      String scheme = uri.getScheme();
+      int p = uri.getPort();
+      String port = p >= 0 ? ":" + p : "";
+      action = scheme + "://" + uri.getHost() + port + action;
+    }
+    HttpPost post = new HttpPost(action);
+
+    List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+
+    int nextInput = formStartEnd + 1;
+    while (nextInput < formEnd) {
+      int inputStart = pageData.indexOf("<input ", nextInput);
+      if (inputStart == -1) {
+        break;
+      }
+      int inputEnd = pageData.indexOf('>', inputStart);
+      if (inputEnd == -1) {
+        break;
+      }
+
+
+      String n = findAttr(pageData.substring(inputStart, inputEnd), "name");
+      if (n != null) {
+        String v = findAttr(pageData.substring(inputStart, inputEnd), "value");
+
+        if (n.equals("ssousername")) {
+          v = otnUsername;
+        } else if (n.equals("password")) {
+          v = otnPassword;
+        }
+
+        formparams.add(new BasicNameValuePair(n, v));
+      }
+
+      nextInput = inputEnd + 1;
+    }
+    post.setEntity(new UrlEncodedFormEntity(formparams, Consts.UTF_8));
+    return post;
   }
 
   private static String findAttr(String data, String name) {
