@@ -8,7 +8,7 @@
   </parent>
   <packaging>takari-jar</packaging>
   <artifactId>jdkget</artifactId>
-  <version>0.0.9-SNAPSHOT</version>
+  <version>0.0.9</version>
   <properties>
     <takari.javaSourceVersion>1.8</takari.javaSourceVersion>
     <maven.test.redirectTestOutputToFile>false</maven.test.redirectTestOutputToFile>
@@ -18,6 +18,7 @@
     <connection>scm:git:git@github.com:takari/jdkget.git</connection>
     <developerConnection>scm:git:git@github.com:takari/jdkget.git</developerConnection>
     <url>http://github.com/takari/jdkget</url>
+    <tag>jdkget-0.0.9</tag>
   </scm>
 
   <dependencies>
