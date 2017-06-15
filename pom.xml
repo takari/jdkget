@@ -13,6 +13,13 @@
     <takari.javaSourceVersion>1.8</takari.javaSourceVersion>
     <maven.test.redirectTestOutputToFile>false</maven.test.redirectTestOutputToFile>
   </properties>
+
+  <scm>
+    <connection>scm:git:git@github.com:takari/jdkget.git</connection>
+    <developerConnection>scm:git:git@github.com:takari/jdkget.git</developerConnection>
+    <url>http://github.com/takari/jdkget</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>de.pdark</groupId>
