@@ -37,7 +37,7 @@ public class LoadAllIT {
     JdkReleases releases = JdkReleases.readFromClasspath();
 
     JdkRelease r = releases.select(JdkVersion.parse(ver));
-    boolean failed = downloadUnpack(releases, r, true, transport);
+    boolean failed = downloadUnpack(releases, r, Arch.WIN_64, true, transport);
 
     assertFalse(failed);
   }
@@ -61,16 +61,16 @@ public class LoadAllIT {
       if (start != null && r.getVersion().compareTo(start) > 0) {
         continue;
       }
-      failed |= downloadUnpack(releases, r, true, transport);
+      failed |= downloadUnpack(releases, r, null, true, transport);
     }
 
     assertFalse(failed);
   }
 
-  private boolean downloadUnpack(JdkReleases releases, JdkRelease r, boolean jce, ITransport transport) {
+  private boolean downloadUnpack(JdkReleases releases, JdkRelease r, Arch selArch, boolean jce, ITransport transport) {
     JdkVersion v = r.getVersion();
     System.out.println(v.longBuild() + " / " + v.shortBuild() + (r.isPsu() ? " PSU" : ""));
-    Stream<Arch> a = r.getArchs().parallelStream();
+    Stream<Arch> a = selArch != null ? Stream.of(selArch) : r.getArchs().parallelStream();
 
     boolean[] failed = new boolean[] {false};
     a.forEach(arch -> {
@@ -99,7 +99,7 @@ public class LoadAllIT {
         try (PrintStream out = new PrintStream(new File("target/tmp/" + v.toString() + "_" + arch + ".log"))) {
           o.output(out);
         }
-      } catch (Exception e) {
+      } catch (Throwable e) {
         failed[0] = true;
         System.err.println("  " + arch + " >> FAIL");
         o.output(System.err);
@@ -107,12 +107,17 @@ public class LoadAllIT {
       }
     });
 
-    System.gc();
     Runtime rt = Runtime.getRuntime();
     long total = rt.totalMemory();
     long free = rt.freeMemory();
+    long occBefore = total - free;
+
+    System.gc();
+    total = rt.totalMemory();
+    free = rt.freeMemory();
     long occ = total - free;
-    System.out.println("    MEM: " + (occ / 1024L / 1024L));
+
+    System.out.println("    MEM: " + (occ / 1024L / 1024L) + " (" + (occBefore / 1024L / 1024L) + ")");
 
     return failed[0];
   }

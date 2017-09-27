@@ -85,5 +85,11 @@ public class VersionsTest {
     assertEquals(-1, v5.security);
     assertEquals(null, v5.buildNumber);
 
+    JdkVersion v6 = JdkVersion.parse("9.");
+    assertEquals(9, v6.major);
+    assertEquals(0, v6.minor);
+    assertEquals(0, v6.security);
+    assertEquals(null, v6.buildNumber);
+
   }
 }
