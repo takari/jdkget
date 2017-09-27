@@ -47,24 +47,28 @@ public class JdkReleases implements Serializable {
     }
 
     try {
-      HttpsURLConnection conn = (HttpsURLConnection) new URL(REMOTE_XML).openConnection();
-      conn.setAllowUserInteraction(false);
-      conn.setDoInput(true);
-      conn.setDoOutput(false);
-      conn.setUseCaches(true);
-      conn.setRequestMethod("GET");
-      conn.setConnectTimeout(TIMEOUT_VALUE);
-      conn.setReadTimeout(TIMEOUT_VALUE);
-      conn.connect();
-      return read(conn.getInputStream());
+      return readFromGithub();
     } catch (Exception e) {
       output.error("Warning: Unable to retreive jdkreleases.xml from Github. Using built-in JDK list.");
       return readFromClasspath();
     }
   }
 
-  private static final JdkReleases readFromClasspath() throws IOException {
-    try(InputStream in = JdkReleases.class.getClassLoader().getResourceAsStream("jdkreleases.xml")) {
+  public static JdkReleases readFromGithub() throws IOException {
+    HttpsURLConnection conn = (HttpsURLConnection) new URL(REMOTE_XML).openConnection();
+    conn.setAllowUserInteraction(false);
+    conn.setDoInput(true);
+    conn.setDoOutput(false);
+    conn.setUseCaches(true);
+    conn.setRequestMethod("GET");
+    conn.setConnectTimeout(TIMEOUT_VALUE);
+    conn.setReadTimeout(TIMEOUT_VALUE);
+    conn.connect();
+    return read(conn.getInputStream());
+  }
+
+  public static final JdkReleases readFromClasspath() throws IOException {
+    try (InputStream in = JdkReleases.class.getClassLoader().getResourceAsStream("jdkreleases.xml")) {
       return new JdkReleasesParser().parse(in);
     }
   }
@@ -113,16 +117,28 @@ public class JdkReleases implements Serializable {
       if (o.major < ver.major) {
         break;
       }
-      if (ver.revision == -1) {
+      if (ver.minor == -1) {
         if (rel.isPsu()) {
           continue;
         }
         return rel;
       }
-      if (o.revision > ver.revision) {
+      if (o.minor > ver.minor) {
         continue;
       }
-      if (o.revision < ver.revision) {
+      if (o.minor < ver.minor) {
+        break;
+      }
+      if (ver.security == -1) {
+        if (rel.isPsu()) {
+          continue;
+        }
+        return rel;
+      }
+      if (o.security > ver.security) {
+        continue;
+      }
+      if (o.security < ver.security) {
         break;
       }
       if (ver.buildNumber.isEmpty()) {

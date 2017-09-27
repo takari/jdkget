@@ -26,7 +26,8 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
 
     context.getOutput().info("Extracting jdk image into " + outputDir);
 
-    String versionPrefix = "jdk" + context.getVersion().longVersion();
+    String versionPrefix1 = "jdk" + context.getVersion().longVersion();
+    String versionPrefix2 = "jdk-" + context.getVersion().longVersion(); // 9+ has this prefix
 
     try (InputStream in = new FileInputStream(jdkImage)) {
       TarArchiveInputStream t = new TarArchiveInputStream(wrap(in));
@@ -37,8 +38,11 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
 
         String entryName = te.getName();
 
-        if (entryName.startsWith(versionPrefix)) {
-          entryName = entryName.substring(versionPrefix.length());
+        if (entryName.startsWith(versionPrefix1)) {
+          entryName = entryName.substring(versionPrefix1.length());
+        }
+        if (entryName.startsWith(versionPrefix2)) {
+          entryName = entryName.substring(versionPrefix2.length());
         }
 
         File f = new File(outputDir, entryName);

@@ -96,7 +96,7 @@ public class JdkGetter {
 
     File jdkImage = transport.getImageFile(context, inProcessDirectory);
     File jceImage = null;
-    if (unrestrictedJCE) {
+    if (unrestrictedJCE && theVersion.major < 9) {
       jceImage = new File(jdkImage.getParentFile(), jdkImage.getName() + "-jce.zip");
     }
 
@@ -276,7 +276,7 @@ public class JdkGetter {
     }
 
 
-    String v = cli.getOptionValue("v");//"1.8.0_92-b14";
+    String v = cli.getOptionValue("v");// "1.8.0_92-b14";
     String o = cli.getOptionValue("o");
     String a = cli.getOptionValue("a");
     String u = cli.getOptionValue("u");
@@ -318,11 +318,11 @@ public class JdkGetter {
 
     if (u != null) {
       b = b.transport(new OracleWebsiteTransport(u, otnu, otnp));
-    } else if(otnu != null || otnp != null) {
+    } else if (otnu != null || otnp != null) {
       b = b.transport(new OracleWebsiteTransport(OracleWebsiteTransport.ORACLE_WEBSITE, otnu, otnp));
     }
 
-    if(jce) {
+    if (jce) {
       b = b.unrestrictedJCE();
     }
 

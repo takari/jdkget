@@ -25,6 +25,14 @@ To build JDKGet use the Maven Wrapper script provided with the project:
 ./mvnw clean install
 ```
 
+## Integration testing
+
+Testing downloads of all versions can be performed using `it` profile and providing your OTN credentials:
+
+```
+mvn clean verify -Pit -Djdkget.otn.username=<otnUsername> -Djdkget.otn.password=<otnPassword>
+```
+
 The result will produce a shaded JAR in the `target/` directory which can we executued using `java -jar jdkget-${version}.jar`
 
 ## *nix and Solaris
