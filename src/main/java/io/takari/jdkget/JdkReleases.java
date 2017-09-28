@@ -132,7 +132,7 @@ public class JdkReleases implements Serializable {
       if (o.minor < ver.minor) {
         break;
       }
-      if (ver.security == -1) {
+      if (ver.security == -1 && o.security != -1) {
         if (rel.isPsu()) {
           continue;
         }
