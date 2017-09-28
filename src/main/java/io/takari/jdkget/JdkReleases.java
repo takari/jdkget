@@ -263,7 +263,7 @@ public class JdkReleases implements Serializable {
     Builder b = new Builder();
 
     for (JdkRelease r : rels.getReleases()) {
-      String v = r.getVersion().longBuild();
+      String v = r.getVersion().shortBuild();
       if (r.isPsu()) {
         b.setPSU(v);
       }
