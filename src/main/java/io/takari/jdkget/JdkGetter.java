@@ -2,14 +2,19 @@ package io.takari.jdkget;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.io.FileUtils;
 
 import com.google.common.base.Throwables;
 
+import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;
 import io.takari.jdkget.extract.BinJDKExtractor;
 import io.takari.jdkget.extract.OsxJDKExtractor;
@@ -250,23 +255,27 @@ public class JdkGetter {
     }
   }
 
+  private static final Options cliOptions = new Options();
+  static {
+    cliOptions.addOption("o", true, "Output dir");
+    cliOptions.addOption("v", true, "JDK Version");
+    cliOptions.addOption("a", true, "Architecture");
+    cliOptions.addOption("l", false, "List versions");
+    cliOptions.addOption("u", true, "Alternate url to oracle.com/otn-pub");
+    cliOptions.addOption("jce", false, "Also install unlimited jce policy");
+    cliOptions.addOption("otnUser", true, "OTN username");
+    cliOptions.addOption("otnPassword", true, "OTN password");
+    cliOptions.addOption("mirror", false, "Mirror remote storage by only downloading binaries; can be used with -v, -vf, -vt and -a, otherwise will download everything");
+    cliOptions.addOption("vf", true, "When used with -mirror, specifies version range 'from'");
+    cliOptions.addOption("vt", true, "When used with -mirror, specifies version range 'to'");
+    cliOptions.addOption("?", "help", false, "Help");
+  }
+
   public static void main(String[] args) throws Exception {
 
-    Options options = new Options();
-    options.addOption("o", true, "Output dir");
-    options.addOption("v", true, "JDK Version");
-    options.addOption("a", true, "Architecture");
-    options.addOption("l", false, "List versions");
-    options.addOption("u", true, "Alternate url to oracle.com/otn-pub");
-    options.addOption("jce", false, "Also configure unlimited jce policy");
-    options.addOption("otnUser", true, "OTN username");
-    options.addOption("otnPassword", true, "OTN password");
-    options.addOption("?", "help", false, "Help");
-
-    CommandLine cli = new PosixParser().parse(options, args);
+    CommandLine cli = new PosixParser().parse(cliOptions, args);
 
     if (cli.hasOption("l")) {
-
       System.out.println("Available JDK versions:");
       for (JdkRelease r : JdkReleases.get().getReleases()) {
         JdkVersion v = r.getVersion();
@@ -275,14 +284,19 @@ public class JdkGetter {
       return;
     }
 
-
-    String v = cli.getOptionValue("v");// "1.8.0_92-b14";
     String o = cli.getOptionValue("o");
-    String a = cli.getOptionValue("a");
+
     String u = cli.getOptionValue("u");
-    boolean jce = cli.hasOption("jce");
     String otnu = cli.getOptionValue("otnUser");
     String otnp = cli.getOptionValue("otnPassword");
+
+    boolean mirror = cli.hasOption("mirror");
+    String vf = cli.getOptionValue("vf");
+    String vt = cli.getOptionValue("vt");
+    String v = cli.getOptionValue("v");// "1.8.0_92-b14";
+    String a = cli.getOptionValue("a");
+
+    boolean jce = cli.hasOption("jce");
 
     if (cli.hasOption('?')) {
       usage();
@@ -295,38 +309,88 @@ public class JdkGetter {
       return;
     }
 
+    File outDir = new File(o);
+    Arch arch = null;
+    if (a != null) {
+      arch = parseArch(a);
+    }
+
+    ITransport transport = null;
+    if (u != null) {
+      transport = new OracleWebsiteTransport(u, otnu, otnp);
+    } else {
+      transport = new OracleWebsiteTransport(OracleWebsiteTransport.ORACLE_WEBSITE, otnu, otnp);
+    }
+
+    if (mirror) {
+      mirrorRemote(transport, v != null ? v : vf, v != null ? v : vt, arch, outDir);
+      return;
+    }
+
     if (v == null) {
       System.err.println("No version specified");
       usage();
       return;
     }
 
-    Arch arch = null;
-    if (a != null) {
-      arch = parseArch(a);
-      if (arch == null) {
-        usage();
-        return;
-      }
+    if (arch == null) {
+      usage();
+      return;
     }
 
-    File jdkDir = new File(o);
-    JdkGetter.Builder b = JdkGetter.builder()
-      .version(v)
-      .outputDirectory(jdkDir)
-      .arch(arch);
-
-    if (u != null) {
-      b = b.transport(new OracleWebsiteTransport(u, otnu, otnp));
-    } else if (otnu != null || otnp != null) {
-      b = b.transport(new OracleWebsiteTransport(OracleWebsiteTransport.ORACLE_WEBSITE, otnu, otnp));
-    }
+    JdkGetter.Builder b = JdkGetter.builder() //
+        .version(v) //
+        .outputDirectory(outDir) //
+        .arch(arch) //
+        .transport(transport);
 
     if (jce) {
       b = b.unrestrictedJCE();
     }
 
     b.build().get();
+  }
+
+  private static void mirrorRemote(ITransport transport, String vfrom, String vto, Arch arch, File outDir) throws IOException, InterruptedException {
+    JdkReleases rels = JdkReleases.get();
+    JdkVersion vf = vfrom != null ? JdkVersion.parse(vfrom) : null;
+    JdkVersion vt = vto != null ? rels.select(JdkVersion.parse(vto)).getVersion() : null;
+
+    for (JdkRelease rel : rels.getReleases()) {
+      JdkVersion v = rel.getVersion();
+      if (vt != null && vt.compareTo(v) < 0) {
+        continue;
+      }
+      if (vf != null && v.compareTo(vf) < 0) {
+        break;
+      }
+
+      Collection<Arch> arches = rel.getArchs();
+      if (arch != null) {
+        if (!arches.contains(arch)) {
+          continue;
+        }
+        arches = Collections.singleton(arch);
+      }
+      for (Arch a : arches) {
+        JdkBinary bin = rel.getBinary(a);
+        File out = new File(outDir, bin.getPath()).getAbsoluteFile();
+        FileUtils.forceMkdir(out.getParentFile());
+
+        System.out.println("\n** Downloading " + v.shortBuild() + " for " + a.name() + " to " + out);
+        JdkContext ctx = new JdkContext(rels, v, a, StdOutput.INSTANCE);
+        if (out.exists()) {
+          if (transport.validate(ctx, out)) {
+            System.out.println("Valid file already exists");
+            continue;
+          } else {
+            System.out.println("Existing file failed validation, deleting");
+            FileUtils.forceDelete(out);
+          }
+        }
+        transport.downloadJdk(ctx, out);
+      }
+    }
   }
 
   private static Arch parseArch(String a) {
@@ -346,14 +410,20 @@ public class JdkGetter {
   }
 
   private static void usage() {
-    System.out.println("Usage:");
-    System.out.println("List versions: java -jar jdkget.jar -l");
-    System.out.println("Download and extract: java -jar jdkget.jar -o <outputDir> -v <jdkVersion> [-a <arch>]");
-    System.out.println("  Version format: 1.<major>.0_<rev>-<build> (Ex. 1.8.0_92-b14)");
-    System.out.println("  Available architectures:");
+    new HelpFormatter().printHelp("java -jar jdkget-<ver>.jar", cliOptions);
+    System.out.println("\nVersion format: 1.<major>.0_<rev>-<build> or <major>u<rev>-<build> or <ver>+<build> (for 9+)");
+    System.out.println("\nAvailable architectures:");
     for (Arch ar : Arch.values()) {
       System.out.println("    " + simpleArch(ar.name()));
     }
+
+    System.out.println("\nExamples:");
+    System.out.println("  List versions:");
+    System.out.println("    java -jar jdkget-<ver>.jar -l");
+    System.out.println("  Download and extract:");
+    System.out.println("    java -jar jdkget-<ver>.jar -o <outputDir> -v <jdkVersion> [-a <arch>]");
+    System.out.println("  Mirror remote:");
+    System.out.println("    java -jar jdkget-<ver>.jar -mirror -o <outputDir> [-v <jdkVersion>] [-vf <fromVersion>] [-vt <toVersion>] [-a <arch>]");
   }
 
 
