@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -410,7 +409,8 @@ public class JdkGetter {
   }
 
   private static void usage() {
-    new HelpFormatter().printHelp("java -jar jdkget-<ver>.jar", cliOptions);
+    String ver = JdkGetter.class.getPackage().getImplementationVersion();
+    new HelpFormatter().printHelp("jdkget-" + ver + ".jar", cliOptions);
     System.out.println("\nVersion format: 1.<major>.0_<rev>-<build> or <major>u<rev>-<build> or <ver>+<build> (for 9+)");
     System.out.println("\nAvailable architectures:");
     for (Arch ar : Arch.values()) {
@@ -419,11 +419,11 @@ public class JdkGetter {
 
     System.out.println("\nExamples:");
     System.out.println("  List versions:");
-    System.out.println("    java -jar jdkget-<ver>.jar -l");
+    System.out.println("    jdkget-" + ver + ".jar -l");
     System.out.println("  Download and extract:");
-    System.out.println("    java -jar jdkget-<ver>.jar -o <outputDir> -v <jdkVersion> [-a <arch>]");
+    System.out.println("    jdkget-" + ver + ".jar -o <outputDir> -v <jdkVersion> [-a <arch>]");
     System.out.println("  Mirror remote:");
-    System.out.println("    java -jar jdkget-<ver>.jar -mirror -o <outputDir> [-v <jdkVersion>] [-vf <fromVersion>] [-vt <toVersion>] [-a <arch>]");
+    System.out.println("    jdkget-" + ver + ".jar -mirror -o <outputDir> [-v <jdkVersion>] [-vf <fromVersion>] [-vt <toVersion>] [-a <arch>]");
   }
 
 
