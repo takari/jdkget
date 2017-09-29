@@ -8,9 +8,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -41,16 +44,20 @@ public class OsxJDKExtractor implements IJdkExtractor {
 
     List<File> payloads = new ArrayList<>();
 
-    List<File> files = FileUtils.getFiles(workDir, "**/*.pkg", null, true);
+    List<File> packageFiles = FileUtils.getFiles(workDir, "**/*.pkg", null, true);
     // validate
 
-    File jdkPkg = files.get(0);
+    File jdkPkg = packageFiles.get(0);
     XarFile xarFile = new XarFile(jdkPkg);
     for (XarEntry entry : xarFile.getEntries()) {
       Util.checkInterrupt();
       String name = entry.getName();
-      if (!entry.isDirectory() && (name.startsWith("jdk") || name.startsWith("JavaForOSX") || name.startsWith("JavaEssentials") || name.startsWith("JavaMDNS"))
-        && entry.getName().endsWith("Payload")) {
+      if (!entry.isDirectory() && //
+          (name.startsWith("jdk") //
+              || name.startsWith("JavaForOSX") //
+              || name.startsWith("JavaEssentials") //
+              || name.startsWith("JavaMDNS") //
+          ) && entry.getName().endsWith("Payload")) {
         File file = new File(workDir, name);
         File parentFile = file.getParentFile();
         if (parentFile.isFile()) {
@@ -64,6 +71,8 @@ public class OsxJDKExtractor implements IJdkExtractor {
         payloads.add(file);
       }
     }
+
+    Map<Path, Integer> fileModes = new HashMap<>();
 
     for (File jdkGz : payloads) {
       Util.checkInterrupt();
@@ -79,8 +88,11 @@ public class OsxJDKExtractor implements IJdkExtractor {
           Util.checkInterrupt();
           if (!e.isDirectory()) {
             String name = e.getName();
-            File jdkFile = new File(outputDir, name);
+
+            File jdkFile = new File(outputDir, name).getAbsoluteFile();
             jdkFile.getParentFile().mkdirs();
+            Path path = jdkFile.toPath();
+
             if (e.isRegularFile()) {
               try (OutputStream os = new FileOutputStream(jdkFile)) {
                 Util.copyInterruptibly(is, os);
@@ -94,19 +106,29 @@ public class OsxJDKExtractor implements IJdkExtractor {
                 }
 
                 if (File.pathSeparatorChar == ';') {
-                  context.getOutput().info("Not creating symbolic link " + e.getName() + " -> " + target);
+                  context.getOutput().info("Not creating symbolic link " + name + " -> " + target);
                 } else {
-                  Files.createSymbolicLink(jdkFile.toPath(), Paths.get(target));
+                  Files.createSymbolicLink(path, Paths.get(target));
                 }
               }
             }
-            // The lower 9 bits specify read/write/execute permissions for world, group, and user following standard POSIX conventions.
+            // The lower 9 bits specify read/write/execute permissions for world, group, and user following standard POSIX
+            // conventions.
             if (File.pathSeparatorChar != ';') {
-              int mode = (int) e.getMode() & 0000777;
-              Files.setPosixFilePermissions(jdkFile.toPath(), PosixModes.intModeToPosix(mode));
+              fileModes.put(path, (int) e.getMode() & 0000777);
             }
           }
         }
+      }
+    }
+
+    for (Map.Entry<Path, Integer> e : fileModes.entrySet()) {
+      Path path = e.getKey();
+      Integer mode = e.getValue();
+      try {
+        Files.setPosixFilePermissions(path, PosixModes.intModeToPosix(mode));
+      } catch (IOException ex) {
+        context.getOutput().error("Cannot set file permissions on " + path, ex);
       }
     }
 
