@@ -191,6 +191,7 @@
         </executions>
       </plugin>
       <!-- now make the jar chmod +x style executable -->
+      <!--
       <plugin>
         <groupId>org.skife.maven</groupId>
         <artifactId>really-executable-jar-maven-plugin</artifactId>
@@ -198,8 +199,6 @@
         <configuration>
           <flags>-Xmx3G</flags>
           <allowOtherTypes>true</allowOtherTypes>
-          <!-- <programFile>jdkget-${project.version}.jar</programFile> -->
-          <!-- <scriptFile>src/packaging/someScript.extension</scriptFile> -->
         </configuration>
         <executions>
           <execution>
@@ -210,6 +209,7 @@
           </execution>
         </executions>
       </plugin>
+       -->
     </plugins>
     <pluginManagement>
       <plugins>

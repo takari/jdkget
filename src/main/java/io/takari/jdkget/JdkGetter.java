@@ -410,7 +410,7 @@ public class JdkGetter {
 
   private static void usage() {
     String ver = JdkGetter.class.getPackage().getImplementationVersion();
-    new HelpFormatter().printHelp("jdkget-" + ver + ".jar", cliOptions);
+    new HelpFormatter().printHelp("java -jar jdkget-" + ver + ".jar", cliOptions);
     System.out.println("\nVersion format: 1.<major>.0_<rev>-<build> or <major>u<rev>-<build> or <ver>+<build> (for 9+)");
     System.out.println("\nAvailable architectures:");
     for (Arch ar : Arch.values()) {
