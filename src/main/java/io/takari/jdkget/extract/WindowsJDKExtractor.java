@@ -26,9 +26,10 @@ import dorkbox.cabParser.CabStreamSaver;
 import dorkbox.cabParser.structure.CabFileEntry;
 import io.takari.jdkget.JdkContext;
 import io.takari.jdkget.Util;
-import net.sf.jcablib.CabConstants;
 
 public class WindowsJDKExtractor extends AbstractZipExtractor {
+
+  public static final int MSCF = 0x4D534346;
 
   @Override
   public boolean extractJdk(JdkContext context, File jdkImage, File outputDir, File workDir) throws IOException, InterruptedException {
@@ -85,7 +86,7 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
         int sig = raf.readInt();
         raf.seek(offset);
 
-        if (sig == CabConstants.MSCF) {
+        if (sig == MSCF) {
           File cab = new File(workDir, "cab-" + System.currentTimeMillis() + ".tmp");
           extractFileFromExe(raf, size, cab);
           if (scanCab(outputFile, cab)) {
