@@ -1,42 +1,40 @@
 package io.takari.jdkget.extract;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Collections;
+import java.io.RandomAccessFile;
 import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import com.github.katjahahn.parser.Location;
+import com.github.katjahahn.parser.PEData;
+import com.github.katjahahn.parser.PELoader;
+import com.github.katjahahn.parser.sections.SectionLoader;
+import com.github.katjahahn.parser.sections.rsrc.Resource;
+import com.github.katjahahn.parser.sections.rsrc.ResourceSection;
 
 import dorkbox.cabParser.CabException;
 import dorkbox.cabParser.CabParser;
 import dorkbox.cabParser.CabStreamSaver;
 import dorkbox.cabParser.structure.CabFileEntry;
-import dorkbox.peParser.PE;
-import dorkbox.peParser.headers.resources.ResourceDataEntry;
-import dorkbox.peParser.headers.resources.ResourceDirectoryEntry;
-import dorkbox.peParser.headers.resources.ResourceDirectoryHeader;
-import dorkbox.peParser.misc.DirEntry;
-import dorkbox.peParser.types.ImageDataDir;
 import io.takari.jdkget.JdkContext;
 import io.takari.jdkget.Util;
+import net.sf.jcablib.CabConstants;
 
 public class WindowsJDKExtractor extends AbstractZipExtractor {
-
-  private static final Set<String> SKIP_DIRS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
-    "Icon", "Bitmap")));
 
   @Override
   public boolean extractJdk(JdkContext context, File jdkImage, File outputDir, File workDir) throws IOException, InterruptedException {
 
     // <= 1.7: PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
-    // > 1.7:  PE EXE <- PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
+    // > 1.7: PE EXE <- PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
 
     File tmptools = new File(workDir, "tools-" + System.currentTimeMillis() + ".zip");
     if (scanPE(jdkImage, tmptools, workDir)) {
@@ -71,111 +69,107 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
     }
   }
 
-  private boolean scanPE(File f, File outputDir, File workDir) throws IOException, InterruptedException {
-    PE pe;
-    try {
-      pe = new PE(f.getCanonicalPath());
-    } catch (Exception e) {
-      return false;
-    }
+  private boolean scanPE(File f, File outputFile, File workDir) throws IOException, InterruptedException {
+    PEData data = PELoader.loadPE(f);
+    ResourceSection rsrc = new SectionLoader(data).loadResourceSection();
+    List<Resource> resources = rsrc.getResources();
 
-    if (pe.isPE()) {
-      for (ImageDataDir entry : pe.optionalHeader.tables) {
-        Util.checkInterrupt();
-        if (entry.getType() == DirEntry.RESOURCE) {
+    for (Resource res : resources) {
+      Location loc = res.rawBytesLocation();
+      long offset = loc.from();
+      // this example only works for small resources
+      assert loc.size() == (int) loc.size();
+      int size = (int) loc.size();
+      try (RandomAccessFile raf = new RandomAccessFile(data.getFile(), "r")) {
+        raf.seek(offset);
+        int sig = raf.readInt();
+        raf.seek(offset);
 
-          ResourceDirectoryHeader root = (ResourceDirectoryHeader) entry.data;
-          if (scanPEDir(pe, root, outputDir, workDir)) {
+        if (sig == CabConstants.MSCF) {
+          File cab = new File(workDir, "cab-" + System.currentTimeMillis() + ".tmp");
+          extractFileFromExe(raf, size, cab);
+          if (scanCab(outputFile, cab)) {
             return true;
           }
-
-        }
-      }
-
-    }
-    return false;
-  }
-
-  private boolean scanPEDir(PE pe, ResourceDirectoryHeader dir, File outputDir, File workDir) throws IOException, InterruptedException {
-    for (ResourceDirectoryEntry entry : dir.entries) {
-      Util.checkInterrupt();
-      if (entry.isDirectory) {
-        if (SKIP_DIRS.contains(entry.NAME.get())) {
-          continue;
-        }
-        if (scanPEDir(pe, entry.directory, outputDir, workDir)) {
-          return true;
-        }
-      } else {
-        if (scanPEEntry(pe, entry.resourceDataEntry, outputDir, workDir)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  private boolean scanPEEntry(PE pe, ResourceDataEntry resourceDataEntry, File outputDir, File workDir) throws IOException, InterruptedException {
-
-    byte[] data = resourceDataEntry.getData(pe.fileBytes);
-    if (scanCab(outputDir, data)) {
-      return true;
-    }
-
-    // try pe
-    File f = new File(workDir, "cabextract-" + System.currentTimeMillis() + ".tmp");
-    f.createNewFile();
-    try {
-      try (OutputStream out = new FileOutputStream(f)) {
-        out.write(data);
-      }
-      if (scanPE(f, outputDir, workDir)) {
-        return true;
-      }
-    } finally {
-      if (!f.delete()) {
-        f.deleteOnExit();
-      }
-    }
-
-    return false;
-  }
-
-  private boolean scanCab(final File output, byte[] data) throws IOException {
-    final boolean[] res = new boolean[] {false};
-    InputStream in = new ByteArrayInputStream(data);
-    try {
-      new CabParser(in, new CabStreamSaver() {
-        public boolean saveReservedAreaData(byte[] data, int dataLength) {
-          return false;
         }
 
-        public OutputStream openOutputStream(CabFileEntry entry) {
-          if (res[0])
-            return null;
-
-          if (entry.getName().equals("tools.zip")) {
-            res[0] = true;
-            try {
-              output.createNewFile();
-              return new FileOutputStream(output);
-            } catch (IOException e) {
-              return null;
+        if ((sig & 0xffff0000) == ('M' << 24 | 'Z' << 16)) {
+          // try pe
+          File subf = new File(workDir, "exe-" + System.currentTimeMillis() + ".tmp");
+          extractFileFromExe(raf, size, subf);
+          try {
+            if (scanPE(subf, outputFile, workDir)) {
+              return true;
+            }
+          } finally {
+            if (!subf.delete()) {
+              subf.deleteOnExit();
             }
           }
-          return null;
         }
 
-        public void closeOutputStream(OutputStream os, CabFileEntry entry) {
-          try {
-            os.close();
-          } catch (IOException e) {
+      }
+    }
+
+    return false;
+  }
+
+  private void extractFileFromExe(RandomAccessFile raf, int size, File output) throws IOException, FileNotFoundException {
+    try (OutputStream out = new FileOutputStream(output)) {
+      byte[] buf = new byte[32784];
+      int total = size;
+      int l;
+      while (total > 0) {
+        l = raf.read(buf, 0, Math.min(total, buf.length));
+        out.write(buf, 0, l);
+        total -= l;
+      }
+    }
+  }
+
+  private boolean scanCab(File outputFile, File cab) throws IOException {
+    OutputStream[] out = new OutputStream[] {null};
+    boolean[] res = new boolean[] {false};
+    try (InputStream in = new FileInputStream(cab)) {
+      try {
+        new CabParser(in, new CabStreamSaver() {
+          public boolean saveReservedAreaData(byte[] data, int dataLength) {
+            return false;
           }
-        }
-      }).extractStream();
-    } catch (CabException e) {
-      // not a cab file, probably
+
+          public OutputStream openOutputStream(CabFileEntry entry) {
+            if (res[0])
+              return null;
+
+            if (entry.getName().equals("tools.zip")) {
+              res[0] = true;
+              try {
+                outputFile.createNewFile();
+                out[0] = new FileOutputStream(outputFile);
+                return out[0];
+              } catch (IOException e) {
+                return null;
+              }
+            }
+            return null;
+          }
+
+          public void closeOutputStream(OutputStream os, CabFileEntry entry) {
+            try {
+              os.close();
+            } catch (IOException e) {
+            }
+          }
+        }).extractStream();
+      } catch (CabException e) {
+        throw new IOException(e);
+      }
+    } finally {
+      if (out[0] != null) {
+        out[0].close();
+      }
     }
     return res[0];
   }
+
 }

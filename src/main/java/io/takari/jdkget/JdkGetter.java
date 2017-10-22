@@ -100,8 +100,14 @@ public class JdkGetter {
 
     File jdkImage = transport.getImageFile(context, inProcessDirectory);
     File jceImage = null;
+    boolean jceFix = false;
     if (unrestrictedJCE && theVersion.major < 9) {
-      jceImage = new File(jdkImage.getParentFile(), jdkImage.getName() + "-jce.zip");
+      
+      if(theVersion.major == 8 && theVersion.minor >= 151) {
+        jceFix = true;
+      } else {
+        jceImage = new File(jdkImage.getParentFile(), jdkImage.getName() + "-jce.zip");
+      }
     }
 
     boolean valid = false;
@@ -161,6 +167,9 @@ public class JdkGetter {
     if (jceImage != null) {
       transport.downloadJce(context, jceImage);
       new JCEExtractor().extractJCE(context, jceImage, outputDirectory, inProcessDirectory);
+    }
+    if(jceFix) {
+      new JCEExtractor().fixJce(context, outputDirectory);
     }
 
     FileUtils.deleteDirectory(inProcessDirectory);

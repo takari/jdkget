@@ -236,9 +236,9 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
     public String longVersion() {
       StringBuilder sb = new StringBuilder();
       sb.append(major);
-      if (minor > 0)
+      if (minor > 0 || security > 0)
         sb.append('.').append(minor);
-      if (minor > 0)
+      if (security > 0)
         sb.append('.').append(security);
       return sb.toString();
     }
@@ -247,9 +247,9 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
     public String longBuild() {
       StringBuilder sb = new StringBuilder();
       sb.append(major);
-      if (minor > 0)
+      if (minor > 0 || security > 0)
         sb.append('.').append(minor);
-      if (minor > 0)
+      if (security > 0)
         sb.append('.').append(security);
       sb.append(buildNumber);
       return sb.toString();

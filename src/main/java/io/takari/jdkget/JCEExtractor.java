@@ -27,6 +27,20 @@ public class JCEExtractor {
     context.getOutput().info("Installing unrestricted JCE policy files");
     unzip(jceImage, secDir, context.getOutput());
   }
+  
+  public void fixJce(JdkContext context, File outputDir) {
+    File secDir = new File(outputDir, "jre/lib/security");
+    if (!secDir.exists()) {
+      // osx
+      secDir = new File(outputDir, "Contents/Home/jre/lib/security");
+    }
+
+    if (!secDir.exists()) {
+      throw new IllegalStateException("Cannot find JCE target dir");
+    }
+
+    context.getOutput().info("Unrestricting JCE policy");
+  }
 
   private void unzip(File file, File dir, IOutput output) throws IOException, InterruptedException {
     ZipFile zip = new ZipFile(file);

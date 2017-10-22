@@ -72,6 +72,7 @@ public class VersionsTest {
     assertEquals(0, v3.minor);
     assertEquals(1, v3.security);
     assertEquals(null, v3.buildNumber);
+    assertEquals("9.0.1", v3.longVersion());
 
     JdkVersion v4 = JdkVersion.parse("9.1.1");
     assertEquals(9, v4.major);
