@@ -104,7 +104,7 @@ public class OracleWebsiteTransport implements ITransport {
   }
 
   private void doDownload(final String url, boolean cookie, File target, IOutput output) throws IOException, InterruptedException {
-    output.info("Downloading " + url);
+    output.info("Downloading " + cleanUrl(url));
 
     BasicCookieStore cookieStore = new BasicCookieStore();
     CloseableHttpClient cl = HttpClientBuilder.create().setDefaultCookieStore(cookieStore)
@@ -143,7 +143,7 @@ public class OracleWebsiteTransport implements ITransport {
         if (code == 401 && shouldTryLogin) {
 
           req = createLogin(req.getURI(), otnUsername, otnPassword);
-          output.info("Authorizing on " + req.getURI());
+          output.info("Authorizing on " + cleanUrl(req.getURI().toString()));
 
         } else if (code == 200) {
 
@@ -153,7 +153,7 @@ public class OracleWebsiteTransport implements ITransport {
         } else if (code == 301 || code == 302) {
 
           String newUrl = res.getFirstHeader("Location").getValue();
-          output.info("Redirecting to " + newUrl);
+          output.info("Redirecting to " + cleanUrl(newUrl));
           req = new HttpGet(newUrl);
 
         } else if (code == 404) {
@@ -176,6 +176,11 @@ public class OracleWebsiteTransport implements ITransport {
     }
 
     throw new IOException("Could not download jdk after " + retries + " attempts");
+  }
+  
+  private static String cleanUrl(String url) {
+    int q = url.indexOf('?');
+    return q != -1 ? url.substring(0, q) : url;
   }
 
   private void downloadResponse(HttpResponse res, File target, IOutput output) throws IOException, InterruptedException, FileNotFoundException {
