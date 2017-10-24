@@ -1,12 +1,11 @@
-package io.takari.jdkget.extract;
+package io.takari.jdkget.win;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 // https://github.com/kyz/libmspack/blob/6139a0b9e93fcb7fcf423e56aa825bc869e02229/libmspack/mspack/lzxd.c
 
-public class LzxDecompressor {
+public class LzxDecompressionMethod implements CabDecompressor.DecompressionMethod {
 
   private static final int LZX_MIN_MATCH = 2;
   private static final int LZX_MAX_MATCH = 257;
@@ -103,7 +102,7 @@ public class LzxDecompressor {
       33161216, 33292288, 33423360
   };
 
-  private InputStream input;
+  private ByteSource input;
 
   private long offset; /* number of bytes actually output */
   private long length; /* overall decompressed length of stream */
@@ -226,7 +225,10 @@ public class LzxDecompressor {
     this.input_end = false;
   }
 
-  public void setReferenceData(InputStream in, int length) throws IOException {
+  @Override
+  public void free() {}
+
+  public void setReferenceData(ByteSource in, int length) throws IOException {
 
     if (!is_delta) {
       throw new IllegalStateException("only LZX DELTA streams support reference data");
@@ -261,7 +263,7 @@ public class LzxDecompressor {
     return length;
   }
 
-  public void decompress(InputStream input, OutputStream output, long out_bytes) throws IOException {
+  public void decompress(ByteSource input, OutputStream output, long out_bytes) throws IOException {
     this.input = input;
 
     /* huffman reading variables */
