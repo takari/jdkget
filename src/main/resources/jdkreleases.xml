@@ -14,6 +14,21 @@
     <url>java/jdk/${version}${build}/jdk-${version}-${arch}.${ext}</url>
   </defaults>
 
+  <jdk version="9.0.1+11">
+    <url>java/jdk/${version}${build}/jdk-${version}_${arch}_bin.${ext}</url>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>2cdaf0ff92d0829b510edd883a4ac8322c02f2fc1beae95d048b6716076bc014</sha256>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>4df5f74fe04c708977e23bdae8842297bce10d550e4a1cbedde9a33af56f4dab</sha256>
+    </bin>
+    <bin cls="osx_64" arch="osx-x64" ext="dmg">
+      <sha256>e87f9c83045f68546e78ee24a61724d06180581b0712ffdcdcac8faf6a3eca56</sha256>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>6602c0c1470ee7f38f9e33ed5796fcccc2502f81d560f7de392a001ebe247f87</sha256>
+    </bin>
+  </jdk>
   <jdk version="9+181">
     <url>java/jdk/${version}${build}/jdk-${version}_${arch}_bin.${ext}</url>
     <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
