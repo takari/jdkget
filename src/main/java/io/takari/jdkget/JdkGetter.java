@@ -163,13 +163,26 @@ public class JdkGetter {
     if (!extractor.extractJdk(context, jdkImage, outputDirectory, inProcessDirectory)) {
       throw new IOException("Failed to extract JDK from " + jdkImage);
     }
+    
+    File jdkHome = outputDirectory;
+    boolean libFound = new File(jdkHome, "lib").isDirectory();
+    if(!libFound) {
+      File osxHome = new File(jdkHome, "Contents/Home");
+      if(new File(osxHome, "lib").isDirectory()) {
+        jdkHome = osxHome;
+        libFound = true;
+      }
+    }
+    if(!libFound) {
+      throw new IOException("Cannot detect jdk installation");
+    }
 
     if (jceImage != null) {
       transport.downloadJce(context, jceImage);
-      new JCEExtractor().extractJCE(context, jceImage, outputDirectory, inProcessDirectory);
+      new JCEExtractor().extractJCE(context, jceImage, jdkHome, inProcessDirectory);
     }
     if(jceFix) {
-      new JCEExtractor().fixJce(context, outputDirectory);
+      new JCEExtractor().fixJce(context, jdkHome);
     }
 
     FileUtils.deleteDirectory(inProcessDirectory);
