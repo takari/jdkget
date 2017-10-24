@@ -5,10 +5,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import io.takari.jdkget.JdkContext;
+import io.takari.jdkget.osx.PosixModes;
 
 public class BinJDKExtractor extends AbstractZipExtractor {
 
@@ -24,7 +27,7 @@ public class BinJDKExtractor extends AbstractZipExtractor {
     outputDir.mkdir();
 
     try (InputStream in = new BufferedInputStream(new FileInputStream(jdkImage))) {
-      // find start of zip 
+      // find start of zip
       findZipStream(in);
 
       ZipInputStream zip = new ZipInputStream(in);
@@ -34,6 +37,9 @@ public class BinJDKExtractor extends AbstractZipExtractor {
         extractEntry(outputDir, versionPrefix, e, zip);
       }
     }
+
+    // make sure bin files are executables
+    updateExecutables(outputDir);
 
     return true;
   }
@@ -70,4 +76,15 @@ public class BinJDKExtractor extends AbstractZipExtractor {
     throw new IllegalStateException("Cannot find start of zip stream");
   }
 
+  private void updateExecutables(File outputDir) throws IOException {
+    File bin = new File(outputDir, "bin");
+    File[] binFiles = bin.listFiles();
+    if (binFiles != null) {
+      for (File ex : binFiles) {
+        Path p = ex.toPath();
+        int mode = PosixModes.posixToIntMode(Files.getPosixFilePermissions(p));
+        Files.setPosixFilePermissions(p, PosixModes.intModeToPosix(mode | 0111)); // add +x
+      }
+    }
+  }
 }

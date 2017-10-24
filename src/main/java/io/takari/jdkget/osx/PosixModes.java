@@ -19,9 +19,10 @@ public final class PosixModes {
   /**
    * Convert an integer into a set of {@link PosixFilePermission}s
    *
-   * <p>Note that this method will not try and read {@code 755} "in octal";
-   * you <strong>must</strong> prefix your integer with {@code 0} so that the
-   * constant be octal, as in {@code 0755}.</p>
+   * <p>
+   * Note that this method will not try and read {@code 755} "in octal"; you <strong>must</strong> prefix your integer
+   * with {@code 0} so that the constant be octal, as in {@code 0755}.
+   * </p>
    *
    * @param intMode the mode
    * @return a set of POSIX permissions
@@ -45,5 +46,13 @@ public final class PosixModes {
       intMode >>= 1;
     }
     return set;
+  }
+
+  public static int posixToIntMode(Set<PosixFilePermission> perms) {
+    int mask = 0;
+    for (PosixFilePermission perm : perms) {
+      mask |= 1 << (PERMISSIONS_LENGTH - perm.ordinal() - 1);
+    }
+    return mask;
   }
 }
