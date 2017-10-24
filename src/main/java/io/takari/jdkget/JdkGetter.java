@@ -2,14 +2,18 @@ package io.takari.jdkget;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import com.google.common.base.Throwables;
 
@@ -102,8 +106,8 @@ public class JdkGetter {
     File jceImage = null;
     boolean jceFix = false;
     if (unrestrictedJCE && theVersion.major < 9) {
-      
-      if(theVersion.major == 8 && theVersion.minor >= 151) {
+
+      if (theVersion.major == 8 && theVersion.minor >= 151) {
         jceFix = true;
       } else {
         jceImage = new File(jdkImage.getParentFile(), jdkImage.getName() + "-jce.zip");
@@ -163,17 +167,17 @@ public class JdkGetter {
     if (!extractor.extractJdk(context, jdkImage, outputDirectory, inProcessDirectory)) {
       throw new IOException("Failed to extract JDK from " + jdkImage);
     }
-    
+
     File jdkHome = outputDirectory;
     boolean libFound = new File(jdkHome, "lib").isDirectory();
-    if(!libFound) {
+    if (!libFound) {
       File osxHome = new File(jdkHome, "Contents/Home");
-      if(new File(osxHome, "lib").isDirectory()) {
+      if (new File(osxHome, "lib").isDirectory()) {
         jdkHome = osxHome;
         libFound = true;
       }
     }
-    if(!libFound) {
+    if (!libFound) {
       throw new IOException("Cannot detect jdk installation");
     }
 
@@ -181,11 +185,35 @@ public class JdkGetter {
       transport.downloadJce(context, jceImage);
       new JCEExtractor().extractJCE(context, jceImage, jdkHome, inProcessDirectory);
     }
-    if(jceFix) {
+    if (jceFix) {
       new JCEExtractor().fixJce(context, jdkHome);
     }
 
+    // rebuild jsa cache (https://docs.oracle.com/javase/9/vm/class-data-sharing.htm)
+    // but only if we're running on a compatible system (usually we do)
+    if (arch == Arch.autodetect()) {
+      rebuildJsa(jdkHome);
+    }
+
     FileUtils.deleteDirectory(inProcessDirectory);
+  }
+
+  private void rebuildJsa(File jdkHome) throws IOException, InterruptedException {
+    output.info("Building JSA cache");
+    String cmd = new File(jdkHome, arch.isWindows() ? "bin\\java.exe" : "bin/java").getAbsolutePath();
+    Process proc = new ProcessBuilder(cmd, "-Xshare:dump")
+        .directory(jdkHome)
+        .redirectErrorStream(true)
+        .start();
+
+    InputStream in = proc.getInputStream();
+    List<String> stdout = IOUtils.readLines(in, Charset.defaultCharset());
+    int ret = proc.waitFor();
+    if (ret != 0) {
+      for (String l : stdout) {
+        output.error(l);
+      }
+    }
   }
 
   private static IJdkExtractor getExtractor(File jdkImage) {

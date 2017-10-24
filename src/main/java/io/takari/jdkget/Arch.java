@@ -38,4 +38,8 @@ public enum Arch {
       throw new IllegalStateException("Unsupported architecture " + arch);
     }
   }
+
+  public boolean isWindows() {
+    return this == WIN_32 || this == WIN_64;
+  }
 }
