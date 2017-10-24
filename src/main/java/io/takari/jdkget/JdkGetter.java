@@ -200,19 +200,25 @@ public class JdkGetter {
 
   private void rebuildJsa(File jdkHome) throws IOException, InterruptedException {
     output.info("Building JSA cache");
-    String cmd = new File(jdkHome, arch.isWindows() ? "bin\\java.exe" : "bin/java").getAbsolutePath();
-    Process proc = new ProcessBuilder(cmd, "-Xshare:dump")
-        .directory(jdkHome)
-        .redirectErrorStream(true)
-        .start();
+    try {
+      String cmd = new File(jdkHome, arch.isWindows() ? "bin\\java.exe" : "bin/java").getAbsolutePath();
+      Process proc = new ProcessBuilder(cmd, "-Xshare:dump")
+          .directory(jdkHome)
+          .redirectErrorStream(true)
+          .start();
 
-    InputStream in = proc.getInputStream();
-    List<String> stdout = IOUtils.readLines(in, Charset.defaultCharset());
-    int ret = proc.waitFor();
-    if (ret != 0) {
-      for (String l : stdout) {
-        output.error(l);
+      InputStream in = proc.getInputStream();
+      List<String> stdout = IOUtils.readLines(in, Charset.defaultCharset());
+      int ret = proc.waitFor();
+      if (ret != 0) {
+        output.info("Ignoring an error building JSA cache:");
+        for (String l : stdout) {
+          output.info(" > " + l);
+        }
       }
+    } catch (Throwable t) {
+      Throwables.propagateIfInstanceOf(t, InterruptedException.class);
+      output.info("Ignoring an error building JSA cache: " + t);
     }
   }
 
