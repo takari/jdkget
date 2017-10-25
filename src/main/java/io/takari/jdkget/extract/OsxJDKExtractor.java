@@ -15,15 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
-
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.cpio.CpioArchiveEntry;
 import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
-import org.codehaus.plexus.util.FileUtils;
-
 import com.sprylab.xar.XarEntry;
 import com.sprylab.xar.XarFile;
-
 import io.takari.jdkget.IJdkExtractor;
 import io.takari.jdkget.JdkContext;
 import io.takari.jdkget.Util;
@@ -42,12 +38,10 @@ public class OsxJDKExtractor implements IJdkExtractor {
     // DMG <-- XAR <-- GZ <-- CPIO
     UnHFS.unhfs(jdkImage, workDir);
 
-    List<File> payloads = new ArrayList<>();
-
-    List<File> packageFiles = FileUtils.getFiles(workDir, "**/*.pkg", null, true);
+    List<File> payloads = new ArrayList<>(); 
+    File jdkPkg = getJdkPackage(workDir);
+    
     // validate
-
-    File jdkPkg = packageFiles.get(0);
     XarFile xarFile = new XarFile(jdkPkg);
     for (XarEntry entry : xarFile.getEntries()) {
       Util.checkInterrupt();
@@ -133,6 +127,15 @@ public class OsxJDKExtractor implements IJdkExtractor {
     }
 
     return true;
+  }
+
+  private File getJdkPackage(File workDir) throws IOException {
+    File[] files = workDir.listFiles((d, name) -> name.endsWith(".pkg"));
+    if (files == null || files.length < 1) {
+      new IOException("JDK package not found in " + workDir.getAbsolutePath());
+    }
+
+    return files[0];
   }
 
 }
