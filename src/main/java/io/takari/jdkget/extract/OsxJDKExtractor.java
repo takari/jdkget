@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,11 +129,13 @@ public class OsxJDKExtractor implements IJdkExtractor {
     return true;
   }
 
-  private File getJdkPackage(File workDir) throws IOException{
-    return Arrays.stream(new File(workDir.getPath())
-          .listFiles((d, name) -> name.endsWith(".pkg")))
-        .findFirst()
-        .orElseThrow(() -> new IOException("JDK package not found in " + workDir.getAbsolutePath()));
+  private File getJdkPackage(File workDir) throws IOException {
+    File[] files = workDir.listFiles((d, name) -> name.endsWith(".pkg"));
+    if (files == null || files.length < 1) {
+      new IOException("JDK package not found in " + workDir.getAbsolutePath());
+    }
+
+    return files[0];
   }
 
 }
