@@ -4,12 +4,14 @@ public class JdkContext {
   private JdkReleases releases;
   private JdkVersion version;
   private Arch arch;
+  private String type;
   private IOutput output;
 
-  public JdkContext(JdkReleases releases, JdkVersion version, Arch arch, IOutput output) {
+  public JdkContext(JdkReleases releases, JdkVersion version, Arch arch, String type, IOutput output) {
     this.releases = releases;
     this.version = version;
     this.arch = arch;
+    this.type = type;
     this.output = output;
   }
 
@@ -29,4 +31,7 @@ public class JdkContext {
     return output;
   }
 
+  public String getType() {
+    return type;
+  }
 }

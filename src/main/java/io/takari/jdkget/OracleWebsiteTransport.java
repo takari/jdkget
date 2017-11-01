@@ -57,7 +57,7 @@ public class OracleWebsiteTransport implements ITransport {
 
   private JdkBinary binary(JdkContext context) throws IOException {
     JdkRelease rel = context.getReleases().select(context.getVersion());
-    return rel.getBinary(context.getArch());
+    return rel.getBinary(context.getType(), context.getArch());
   }
 
   private boolean isApple(JdkContext context) {

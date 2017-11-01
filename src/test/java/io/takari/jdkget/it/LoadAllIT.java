@@ -70,7 +70,7 @@ public class LoadAllIT {
   private boolean downloadUnpack(JdkReleases releases, JdkRelease r, Arch selArch, boolean jce, ITransport transport) {
     JdkVersion v = r.getVersion();
     System.out.println(v.longBuild() + " / " + v.shortBuild() + (r.isPsu() ? " PSU" : ""));
-    Stream<Arch> a = selArch != null ? Stream.of(selArch) : r.getArchs().parallelStream();
+    Stream<Arch> a = selArch != null ? Stream.of(selArch) : r.getArchs("jdk").parallelStream();
 
     boolean[] failed = new boolean[] {false};
     a.forEach(arch -> {

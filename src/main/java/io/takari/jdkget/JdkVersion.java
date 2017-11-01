@@ -100,7 +100,7 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
       String revision = x[0];
 
       String buildNumber;
-      if (revision.endsWith("b")) { // 6u5b
+      if (revision.endsWith("b") || revision.endsWith("p")) { // 6u5b
         buildNumber = revision.substring(revision.length() - 1);
         revision = revision.substring(0, revision.length() - 1);
       } else {
@@ -141,7 +141,7 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
     if (b.startsWith("-")) {
       b = b.substring(1);
     }
-    if (b.startsWith("b")) {
+    if (b.startsWith("b") || b.startsWith("p")) {
       b = b.substring(1);
     }
     if (b.isEmpty()) {

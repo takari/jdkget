@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -14,9 +15,9 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import com.google.common.base.Throwables;
-
+import io.takari.jdkget.JdkReleases.JavaReleaseType;
 import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;
 import io.takari.jdkget.extract.BinJDKExtractor;
@@ -31,21 +32,23 @@ public class JdkGetter {
   private final JdkVersion jdkVersion;
   private final boolean unrestrictedJCE;
   private final Arch arch;
+  private final String type;
   private final File outputDirectory;
   private final File inProcessDirectory;
   private final int retries;
   private ITransport transport;
   private IOutput output;
-
-  public JdkGetter(JdkReleases releases, String version, Arch arch, File outputDirectory, int retries, ITransport transport, IOutput output) {
-    this(releases, version, false, arch, outputDirectory, retries, transport, output);
+  
+  
+  public JdkGetter(JdkReleases releases, String version, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
+    this(releases, version, false, arch, type, outputDirectory, retries, transport, output);
   }
 
-  public JdkGetter(JdkReleases releases, String version, boolean unrestrictedJCE, Arch arch, File outputDirectory, int retries, ITransport transport, IOutput output) {
-    this(releases, version == null || version.equals("latest") ? null : JdkVersion.parse(version), unrestrictedJCE, arch, outputDirectory, retries, transport, output);
+  public JdkGetter(JdkReleases releases, String version, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
+    this(releases, version == null || version.equals("latest") ? null : JdkVersion.parse(version), unrestrictedJCE, arch, type, outputDirectory, retries, transport, output);
   }
 
-  public JdkGetter(JdkReleases releases, JdkVersion jdkVersion, boolean unrestrictedJCE, Arch arch, File outputDirectory, int retries, ITransport transport, IOutput output) {
+  public JdkGetter(JdkReleases releases, JdkVersion jdkVersion, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
     this.releases = releases;
     this.jdkVersion = jdkVersion;
     this.unrestrictedJCE = unrestrictedJCE;
@@ -66,6 +69,12 @@ public class JdkGetter {
       this.transport = transport;
     } else {
       this.transport = new OracleWebsiteTransport();
+    }
+    
+    if(type == null) {
+      this.type = JavaReleaseType.getDefault().getName();
+    } else {
+      this.type = type;
     }
     this.outputDirectory = outputDirectory.getAbsoluteFile();
     this.inProcessDirectory = new File(outputDirectory.getPath() + ".in-process");
@@ -100,7 +109,7 @@ public class JdkGetter {
 
     output.info("Getting jdk " + theVersion.shortBuild() + " for " + arch.toString().toLowerCase().replace("_", ""));
 
-    JdkContext context = new JdkContext(getReleases(), theVersion, arch, output);
+    JdkContext context = new JdkContext(getReleases(), theVersion, arch, type, output);
 
     File jdkImage = transport.getImageFile(context, inProcessDirectory);
     File jceImage = null;
@@ -256,12 +265,13 @@ public class JdkGetter {
     private int retries = 0;
     private ITransport transport;
     private IOutput output;
+    private String type;
 
     public JdkGetter build() {
       if (jdkVersion != null) {
-        return new JdkGetter(releases, jdkVersion, unrestrictedJCE, arch, outputDirectory, retries, transport, output);
+        return new JdkGetter(releases, jdkVersion, unrestrictedJCE, arch, type, outputDirectory, retries, transport, output);
       }
-      return new JdkGetter(releases, version, unrestrictedJCE, arch, outputDirectory, retries, transport, output);
+      return new JdkGetter(releases, version, unrestrictedJCE, arch, type, outputDirectory, retries, transport, output);
     }
 
     public Builder releases(JdkReleases releases) {
@@ -308,19 +318,25 @@ public class JdkGetter {
       this.output = output;
       return this;
     }
+
+    public Builder type(String type) {
+      this.type = type;
+      return this;
+    }
   }
 
   private static final Options cliOptions = new Options();
   static {
     cliOptions.addOption("o", true, "Output dir");
     cliOptions.addOption("v", true, "JDK Version");
+    cliOptions.addOption("t", true, "Java release type of: jdk(default), jre, serverjre");
     cliOptions.addOption("a", true, "Architecture");
     cliOptions.addOption("l", false, "List versions");
     cliOptions.addOption("u", true, "Alternate url to oracle.com/otn-pub");
     cliOptions.addOption("jce", false, "Also install unlimited jce policy");
     cliOptions.addOption("otnUser", true, "OTN username");
     cliOptions.addOption("otnPassword", true, "OTN password");
-    cliOptions.addOption("mirror", false, "Mirror remote storage by only downloading binaries; can be used with -v, -vf, -vt and -a, otherwise will download everything");
+    cliOptions.addOption("mirror", false, "Mirror remote storage by only downloading binaries; can be used with -v, -vf, -vt, -t(default is all types to download) and -a, otherwise will download everything");
     cliOptions.addOption("vf", true, "When used with -mirror, specifies version range 'from'");
     cliOptions.addOption("vt", true, "When used with -mirror, specifies version range 'to'");
     cliOptions.addOption("?", "help", false, "Help");
@@ -350,7 +366,8 @@ public class JdkGetter {
     String vt = cli.getOptionValue("vt");
     String v = cli.getOptionValue("v");// "1.8.0_92-b14";
     String a = cli.getOptionValue("a");
-
+    String t = cli.getOptionValue("t");
+    t = StringUtils.isBlank(t) || !JavaReleaseType.contains(t) ? null : t;
     boolean jce = cli.hasOption("jce");
 
     if (cli.hasOption('?')) {
@@ -378,10 +395,12 @@ public class JdkGetter {
     }
 
     if (mirror) {
-      mirrorRemote(transport, v != null ? v : vf, v != null ? v : vt, arch, outDir);
+      mirrorRemote(transport, v != null ? v : vf, v != null ? v : vt, arch, t, outDir);
       return;
     }
-
+    
+    t = t == null ? JavaReleaseType.getDefault().getName() : t;
+    
     if (v == null) {
       System.err.println("No version specified");
       usage();
@@ -392,8 +411,9 @@ public class JdkGetter {
       usage();
       return;
     }
-
+        
     JdkGetter.Builder b = JdkGetter.builder() //
+        .type(t) //
         .version(v) //
         .outputDirectory(outDir) //
         .arch(arch) //
@@ -406,7 +426,7 @@ public class JdkGetter {
     b.build().get();
   }
 
-  private static void mirrorRemote(ITransport transport, String vfrom, String vto, Arch arch, File outDir) throws IOException, InterruptedException {
+  private static void mirrorRemote(ITransport transport, String vfrom, String vto, Arch arch, String type, File outDir) throws IOException, InterruptedException {
     JdkReleases rels = JdkReleases.get();
     JdkVersion vf = vfrom != null ? JdkVersion.parse(vfrom) : null;
     JdkVersion vt = vto != null ? rels.select(JdkVersion.parse(vto)).getVersion() : null;
@@ -419,32 +439,45 @@ public class JdkGetter {
       if (vf != null && v.compareTo(vf) < 0) {
         break;
       }
-
-      Collection<Arch> arches = rel.getArchs();
-      if (arch != null) {
-        if (!arches.contains(arch)) {
-          continue;
-        }
-        arches = Collections.singleton(arch);
+      
+      Collection<String> types = rel.getTypes(type == null ? JavaReleaseType.names() : Arrays.asList(type));
+      if(types == null) {
+        continue;
       }
-      for (Arch a : arches) {
-        JdkBinary bin = rel.getBinary(a);
-        File out = new File(outDir, bin.getPath()).getAbsoluteFile();
-        FileUtils.forceMkdir(out.getParentFile());
-
-        System.out.println("\n** Downloading " + v.shortBuild() + " for " + a.name() + " to " + out);
-        JdkContext ctx = new JdkContext(rels, v, a, StdOutput.INSTANCE);
-        if (out.exists()) {
-          if (transport.validate(ctx, out)) {
-            System.out.println("Valid file already exists");
+      
+      for(String t : types) {
+        Collection<Arch> arches = rel.getArchs(t);
+        if (arch != null) {
+          if (!arches.contains(arch)) {
             continue;
-          } else {
-            System.out.println("Existing file failed validation, deleting");
-            FileUtils.forceDelete(out);
           }
+          arches = Collections.singleton(arch);
         }
-        transport.downloadJdk(ctx, out);
+        mirrorRemoteDownloading(transport, outDir, rels, rel, v, arches, t);
       }
+    }
+  }
+
+  private static void mirrorRemoteDownloading(ITransport transport, File outDir, JdkReleases rels,
+      JdkRelease rel, JdkVersion v, Collection<Arch> arches, String type)
+      throws IOException, InterruptedException {
+    for (Arch a : arches) {
+      JdkBinary bin = rel.getBinary(type, a);
+      File out = new File(outDir, bin.getPath()).getAbsoluteFile();
+      FileUtils.forceMkdir(out.getParentFile());
+
+      System.out.println("\n** Downloading " + v.shortBuild() + " for " + a.name() + " to " + out);
+      JdkContext ctx = new JdkContext(rels, v, a, type, StdOutput.INSTANCE);
+      if (out.exists()) {
+        if (transport.validate(ctx, out)) {
+          System.out.println("Valid file already exists");
+          continue;
+        } else {
+          System.out.println("Existing file failed validation, deleting");
+          FileUtils.forceDelete(out);
+        }
+      }
+      transport.downloadJdk(ctx, out);
     }
   }
 
