@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
@@ -40,15 +40,15 @@ public class JdkGetter {
   private IOutput output;
   
   
-  public JdkGetter(JdkReleases releases, String version, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
+  private JdkGetter(JdkReleases releases, String version, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
     this(releases, version, false, arch, type, outputDirectory, retries, transport, output);
   }
 
-  public JdkGetter(JdkReleases releases, String version, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
+  private JdkGetter(JdkReleases releases, String version, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
     this(releases, version == null || version.equals("latest") ? null : JdkVersion.parse(version), unrestrictedJCE, arch, type, outputDirectory, retries, transport, output);
   }
 
-  public JdkGetter(JdkReleases releases, JdkVersion jdkVersion, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
+  private JdkGetter(JdkReleases releases, JdkVersion jdkVersion, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
     this.releases = releases;
     this.jdkVersion = jdkVersion;
     this.unrestrictedJCE = unrestrictedJCE;
@@ -71,11 +71,8 @@ public class JdkGetter {
       this.transport = new OracleWebsiteTransport();
     }
     
-    if(type == null) {
-      this.type = JavaReleaseType.getDefault().getName();
-    } else {
-      this.type = type;
-    }
+    this.type = JavaReleaseType.validateTypeName(type);
+    
     this.outputDirectory = outputDirectory.getAbsoluteFile();
     this.inProcessDirectory = new File(outputDirectory.getPath() + ".in-process");
   }
@@ -336,7 +333,7 @@ public class JdkGetter {
     cliOptions.addOption("jce", false, "Also install unlimited jce policy");
     cliOptions.addOption("otnUser", true, "OTN username");
     cliOptions.addOption("otnPassword", true, "OTN password");
-    cliOptions.addOption("mirror", false, "Mirror remote storage by only downloading binaries; can be used with -v, -vf, -vt, -t(default is all types to download) and -a, otherwise will download everything");
+    cliOptions.addOption("mirror", false, "Mirror remote storage by only downloading binaries; can be used with -v, -vf, -vt, -t and -a, otherwise will download everything");
     cliOptions.addOption("vf", true, "When used with -mirror, specifies version range 'from'");
     cliOptions.addOption("vt", true, "When used with -mirror, specifies version range 'to'");
     cliOptions.addOption("?", "help", false, "Help");
@@ -366,8 +363,8 @@ public class JdkGetter {
     String vt = cli.getOptionValue("vt");
     String v = cli.getOptionValue("v");// "1.8.0_92-b14";
     String a = cli.getOptionValue("a");
-    String t = cli.getOptionValue("t");
-    t = StringUtils.isBlank(t) || !JavaReleaseType.contains(t) ? null : t;
+    String[] t = cli.getOptionValues("t");
+    
     boolean jce = cli.hasOption("jce");
 
     if (cli.hasOption('?')) {
@@ -399,8 +396,6 @@ public class JdkGetter {
       return;
     }
     
-    t = t == null ? JavaReleaseType.getDefault().getName() : t;
-    
     if (v == null) {
       System.err.println("No version specified");
       usage();
@@ -411,9 +406,24 @@ public class JdkGetter {
       usage();
       return;
     }
-        
+
+    if(t != null && t.length != 1) {
+      System.err.println("Only one type is allowed: " + Arrays.toString(t));
+      usage();
+      return;
+    }
+    
+    if(t != null && StringUtils.equals("n/a", JavaReleaseType.validateTypeName(t[0], "n/a"))) {
+      System.err.println("Release type is not supported: " + t[0]);
+      System.err.print("Avalable release types: " + 
+          Arrays.asList(JavaReleaseType.values()).stream().map(at -> at.getName())
+          .collect(Collectors.joining(", ")));
+      usage();
+      return;
+    }
+    
     JdkGetter.Builder b = JdkGetter.builder() //
-        .type(t) //
+        .type(t == null ? null : t[0]) //
         .version(v) //
         .outputDirectory(outDir) //
         .arch(arch) //
@@ -426,7 +436,7 @@ public class JdkGetter {
     b.build().get();
   }
 
-  private static void mirrorRemote(ITransport transport, String vfrom, String vto, Arch arch, String type, File outDir) throws IOException, InterruptedException {
+  private static void mirrorRemote(ITransport transport, String vfrom, String vto, Arch arch, String[] types, File outDir) throws IOException, InterruptedException {
     JdkReleases rels = JdkReleases.get();
     JdkVersion vf = vfrom != null ? JdkVersion.parse(vfrom) : null;
     JdkVersion vt = vto != null ? rels.select(JdkVersion.parse(vto)).getVersion() : null;
@@ -440,12 +450,12 @@ public class JdkGetter {
         break;
       }
       
-      Collection<String> types = rel.getTypes(type == null ? JavaReleaseType.names() : Arrays.asList(type));
-      if(types == null) {
+      Collection<String> binTypes = rel.getTypes(JavaReleaseType.validateTypeNames(types));
+      if(binTypes == null) {
         continue;
       }
       
-      for(String t : types) {
+      for(String t : binTypes) {
         Collection<Arch> arches = rel.getArchs(t);
         if (arch != null) {
           if (!arches.contains(arch)) {
@@ -510,9 +520,9 @@ public class JdkGetter {
     System.out.println("  List versions:");
     System.out.println("    jdkget-" + ver + ".jar -l");
     System.out.println("  Download and extract:");
-    System.out.println("    jdkget-" + ver + ".jar -o <outputDir> -v <jdkVersion> [-a <arch>]");
+    System.out.println("    jdkget-" + ver + ".jar -o <outputDir> -v <jdkVersion> [-t <type>] [-a <arch>]");
     System.out.println("  Mirror remote:");
-    System.out.println("    jdkget-" + ver + ".jar -mirror -o <outputDir> [-v <jdkVersion>] [-vf <fromVersion>] [-vt <toVersion>] [-a <arch>]");
+    System.out.println("    jdkget-" + ver + ".jar -mirror -o <outputDir> [-t <type1> ... -t <typeN>] [-v <jdkVersion>] [-vf <fromVersion>] [-vt <toVersion>] [-a <arch>]");
   }
 
 

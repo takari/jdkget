@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
+import org.apache.commons.lang3.StringUtils;
 
 public class JdkReleases implements Serializable {
 
@@ -47,14 +48,46 @@ public class JdkReleases implements Serializable {
       return JDK;
     }
 
-    public static boolean contains(String t) {
-      return JavaReleaseType.valueOf(t) != null;
+    public static boolean contains(String typeName) {
+      return Arrays.asList(JavaReleaseType.values()).stream()
+          .anyMatch(t -> StringUtils.equals(typeName, t.getName()));
     }
     
     public static List<String> names(){
       return Arrays.asList(JavaReleaseType.values()).stream()
           .map(t -> t.getName())
           .collect(Collectors.toList());
+    }
+
+    public static List<String> validateTypeNames(String[] typeNames){
+      return validateTypeNames(typeNames == null ? null : Arrays.asList(typeNames), 
+          Arrays.asList(JavaReleaseType.getDefault().getName()));
+    }
+    
+    public static List<String> validateTypeNames(List<String> typeNames){
+      return validateTypeNames(typeNames, 
+          Arrays.asList(JavaReleaseType.getDefault().getName()));
+    }
+    
+    public static List<String> validateTypeNames(List<String> types, List<String> defaultTypeNames) {
+      if(types == null) {
+        return defaultTypeNames;
+      }
+      
+      List<String> res = types.stream().filter(t -> JavaReleaseType.contains(t))
+          .collect(Collectors.toList());
+      return res.size() < 1 ? defaultTypeNames : res;
+    }
+
+    public static String validateTypeName(String typeName) {
+      return validateTypeName(typeName, getDefault().getName());
+    }
+    
+    public static String validateTypeName(String typeName, String defaultType) {
+      if(StringUtils.isEmpty(typeName) || !contains(typeName)) {
+        return defaultType;
+      }
+      return typeName;
     }
   }
   
@@ -305,29 +338,35 @@ public class JdkReleases implements Serializable {
     return new Builder();
   }
 
-//  public static Builder newBuilder(JdkReleases rels) {
-//    return newBuilder(rels, "jdk");
-//  }
+  public static Builder newBuilder(JdkReleases rels) {
+    return newBuilder(rels, null);
+  }
   
-//  public static Builder newBuilder(JdkReleases rels, String type) {
-//    Builder b = new Builder();
-//
-//    for (JdkRelease r : rels.getReleases()) {
-//      String v = r.getVersion().shortBuild();
-//      if (r.isPsu()) {
-//        b.setPSU(v);
-//      }
-//      for (JdkBinary bin : r.binaries.values()) {
-//        b.addBinary(v, bin.getArch(), bin.getPath(), bin.getMd5(), bin.getSha256(), bin.getSize());
-//      }
-//    }
-//
-//    for (JCE jce : rels.jces) {
-//      b.addJCE(jce.getMajorVersion(), jce.getPath());
-//    }
-//
-//    return b;
-//  }
+  public static Builder newBuilder(JdkReleases rels, List<String> typeNames) {
+    Builder b = new Builder();
+    List<String> releaseTypes = JavaReleaseType.validateTypeNames(typeNames);
+    for (JdkRelease r : rels.getReleases()) {
+      String v = r.getVersion().shortBuild();
+      if (r.isPsu()) {
+        b.setPSU(v);
+      }
+      
+      r.binaries.entrySet().stream()
+      .filter( e -> releaseTypes.contains(e.getKey()))
+      .forEach(typedBins -> {
+        typedBins.getValue().values().stream().forEach(bin -> 
+          b.addBinary(v, typedBins.getKey(), bin.getArch(), bin.getPath(), bin.getMd5(),
+            bin.getSha256(), bin.getSize())
+        );
+      });
+    }
+
+    for (JCE jce : rels.jces) {
+      b.addJCE(jce.getMajorVersion(), jce.getPath());
+    }
+
+    return b;
+  }
 
   public static class Builder {
     private Map<String, Map<String,List<JdkBinary>>> binaries;
@@ -339,19 +378,27 @@ public class JdkReleases implements Serializable {
       jces = new ArrayList<>();
     }
 
+    public Builder addBinary(String version, Arch arch, String path) {
+      return addBinary(version, null, arch, path, null, null, -1);
+    }
+    
     public Builder addBinary(String version, String type, Arch arch, String path) {
       return addBinary(version, type, arch, path, null, null, -1);
     }
 
+    public Builder addBinary(String version, Arch arch, String path, String md5, String sha256, long size) {
+      return addBinary(version, null, arch, path, md5, sha256, size);
+    }
+    
     public Builder addBinary(String version, String type, Arch arch, String path, String md5, String sha256, long size) {
-      
+      String binType = JavaReleaseType.validateTypeName(type);
       Map<String, List<JdkBinary>> bv = binaries.get(version);
       if (bv == null) {
         binaries.put(version, bv = new LinkedHashMap<>());
       }
-      List<JdkBinary> bt = bv.get(type);
+      List<JdkBinary> bt = bv.get(binType);
       if (bt == null) {
-        bv.put(type, bt = new ArrayList<>());
+        bv.put(binType, bt = new ArrayList<>());
       }
       bt.add(new JdkBinary(arch, path, md5, sha256, size));
       return this;
