@@ -41,11 +41,13 @@ import io.takari.jdkget.JdkReleases.JdkRelease;
 
 public class OracleWebsiteTransport implements ITransport {
 
-  private static final List<String> supportedBinaryContentTypes = Arrays.asList("application/x-gzip",
+  private static final List<String> supportedBinaryContentTypes = Arrays.asList(
+      "application/x-gzip",
       "application/gzip",
       "application/zip",
       "application/octet-stream",
-      "application/x-redhat-package-manager");
+      "application/x-redhat-package-manager",
+      "application/x-compress");
 
   public static final String ORACLE_WEBSITE = "http://download.oracle.com/otn-pub";
 
