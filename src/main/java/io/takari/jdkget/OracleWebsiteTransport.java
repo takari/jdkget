@@ -41,6 +41,12 @@ import io.takari.jdkget.JdkReleases.JdkRelease;
 
 public class OracleWebsiteTransport implements ITransport {
 
+  private static final List<String> supportedBinaryContentTypes = Arrays.asList("application/x-gzip", 
+      "application/gzip",
+      "application/zip",
+      "application/octet-stream",
+      "application/x-redhat-package-manager");
+
   public static final String ORACLE_WEBSITE = "http://download.oracle.com/otn-pub";
 
   public static final String JDK_URL_FORMAT = "/java/jdk/%s/jdk-%s-%s.%s";
@@ -48,10 +54,6 @@ public class OracleWebsiteTransport implements ITransport {
   private String website;
   private String otnUsername;
   private String otnPassword;
-  private static final List<String> supportedBinaryContentTypes = Arrays.asList("application/x-gzip", 
-      "application/gzip",
-      "application/zip",
-      "application/octet-stream");
 
   public OracleWebsiteTransport() {
     this(ORACLE_WEBSITE);
