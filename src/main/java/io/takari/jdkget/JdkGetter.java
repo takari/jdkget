@@ -16,6 +16,9 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.databind.ext.Java7SupportImpl;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import io.takari.jdkget.JdkReleases.JavaReleaseType;
 import io.takari.jdkget.JdkReleases.JdkBinary;
@@ -38,8 +41,7 @@ public class JdkGetter {
   private final int retries;
   private ITransport transport;
   private IOutput output;
-  
-  
+
   private JdkGetter(JdkReleases releases, String version, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
     this(releases, version, false, arch, type, outputDirectory, retries, transport, output);
   }
@@ -70,9 +72,9 @@ public class JdkGetter {
     } else {
       this.transport = new OracleWebsiteTransport();
     }
-    
+
     this.type = JavaReleaseType.validateTypeName(type);
-    
+
     this.outputDirectory = outputDirectory.getAbsoluteFile();
     this.inProcessDirectory = new File(outputDirectory.getPath() + ".in-process");
   }
@@ -340,6 +342,7 @@ public class JdkGetter {
   }
 
   public static void main(String[] args) throws Exception {
+    Preconditions.checkNotNull(Java7SupportImpl.class); // prime it to prevent errors later
 
     CommandLine cli = new PosixParser().parse(cliOptions, args);
 
@@ -364,7 +367,7 @@ public class JdkGetter {
     String v = cli.getOptionValue("v");// "1.8.0_92-b14";
     String a = cli.getOptionValue("a");
     String[] t = cli.getOptionValues("t");
-    
+
     boolean jce = cli.hasOption("jce");
 
     if (cli.hasOption('?')) {
@@ -395,7 +398,7 @@ public class JdkGetter {
       mirrorRemote(transport, v != null ? v : vf, v != null ? v : vt, arch, t, outDir);
       return;
     }
-    
+
     if (v == null) {
       System.err.println("No version specified");
       usage();
@@ -407,21 +410,21 @@ public class JdkGetter {
       return;
     }
 
-    if(t != null && t.length != 1) {
+    if (t != null && t.length != 1) {
       System.err.println("Only one type is allowed: " + Arrays.toString(t));
       usage();
       return;
     }
-    
-    if(t != null && StringUtils.equals("n/a", JavaReleaseType.validateTypeName(t[0], "n/a"))) {
+
+    if (t != null && StringUtils.equals("n/a", JavaReleaseType.validateTypeName(t[0], "n/a"))) {
       System.err.println("Release type is not supported: " + t[0]);
-      System.err.print("Avalable release types: " + 
+      System.err.print("Avalable release types: " +
           Arrays.asList(JavaReleaseType.values()).stream().map(at -> at.getName())
-          .collect(Collectors.joining(", ")));
+              .collect(Collectors.joining(", ")));
       usage();
       return;
     }
-    
+
     JdkGetter.Builder b = JdkGetter.builder() //
         .type(t == null ? null : t[0]) //
         .version(v) //
@@ -449,13 +452,13 @@ public class JdkGetter {
       if (vf != null && v.compareTo(vf) < 0) {
         break;
       }
-      
+
       Collection<String> binTypes = rel.getTypes(JavaReleaseType.validateTypeNames(types));
-      if(binTypes == null) {
+      if (binTypes == null) {
         continue;
       }
-      
-      for(String t : binTypes) {
+
+      for (String t : binTypes) {
         Collection<Arch> arches = rel.getArchs(t);
         if (arch != null) {
           if (!arches.contains(arch)) {
@@ -476,18 +479,22 @@ public class JdkGetter {
       File out = new File(outDir, bin.getPath()).getAbsoluteFile();
       FileUtils.forceMkdir(out.getParentFile());
 
-      System.out.println("\n** Downloading " + v.shortBuild() + " for " + a.name() + " to " + out);
       JdkContext ctx = new JdkContext(rels, v, a, type, StdOutput.INSTANCE);
+      ctx.getOutput().info("\n** Downloading " + v.shortBuild() + " for " + a.name() + " to " + out);
       if (out.exists()) {
         if (transport.validate(ctx, out)) {
-          System.out.println("Valid file already exists");
+          ctx.getOutput().info("Valid file already exists");
           continue;
         } else {
-          System.out.println("Existing file failed validation, deleting");
+          ctx.getOutput().info("Existing file failed validation, deleting");
           FileUtils.forceDelete(out);
         }
       }
       transport.downloadJdk(ctx, out);
+      ctx.getOutput().info("Validating downloaded file");
+      if (!transport.validate(ctx, out)) {
+        ctx.getOutput().error("Invalid image file " + out);
+      }
     }
   }
 
