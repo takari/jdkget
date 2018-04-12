@@ -14,6 +14,36 @@
     <url>java/jdk/${version}${build}/jdk-${version}-${arch}.${ext}</url>
   </defaults>
 
+  <jdk version="10+46">
+    <url>java/jdk/${version}${build}/76eac37278c24557a3c4199677f19b62/jdk-${version}_${arch}_bin.${ext}</url>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>ac487a2738d3d59f7a4b95095207970b811143068752b6b4ec404d5a3aa8680c</sha256>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>d3cb9ddf29c71e49f3976f93ef4d817a6765385f41e8db9ea947e64ba657f1c2</sha256>
+    </bin>
+    <bin cls="osx_64" arch="osx-x64" ext="dmg">
+      <sha256>df64b0d6c24e6a6006820b0073747e1c79ace714063f515cdcfb825b73558851</sha256>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>57c9eaf672fe8108c9621a8370a22136b7b5719487b14ed957cf38b7b42339f6</sha256>
+    </bin>
+  </jdk>
+  <jdk version="9.0.4+11">
+    <url>java/jdk/${version}${build}/c2514751926b4512b076cc82f959763f/jdk-${version}_${arch}_bin.${ext}</url>
+    <bin cls="nix_64" arch="linux-x64" ext="tar.gz">
+      <sha256>90c4ea877e816e3440862cfa36341bc87d05373d53389ec0f2d54d4e8c95daa2</sha256>
+    </bin>
+    <bin cls="win_64" arch="windows-x64" ext="exe">
+      <sha256>56c67197a8f2f7723ffb0324191151075cdec0f0891861e36f3fadda28d556c3</sha256>
+    </bin>
+    <bin cls="osx_64" arch="osx-x64" ext="dmg">
+      <sha256>f5c827ab4c3cf380827199005a3dfe8077a38c4d6e8b3fa37ec19ce6ca9aa658</sha256>
+    </bin>
+    <bin cls="sol_sparc" arch="solaris-sparcv9" ext="tar.gz">
+      <sha256>9f424553d80b8b7337d8c5014dbb8f09dc6d242291d1e73a30e00aaefe47ba89</sha256>
+    </bin>
+  </jdk>
   <jdk version="9.0.1+11">
     <url>java/jdk/${version}${build}/jdk-${version}_${arch}_bin.${ext}</url>
     <bin cls="nix_64" arch="linux-x64" ext="tar.gz">

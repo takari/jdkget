@@ -8,30 +8,44 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
-
+import java.util.List;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Consts;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.cookie.ClientCookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.BasicClientCookie;
-
+import org.apache.http.message.BasicNameValuePair;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-
 import io.takari.jdkget.JdkReleases.JCE;
 import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;
 
 public class OracleWebsiteTransport implements ITransport {
+
+  private static final List<String> supportedBinaryContentTypes = Arrays.asList("application/x-gzip", 
+      "application/gzip",
+      "application/zip",
+      "application/octet-stream",
+      "application/x-redhat-package-manager");
 
   public static final String ORACLE_WEBSITE = "http://download.oracle.com/otn-pub";
 
@@ -109,7 +123,12 @@ public class OracleWebsiteTransport implements ITransport {
     BasicCookieStore cookieStore = new BasicCookieStore();
     CloseableHttpClient cl = HttpClientBuilder.create().setDefaultCookieStore(cookieStore)
         .disableRedirectHandling()
-        .setUserAgent("curl/7.47.0")
+        //.setUserAgent("curl/7.47.0")
+        //User Agent String of Safari
+        .setUserAgent("Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) "
+            + "AppleWebKit/537.51.1 (KHTML, like Gecko) "
+            + "CriOS/30.0.1599.12 Mobile/11A465 Safari/8536.25 "
+            + "(3B92C18B-D9DE-4CB7-A02A-22FD2AF17C8F)")
         .build();
 
     if (cookie) {
@@ -139,25 +158,22 @@ public class OracleWebsiteTransport implements ITransport {
         String msg = res.getStatusLine().getReasonPhrase();
 
         boolean shouldTryLogin = hasOtnCredentials && req.getURI().getHost().equals("login.oracle.com");
-
-        if (code == 401 && shouldTryLogin) {
-
-          req = createLogin(req.getURI(), otnUsername, otnPassword);
+        
+        if(code == 401 && shouldTryLogin){
+          req = createLoginBasic(URI.create(res.getFirstHeader("Location").getValue()), otnUsername, otnPassword);
+          output.info("Basic authorizing on " + cleanUrl(req.getURI().toString()));
+        }
+        if (code == 200 && shouldTryLogin) {
+          req = createLoginPost(req.getURI(),  res);
           output.info("Authorizing on " + cleanUrl(req.getURI().toString()));
-
         } else if (code == 200) {
-
           downloadResponse(res, target, output);
           return;
-
         } else if (code == 301 || code == 302) {
-
           String newUrl = res.getFirstHeader("Location").getValue();
           output.info("Redirecting to " + cleanUrl(newUrl));
           req = new HttpGet(newUrl);
-
         } else if (code == 404) {
-
           if (hasOtnCredentials && url.contains("/otn-pub/")) {
             output.info("Server responded with " + code + ": " + msg + ", retrying with OTN credentials");
             req = new HttpGet(url.replace("/otn-pub/", "/otn/"));
@@ -165,7 +181,6 @@ public class OracleWebsiteTransport implements ITransport {
             output.error("Server responded with " + code + ": " + msg);
             throw new IOException("Could not download jdk");
           }
-
         } else {
           output.error("Server responded with " + code + ": " + msg + ", retrying");
           req = new HttpGet(req.getURI());
@@ -183,7 +198,14 @@ public class OracleWebsiteTransport implements ITransport {
     return q != -1 ? url.substring(0, q) : url;
   }
 
-  private void downloadResponse(HttpResponse res, File target, IOutput output) throws IOException, InterruptedException, FileNotFoundException {
+  private void downloadResponse(HttpResponse res, File target, IOutput output)
+      throws IOException, InterruptedException, FileNotFoundException {
+    Header contentType = res.getFirstHeader("Content-Type");
+    
+    if(contentType == null || !supportedBinaryContentTypes.contains(contentType.getValue().trim())) {
+      throw new IOException("Unsupported content type: " + contentType);
+    }
+    
     Header contentLength = res.getFirstHeader("Content-Length");
     long totalHint = -1;
     if (contentLength != null) {
@@ -197,8 +219,81 @@ public class OracleWebsiteTransport implements ITransport {
       Util.copyWithProgress(is, os, totalHint, output);
     }
   }
+
+  private HttpRequestBase createLoginPost(URI uri, HttpResponse res) throws IOException{
+      String pageData;
+      HttpEntity entity = res.getEntity();
+      String enc = entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue();
+      try (InputStream content = entity.getContent()) {
+        pageData = IOUtils.toString(content, enc);
+      }
   
-  private HttpRequestBase createLogin(URI uri, String username, String password) throws IOException {
+      int formStart = pageData.indexOf("<form ");
+      if (formStart == -1) {
+        throw new IOException("No form found at login page " + uri);
+      }
+      int formStartEnd = pageData.indexOf(">", formStart);
+      if (formStartEnd == -1) {
+        throw new IOException("Form begin tag not closed at login page " + uri);
+      }
+      int formEnd = pageData.indexOf("</form>", formStartEnd);
+      if (formEnd == -1) {
+        throw new IOException("Form end tag not found at login page " + uri);
+      }
+  
+      String action = findAttr(pageData.substring(formStart, formStartEnd), "action");
+      if (action.startsWith("/")) {
+        String scheme = uri.getScheme();
+        int p = uri.getPort();
+        String port = p >= 0 ? ":" + p : "";
+        action = scheme + "://" + uri.getHost() + port + action;
+      }
+      HttpPost post = new HttpPost(action);
+  
+      List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+  
+      int nextInput = formStartEnd + 1;
+      while (nextInput < formEnd) {
+        int inputStart = pageData.indexOf("<input ", nextInput);
+        if (inputStart == -1) {
+          break;
+        }
+        int inputEnd = pageData.indexOf('>', inputStart);
+        if (inputEnd == -1) {
+          break;
+        }
+  
+  
+        String n = findAttr(pageData.substring(inputStart, inputEnd), "name");
+        if (n != null) {
+          String v = findAttr(pageData.substring(inputStart, inputEnd), "value");
+  
+          if (n.equals("ssousername")) {
+            v = otnUsername;
+          } else if (n.equals("password")) {
+            v = otnPassword;
+          }
+  
+          formparams.add(new BasicNameValuePair(n, v));
+        }
+  
+        nextInput = inputEnd + 1;
+      }
+      post.setEntity(new UrlEncodedFormEntity(formparams, Consts.UTF_8));
+      return post;
+    }
+  
+    private static String findAttr(String data, String name) {
+      String pref = name + "=\"";
+      int valueStart = data.indexOf(pref);
+      if (valueStart == -1) {
+        return null;
+      }
+      int valueEnd = data.indexOf('"', valueStart + pref.length());
+      return StringEscapeUtils.unescapeHtml4(data.substring(valueStart + pref.length(), valueEnd));
+    }
+    
+  private HttpRequestBase createLoginBasic(URI uri, String username, String password) throws IOException {
     HttpGet req = new HttpGet(uri);
     String auth = username + ":" + password;
     String authHeader = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes("utf-8"));
