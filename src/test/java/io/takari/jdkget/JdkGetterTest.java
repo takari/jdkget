@@ -16,7 +16,7 @@ public class JdkGetterTest {
     DumbTransport t = new DumbTransport(false);
     try {
       JdkGetter.builder()
-        .output(new NullOutput())
+        .output(IOutput.NULL_OUTPUT)
         .retries(3)
         .transport(t)
         .arch(Arch.NIX_64)
@@ -32,7 +32,7 @@ public class JdkGetterTest {
   public void testInterrupts() throws Exception {
 
     JdkGetter b = JdkGetter.builder()
-      .output(new NullOutput())
+      .output(IOutput.NULL_OUTPUT)
       .retries(3)
       .transport(new SleepingTransport())
       .arch(Arch.NIX_64)

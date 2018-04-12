@@ -41,16 +41,17 @@ public class JdkGetter {
   private final int retries;
   private ITransport transport;
   private IOutput output;
+  private boolean silent;
 
-  private JdkGetter(JdkReleases releases, String version, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
-    this(releases, version, false, arch, type, outputDirectory, retries, transport, output);
+  private JdkGetter(JdkReleases releases, String version, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output, boolean silent) {
+    this(releases, version, false, arch, type, outputDirectory, retries, transport, output, silent);
   }
 
-  private JdkGetter(JdkReleases releases, String version, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
-    this(releases, version == null || version.equals("latest") ? null : JdkVersion.parse(version), unrestrictedJCE, arch, type, outputDirectory, retries, transport, output);
+  private JdkGetter(JdkReleases releases, String version, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output, boolean silent) {
+    this(releases, version == null || version.equals("latest") ? null : JdkVersion.parse(version), unrestrictedJCE, arch, type, outputDirectory, retries, transport, output, silent);
   }
 
-  private JdkGetter(JdkReleases releases, JdkVersion jdkVersion, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output) {
+  private JdkGetter(JdkReleases releases, JdkVersion jdkVersion, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output, boolean silent) {
     this.releases = releases;
     this.jdkVersion = jdkVersion;
     this.unrestrictedJCE = unrestrictedJCE;
@@ -74,6 +75,7 @@ public class JdkGetter {
     }
 
     this.type = JavaReleaseType.validateTypeName(type);
+    this.silent = silent;
 
     this.outputDirectory = outputDirectory.getAbsoluteFile();
     this.inProcessDirectory = new File(outputDirectory.getPath() + ".in-process");
@@ -109,6 +111,7 @@ public class JdkGetter {
     output.info("Getting jdk " + theVersion.shortBuild() + " for " + arch.toString().toLowerCase().replace("_", ""));
 
     JdkContext context = new JdkContext(getReleases(), theVersion, arch, type, output);
+    context.setSilent(silent);
 
     File jdkImage = transport.getImageFile(context, inProcessDirectory);
     File jceImage = null;
@@ -265,12 +268,13 @@ public class JdkGetter {
     private ITransport transport;
     private IOutput output;
     private String type;
+    private boolean silent;
 
     public JdkGetter build() {
       if (jdkVersion != null) {
-        return new JdkGetter(releases, jdkVersion, unrestrictedJCE, arch, type, outputDirectory, retries, transport, output);
+        return new JdkGetter(releases, jdkVersion, unrestrictedJCE, arch, type, outputDirectory, retries, transport, output, silent);
       }
-      return new JdkGetter(releases, version, unrestrictedJCE, arch, type, outputDirectory, retries, transport, output);
+      return new JdkGetter(releases, version, unrestrictedJCE, arch, type, outputDirectory, retries, transport, output, silent);
     }
 
     public Builder releases(JdkReleases releases) {
@@ -322,6 +326,12 @@ public class JdkGetter {
       this.type = type;
       return this;
     }
+
+    public Builder silent() {
+      this.silent = true;
+      return this;
+    }
+
   }
 
   private static final Options cliOptions = new Options();
@@ -338,6 +348,7 @@ public class JdkGetter {
     cliOptions.addOption("mirror", false, "Mirror remote storage by only downloading binaries; can be used with -v, -vf, -vt, -t and -a, otherwise will download everything");
     cliOptions.addOption("vf", true, "When used with -mirror, specifies version range 'from'");
     cliOptions.addOption("vt", true, "When used with -mirror, specifies version range 'to'");
+    cliOptions.addOption("s", false , "Silence download messages");
     cliOptions.addOption("?", "help", false, "Help");
   }
 
@@ -367,6 +378,7 @@ public class JdkGetter {
     String v = cli.getOptionValue("v");// "1.8.0_92-b14";
     String a = cli.getOptionValue("a");
     String[] t = cli.getOptionValues("t");
+    boolean silent = cli.hasOption("s");
 
     boolean jce = cli.hasOption("jce");
 
@@ -395,7 +407,7 @@ public class JdkGetter {
     }
 
     if (mirror) {
-      mirrorRemote(transport, v != null ? v : vf, v != null ? v : vt, arch, t, outDir);
+      mirrorRemote(transport, v != null ? v : vf, v != null ? v : vt, arch, t, outDir, silent);
       return;
     }
 
@@ -436,10 +448,14 @@ public class JdkGetter {
       b = b.unrestrictedJCE();
     }
 
+    if (silent) {
+      b = b.silent();
+    }
+
     b.build().get();
   }
 
-  private static void mirrorRemote(ITransport transport, String vfrom, String vto, Arch arch, String[] types, File outDir) throws IOException, InterruptedException {
+  private static void mirrorRemote(ITransport transport, String vfrom, String vto, Arch arch, String[] types, File outDir, boolean silent) throws IOException, InterruptedException {
     JdkReleases rels = JdkReleases.get();
     JdkVersion vf = vfrom != null ? JdkVersion.parse(vfrom) : null;
     JdkVersion vt = vto != null ? rels.select(JdkVersion.parse(vto)).getVersion() : null;
@@ -466,13 +482,13 @@ public class JdkGetter {
           }
           arches = Collections.singleton(arch);
         }
-        mirrorRemoteDownloading(transport, outDir, rels, rel, v, arches, t);
+        mirrorRemoteDownloading(transport, outDir, rels, rel, v, arches, t, silent);
       }
     }
   }
 
   private static void mirrorRemoteDownloading(ITransport transport, File outDir, JdkReleases rels,
-      JdkRelease rel, JdkVersion v, Collection<Arch> arches, String type)
+      JdkRelease rel, JdkVersion v, Collection<Arch> arches, String type, boolean silent)
       throws IOException, InterruptedException {
     for (Arch a : arches) {
       JdkBinary bin = rel.getBinary(type, a);
@@ -480,7 +496,8 @@ public class JdkGetter {
       FileUtils.forceMkdir(out.getParentFile());
 
       JdkContext ctx = new JdkContext(rels, v, a, type, StdOutput.INSTANCE);
-      ctx.getOutput().info("\n** Downloading " + v.shortBuild() + " for " + a.name() + " to " + out);
+      ctx.setSilent(silent);
+      ctx.getOutput().info("\n** Downloading " + type + " " + v.shortBuild() + " for " + a.name() + " to " + out);
       if (out.exists()) {
         if (transport.validate(ctx, out)) {
           ctx.getOutput().info("Valid file already exists");

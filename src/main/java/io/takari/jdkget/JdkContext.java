@@ -7,6 +7,8 @@ public class JdkContext {
   private String type;
   private IOutput output;
 
+  private boolean silent;
+
   public JdkContext(JdkReleases releases, JdkVersion version, Arch arch, String type, IOutput output) {
     this.releases = releases;
     this.version = version;
@@ -33,5 +35,13 @@ public class JdkContext {
 
   public String getType() {
     return type;
+  }
+
+  public boolean isSilent() {
+    return silent;
+  }
+
+  public void setSilent(boolean silent) {
+    this.silent = silent;
   }
 }

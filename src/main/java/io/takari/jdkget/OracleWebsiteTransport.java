@@ -41,7 +41,7 @@ import io.takari.jdkget.JdkReleases.JdkRelease;
 
 public class OracleWebsiteTransport implements ITransport {
 
-  private static final List<String> supportedBinaryContentTypes = Arrays.asList("application/x-gzip", 
+  private static final List<String> supportedBinaryContentTypes = Arrays.asList("application/x-gzip",
       "application/gzip",
       "application/zip",
       "application/octet-stream",
@@ -104,7 +104,7 @@ public class OracleWebsiteTransport implements ITransport {
       url = website + "/" + bin.getPath();
     }
 
-    doDownload(url, cookie, jdkImage, context.getOutput());
+    doDownload(context, url, cookie, jdkImage);
   }
 
   @Override
@@ -114,17 +114,21 @@ public class OracleWebsiteTransport implements ITransport {
       throw new IllegalStateException("No JCE for JDK " + context.getVersion());
     }
 
-    doDownload(website + "/" + jce.getPath(), true, jceImage, context.getOutput());
+    doDownload(context, website + "/" + jce.getPath(), true, jceImage);
   }
 
-  private void doDownload(final String url, boolean cookie, File target, IOutput output) throws IOException, InterruptedException {
-    output.info("Downloading " + cleanUrl(url));
+  private void doDownload(JdkContext context, final String url, boolean cookie, File target) throws IOException, InterruptedException {
+    IOutput output = context.getOutput();
+    boolean echo = !context.isSilent();
+    if (echo) {
+      output.info("Downloading " + cleanUrl(url));
+    }
 
     BasicCookieStore cookieStore = new BasicCookieStore();
     CloseableHttpClient cl = HttpClientBuilder.create().setDefaultCookieStore(cookieStore)
         .disableRedirectHandling()
-        //.setUserAgent("curl/7.47.0")
-        //User Agent String of Safari
+        // .setUserAgent("curl/7.47.0")
+        // User Agent String of Safari
         .setUserAgent("Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) "
             + "AppleWebKit/537.51.1 (KHTML, like Gecko) "
             + "CriOS/30.0.1599.12 Mobile/11A465 Safari/8536.25 "
@@ -158,24 +162,32 @@ public class OracleWebsiteTransport implements ITransport {
         String msg = res.getStatusLine().getReasonPhrase();
 
         boolean shouldTryLogin = hasOtnCredentials && req.getURI().getHost().equals("login.oracle.com");
-        
-        if(code == 401 && shouldTryLogin){
+
+        if (code == 401 && shouldTryLogin) {
           req = createLoginBasic(URI.create(res.getFirstHeader("Location").getValue()), otnUsername, otnPassword);
-          output.info("Basic authorizing on " + cleanUrl(req.getURI().toString()));
+          if (echo) {
+            output.info("Basic authorizing on " + cleanUrl(req.getURI().toString()));
+          }
         }
         if (code == 200 && shouldTryLogin) {
-          req = createLoginPost(req.getURI(),  res);
-          output.info("Authorizing on " + cleanUrl(req.getURI().toString()));
+          req = createLoginPost(req.getURI(), res);
+          if (echo) {
+            output.info("Authorizing on " + cleanUrl(req.getURI().toString()));
+          }
         } else if (code == 200) {
-          downloadResponse(res, target, output);
+          downloadResponse(context, res, target);
           return;
         } else if (code == 301 || code == 302) {
           String newUrl = res.getFirstHeader("Location").getValue();
-          output.info("Redirecting to " + cleanUrl(newUrl));
+          if (echo) {
+            output.info("Redirecting to " + cleanUrl(newUrl));
+          }
           req = new HttpGet(newUrl);
         } else if (code == 404) {
           if (hasOtnCredentials && url.contains("/otn-pub/")) {
-            output.info("Server responded with " + code + ": " + msg + ", retrying with OTN credentials");
+            if (echo) {
+              output.info("Server responded with " + code + ": " + msg + ", retrying with OTN credentials");
+            }
             req = new HttpGet(url.replace("/otn-pub/", "/otn/"));
           } else {
             output.error("Server responded with " + code + ": " + msg);
@@ -192,20 +204,20 @@ public class OracleWebsiteTransport implements ITransport {
 
     throw new IOException("Could not download jdk after " + retries + " attempts");
   }
-  
+
   private static String cleanUrl(String url) {
     int q = url.indexOf('?');
     return q != -1 ? url.substring(0, q) : url;
   }
 
-  private void downloadResponse(HttpResponse res, File target, IOutput output)
+  private void downloadResponse(JdkContext context, HttpResponse res, File target)
       throws IOException, InterruptedException, FileNotFoundException {
     Header contentType = res.getFirstHeader("Content-Type");
-    
-    if(contentType == null || !supportedBinaryContentTypes.contains(contentType.getValue().trim())) {
+
+    if (contentType == null || !supportedBinaryContentTypes.contains(contentType.getValue().trim())) {
       throw new IOException("Unsupported content type: " + contentType);
     }
-    
+
     Header contentLength = res.getFirstHeader("Content-Length");
     long totalHint = -1;
     if (contentLength != null) {
@@ -216,83 +228,84 @@ public class OracleWebsiteTransport implements ITransport {
     }
 
     try (InputStream is = res.getEntity().getContent(); OutputStream os = new FileOutputStream(target)) {
+      IOutput output = context.isSilent() ? IOutput.NULL_OUTPUT : context.getOutput();
       Util.copyWithProgress(is, os, totalHint, output);
     }
   }
 
-  private HttpRequestBase createLoginPost(URI uri, HttpResponse res) throws IOException{
-      String pageData;
-      HttpEntity entity = res.getEntity();
-      String enc = entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue();
-      try (InputStream content = entity.getContent()) {
-        pageData = IOUtils.toString(content, enc);
-      }
-  
-      int formStart = pageData.indexOf("<form ");
-      if (formStart == -1) {
-        throw new IOException("No form found at login page " + uri);
-      }
-      int formStartEnd = pageData.indexOf(">", formStart);
-      if (formStartEnd == -1) {
-        throw new IOException("Form begin tag not closed at login page " + uri);
-      }
-      int formEnd = pageData.indexOf("</form>", formStartEnd);
-      if (formEnd == -1) {
-        throw new IOException("Form end tag not found at login page " + uri);
-      }
-  
-      String action = findAttr(pageData.substring(formStart, formStartEnd), "action");
-      if (action.startsWith("/")) {
-        String scheme = uri.getScheme();
-        int p = uri.getPort();
-        String port = p >= 0 ? ":" + p : "";
-        action = scheme + "://" + uri.getHost() + port + action;
-      }
-      HttpPost post = new HttpPost(action);
-  
-      List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-  
-      int nextInput = formStartEnd + 1;
-      while (nextInput < formEnd) {
-        int inputStart = pageData.indexOf("<input ", nextInput);
-        if (inputStart == -1) {
-          break;
-        }
-        int inputEnd = pageData.indexOf('>', inputStart);
-        if (inputEnd == -1) {
-          break;
-        }
-  
-  
-        String n = findAttr(pageData.substring(inputStart, inputEnd), "name");
-        if (n != null) {
-          String v = findAttr(pageData.substring(inputStart, inputEnd), "value");
-  
-          if (n.equals("ssousername")) {
-            v = otnUsername;
-          } else if (n.equals("password")) {
-            v = otnPassword;
-          }
-  
-          formparams.add(new BasicNameValuePair(n, v));
-        }
-  
-        nextInput = inputEnd + 1;
-      }
-      post.setEntity(new UrlEncodedFormEntity(formparams, Consts.UTF_8));
-      return post;
+  private HttpRequestBase createLoginPost(URI uri, HttpResponse res) throws IOException {
+    String pageData;
+    HttpEntity entity = res.getEntity();
+    String enc = entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue();
+    try (InputStream content = entity.getContent()) {
+      pageData = IOUtils.toString(content, enc);
     }
-  
-    private static String findAttr(String data, String name) {
-      String pref = name + "=\"";
-      int valueStart = data.indexOf(pref);
-      if (valueStart == -1) {
-        return null;
-      }
-      int valueEnd = data.indexOf('"', valueStart + pref.length());
-      return StringEscapeUtils.unescapeHtml4(data.substring(valueStart + pref.length(), valueEnd));
+
+    int formStart = pageData.indexOf("<form ");
+    if (formStart == -1) {
+      throw new IOException("No form found at login page " + uri);
     }
-    
+    int formStartEnd = pageData.indexOf(">", formStart);
+    if (formStartEnd == -1) {
+      throw new IOException("Form begin tag not closed at login page " + uri);
+    }
+    int formEnd = pageData.indexOf("</form>", formStartEnd);
+    if (formEnd == -1) {
+      throw new IOException("Form end tag not found at login page " + uri);
+    }
+
+    String action = findAttr(pageData.substring(formStart, formStartEnd), "action");
+    if (action.startsWith("/")) {
+      String scheme = uri.getScheme();
+      int p = uri.getPort();
+      String port = p >= 0 ? ":" + p : "";
+      action = scheme + "://" + uri.getHost() + port + action;
+    }
+    HttpPost post = new HttpPost(action);
+
+    List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+
+    int nextInput = formStartEnd + 1;
+    while (nextInput < formEnd) {
+      int inputStart = pageData.indexOf("<input ", nextInput);
+      if (inputStart == -1) {
+        break;
+      }
+      int inputEnd = pageData.indexOf('>', inputStart);
+      if (inputEnd == -1) {
+        break;
+      }
+
+
+      String n = findAttr(pageData.substring(inputStart, inputEnd), "name");
+      if (n != null) {
+        String v = findAttr(pageData.substring(inputStart, inputEnd), "value");
+
+        if (n.equals("ssousername")) {
+          v = otnUsername;
+        } else if (n.equals("password")) {
+          v = otnPassword;
+        }
+
+        formparams.add(new BasicNameValuePair(n, v));
+      }
+
+      nextInput = inputEnd + 1;
+    }
+    post.setEntity(new UrlEncodedFormEntity(formparams, Consts.UTF_8));
+    return post;
+  }
+
+  private static String findAttr(String data, String name) {
+    String pref = name + "=\"";
+    int valueStart = data.indexOf(pref);
+    if (valueStart == -1) {
+      return null;
+    }
+    int valueEnd = data.indexOf('"', valueStart + pref.length());
+    return StringEscapeUtils.unescapeHtml4(data.substring(valueStart + pref.length(), valueEnd));
+  }
+
   private HttpRequestBase createLoginBasic(URI uri, String username, String password) throws IOException {
     HttpGet req = new HttpGet(uri);
     String auth = username + ":" + password;
