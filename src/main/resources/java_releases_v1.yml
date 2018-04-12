@@ -101,16 +101,79 @@ java:
   - { arch: "linux-x64", ext: "rpm", sha256: "d035da618f6935f9a796c7dce31fa8f8e36e32f434de2d1d0b5cde42e021acc7" }
   jre:
   - { arch: "linux-x64", ext: "rpm", sha256: "1a3b2037ae503594f2ce516815e3d78b78c79a9813159212811c36a5e466a8f3" }
-  - { arch: "linux-x64", ext: "tar.gz", sha256: "b030c4eff81745ec3de57f223e7df46a2575b259237117d7a5908ed0e9897d05" }
+  - { arch: "linux-x64", ext: "tar.gz", sha256: "abf54b9905850851ae5de10db1d664ca0625c79ccd505c5e3fc62f6d969424a2" }
   - { arch: "osx-x64", ext: "dmg", sha256: "4f4d7e2079e695da13bc7720dec54f06c32eff67ef5d3e2c021e6cadb9468807" }
   - { arch: "osx-x64", ext: "tar.gz", sha256: "d082a489b82f736278124143705242f461390c0fb50c0ae4f2369ee9222283bd" }
   - { arch: "windows-x64", ext: "exe", sha256: "8f44ed236520e0731c3f1255d7ebadb6e24e1ae63ef645b44d44d576fe267fe3" }
-  - { arch: "windows-x64", ext: "tar.gz", sha256: "24a6d3ab835895976f99851d1f2bc98c49ce1ffc481322d4574cc213be1c3d90" }
-  - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "c129fadfd8dbdf0f0969cb0b7b499ef63146f1c68790df7d4689e7d7e804f031" }
+  - { arch: "windows-x64", ext: "tar.gz", sha256: "597178b4ba5b4c00a8bac2ca00b99e2c033116222be33ac968a34dfbbc8adbe1" }
+  - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "2b32b6fd11f58c9240fad173c428c00ef463df5cdf45bbb4401d3f7fa60f41ed" }
   serverjre:
   - { arch: "linux-x64", ext: "tar.gz", sha256: "b030c4eff81745ec3de57f223e7df46a2575b259237117d7a5908ed0e9897d05" }
   - { arch: "windows-x64", ext: "tar.gz", sha256: "24a6d3ab835895976f99851d1f2bc98c49ce1ffc481322d4574cc213be1c3d90" }
   - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "c129fadfd8dbdf0f0969cb0b7b499ef63146f1c68790df7d4689e7d7e804f031" }
+
+- version: "8u162-b12"
+  psu: true
+  url: "java/jdk/${version}${build}/0da788060d494f5095bf8624735fa2f1/${typeName}-${version}-${arch}.${ext}"
+  jdk:
+  - { arch: "linux-i586", ext: "tar.gz", sha256: "eecf88dbcf7c78d236251d44350126f1297a522f2eab974b4027ef20f7a6fb24" }
+  - { arch: "linux-x64", ext: "tar.gz", sha256: "68ec82d47fd9c2b8eb84225b6db398a72008285fafc98631b1ff8d2229680257" }
+  - { cls: "win_32", arch: "windows-i586", ext: "exe", sha256: "4a705bd74171eb003a1485d1b2d7a3fb735452f252d39a7beee5117f08614c1f" }
+  - { arch: "windows-x64", ext: "exe", sha256: "f05aa9904c373b2e0aad7a5ce1006aa3aff096842f256d66c6cfc268d9c48026" }
+  - { arch: "macosx-x64", ext: "dmg", sha256: "56f7c30eb737ab46cbfb2aed925e4df2a3d24c03ce027ae1eb57c50aa0e29d3e" }
+  - { arch: "solaris-x64", ext: "tar.gz", sha256: "a16f4f30f0ec5737f5d498b579d1f4d16eab7fe40f9039113b98c7b346705320" }
+  - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "3ba4db1ebadc68167f646fde2b6c0477447961fc59bbe4e41d6d3ee30328cd41" }
+  - { arch: "linux-i586", ext: "rpm", sha256: "c8b56cd4819019a401b4ba9f0017a11bdd7b52b006fd006821474ab819aba14c" }
+  - { arch: "linux-x64", ext: "rpm", sha256: "20acf9bafb4ea10688812074942af480d34fd837ecd234173e80e2b53126b46b" }
+  - { arch: "solaris-sparcv9", ext: "tar.Z", sha256: "be0d216c08175252ae4462c299d2a8633fc02120d4ebf005d9b20719eecd92f6" }
+  - { arch: "solaris-x64", ext: "tar.Z", sha256: "805b393afe7c4c917fd2e72c07dc364e9c38672a780fd4430dc2a8f8f966cb4a" }
+  jre:
+  - { arch: "linux-i586", ext: "rpm", sha256: "6770dd5164f1cb08ae31a40994752ef9192474331d4ef147125833b7b03afc52" }
+  - { arch: "linux-i586", ext: "tar.gz", sha256: "b0752798b28ce6e6bb133070f06fbdbd0a5bbbaf678f6c40a6def5c25e102289" }
+  - { arch: "linux-x64", ext: "rpm", sha256: "01bc3e0165b11cfbcc4d8379ca3483bd7bf9dc021503a0d0174c1030cc3f9696" }
+  - { arch: "linux-x64", ext: "tar.gz", sha256: "dfa25ebd1f90bf74ad7ba2dacb0e08d884594e733c9a522b58256778031341a4" }
+  - { arch: "macosx-x64", ext: "dmg", sha256: "76196d9dd195458d4290f77cfc1517b374bf5e5bbb1d4d3df0bb8c90b18792ac" }
+  - { arch: "macosx-x64", ext: "tar.gz", sha256: "9008a6d9ffcf30c023937a51ae87f142824a78f568307920d0f0212f8588e6e2" }
+  - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "c4d2b9de45de531e36c4685eb79b577da1f3cd047a7224fee656ba55a733b99b" }
+  - { arch: "solaris-x64", ext: "tar.gz", sha256: "c095948cbfcf79b5e1f0793627b79a0d7c76b9fbcb3a5de852c83d0da52930f6" }
+  - { arch: "windows-x64", ext: "exe", sha256: "af08b368268b991c97575076f027730b5e39174110c911a116e62fc8d94b02e5" }
+  - { arch: "windows-x64", ext: "tar.gz", sha256: "b6e97fc695a91ef74651f850ce76cb14112c0c5a7f615d3fc0bce686e30ee345" }
+  serverjre:
+  - { arch: "linux-x64", ext: "tar.gz", sha256: "6942684acb6001748a01fc090a18f52ebd8cbfcf7be27ec6131981906bfa8b53", typeName: "server-jre" }
+  - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "7ade23fd363ef608be166f69f2d8a3d091c4ef8d6e0f8b83654e525a0f44a3b0", typeName: "server-jre" }
+  - { arch: "solaris-x64", ext: "tar.gz", sha256: "77b64773e0c46b83cebfbdf9558470442a1c4e7e989a3dd3e74f9c7e9a9fa948", typeName: "server-jre" }
+  - { arch: "windows-x64", ext: "tar.gz", sha256: "4a4d07429be8ef50ea1f80794dc85489db0b66db1f20e01a1ee38eaa19ec4789", typeName: "server-jre" }
+
+- version: "8u161-b12"
+  url: "java/jdk/${version}${build}/2f38c3b165be4555a1fa6e98c45e0808/${typeName}-${version}-${arch}.${ext}"
+  jdk:
+  - { arch: "linux-i586", ext: "tar.gz", sha256: "cf69617a74cccb262f06f7948f38e1c004d2663801e7724e7a7a0dabeb48d7dc" }
+  - { arch: "linux-x64", ext: "tar.gz", sha256: "6dbc56a0e3310b69e91bb64db63a485bd7b6a8083f08e48047276380a0e2021e" }
+  - { cls: "win_32", arch: "windows-i586", ext: "exe", sha256: "91af93793e9ffb37696a1fccb0a037ba4fe6b61eb43fe1471d53da78cfaddf96" }
+  - { arch: "windows-x64", ext: "exe", sha256: "261a0adb39c0ac2ad34aa0b5d3cfc924b801d4369fc2d587c3eae6a6af40d516" }
+  - { arch: "macosx-x64", ext: "dmg", sha256: "8498a3e6314e227c5f2028048363a64c49eeb7316d6c0c5de7d54e38980f9c59" }
+  - { arch: "solaris-x64", ext: "tar.gz", sha256: "63ec435f77091dfd2b8390c5c2303ad5bf6807a962e1bc2239e0ba59989f958f" }
+  - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "0580729058eaed1bfbdbf74927de6312b1513d486fb07657434aec4dbad26ed1" }
+  - { arch: "linux-i586", ext: "rpm", sha256: "0e85c367d71f0fc70162aae274aee7480a3075c1848417d1f25b0b5b68d60139" }
+  - { arch: "linux-x64", ext: "rpm", sha256: "d6808a4a7b96b72e8fbee28a223f94e43a07e970e757b87fc409644716ed7aa0" }
+  - { arch: "solaris-sparcv9", ext: "tar.Z", sha256: "6af9772fb2f59ae356de13e457d2cde4af3340e65407644735a357fd819db0c6" }
+  - { arch: "solaris-x64", ext: "tar.Z", sha256: "0af40ee23f138c540313db3b90303bb5e7773a0d83a0c2fd811d1365d9adb22f" }
+  jre:
+  - { arch: "linux-i586", ext: "rpm", sha256: "8d6fde589042d4a009e5140b0f4e95eb6a4930c6056616becb7edaf46ee05fdc" }
+  - { arch: "linux-i586", ext: "tar.gz", sha256: "1ed63892fc48093bf77f9b30cd1bb3ddc8703649e0e8211e1eb970f11746458a" }
+  - { arch: "linux-x64", ext: "rpm", sha256: "4cdda5b2f40bfff9e0c6dfa145609eeb0596fd584d31a8609bd30ea644b8e309" }
+  - { arch: "linux-x64", ext: "tar.gz", sha256: "f5013ffab71cfb690de18d2b75a2d8c95e87175c888c50042be06b167ea6b4b5" }
+  - { arch: "macosx-x64", ext: "dmg", sha256: "7fb418e00edab19e8a25cd1eb480fa7d1f1db55309e52b408503d60ce97e1e94" }
+  - { arch: "macosx-x64", ext: "tar.gz", sha256: "611ac48ca3db2f143c7a565bd8139bce43ad8f5262555fed542394d127cd14fb" }
+  - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "aa3dd4b687d2ce4d7e850bdc247489c524355e1de2fba2b9769266022c05a39d" }
+  - { arch: "solaris-x64", ext: "tar.gz", sha256: "903878c6599efcf8cd816411a002d9db101b4f9dae177141ab1fae083d40f4e7" }
+  - { arch: "windows-x64", ext: "exe", sha256: "59c02eb80acfaeeaf3728c3841440c68ea9e3b4d5e735a7a863f6e2492760b5d" }
+  - { arch: "windows-x64", ext: "tar.gz", sha256: "929a7cc795cffb3304271be9ffcb43f08c2c1cc077dee67f8487649661ee30d0" }
+  serverjre:
+  - { arch: "linux-x64", ext: "tar.gz", sha256: "eb5776cacfd57fbf0ffb907f68c58a1cc6f823e761f4e75d78a6e3240846534e", typeName: "server-jre" }
+  - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "73cea06559da1cda340b7b68c45d2b194ab1bf3b3586f51c38ebabadc9888756", typeName: "server-jre" }
+  - { arch: "solaris-x64", ext: "tar.gz", sha256: "600adb50483a5b89d95faece4f9af8d2f4375dd080d53d0bc975c98aea40942d", typeName: "server-jre" }
+  - { arch: "windows-x64", ext: "tar.gz", sha256: "9f87e1f6a7fcf8c74e5bbfcc8c3de7d3f416d96be821f24fc44065776456538e", typeName: "server-jre" }
 
 - version: "8u152-b16"
   psu: true
