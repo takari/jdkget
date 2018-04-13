@@ -47,15 +47,17 @@ public class OracleWebsiteTransport implements ITransport {
       "application/zip",
       "application/octet-stream",
       "application/x-redhat-package-manager",
-      "application/x-compress");
+      "application/x-compress",
+      "application/x-sh");
 
   public static final String ORACLE_WEBSITE = "http://download.oracle.com/otn-pub";
 
   public static final String JDK_URL_FORMAT = "/java/jdk/%s/jdk-%s-%s.%s";
 
-  private String website;
-  private String otnUsername;
-  private String otnPassword;
+  private final String website;
+  private final String otnUsername;
+  private final String otnPassword;
+  private volatile BasicCookieStore cookieStore;
 
   public OracleWebsiteTransport() {
     this(ORACLE_WEBSITE);
@@ -96,17 +98,15 @@ public class OracleWebsiteTransport implements ITransport {
   public void downloadJdk(JdkContext context, File jdkImage) throws IOException, InterruptedException {
 
     String url;
-    boolean cookie = true;
     if (isApple(context)) {
       // for osx, jdk6* is only available from here
       url = "http://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg";
-      cookie = false;
     } else {
       JdkBinary bin = binary(context);
       url = website + "/" + bin.getPath();
     }
 
-    doDownload(context, url, cookie, jdkImage);
+    doDownload(context, url, jdkImage);
   }
 
   @Override
@@ -116,17 +116,18 @@ public class OracleWebsiteTransport implements ITransport {
       throw new IllegalStateException("No JCE for JDK " + context.getVersion());
     }
 
-    doDownload(context, website + "/" + jce.getPath(), true, jceImage);
+    doDownload(context, website + "/" + jce.getPath(), jceImage);
   }
 
-  private void doDownload(JdkContext context, final String url, boolean cookie, File target) throws IOException, InterruptedException {
+  private void doDownload(JdkContext context, final String url, File target) throws IOException, InterruptedException {
     IOutput output = context.getOutput();
     boolean echo = !context.isSilent();
     if (echo) {
       output.info("Downloading " + cleanUrl(url));
     }
 
-    BasicCookieStore cookieStore = new BasicCookieStore();
+    BasicCookieStore cookieStore = initCookieStore();
+
     CloseableHttpClient cl = HttpClientBuilder.create().setDefaultCookieStore(cookieStore)
         .disableRedirectHandling()
         // .setUserAgent("curl/7.47.0")
@@ -136,19 +137,6 @@ public class OracleWebsiteTransport implements ITransport {
             + "CriOS/30.0.1599.12 Mobile/11A465 Safari/8536.25 "
             + "(3B92C18B-D9DE-4CB7-A02A-22FD2AF17C8F)")
         .build();
-
-    if (cookie) {
-      cookieStore.addCookie(new BasicClientCookie("oraclelicense", "accept-securebackup-cookie"));
-      cookieStore.addCookie(new BasicClientCookie("gpw_e24", "http%3A%2F%2Fwww.oracle.com"));
-    }
-    cookieStore.getCookies().forEach(c -> {
-      BasicClientCookie bc = (BasicClientCookie) c;
-      bc.setDomain(".oracle.com");
-      bc.setPath("/");
-      bc.setAttribute(ClientCookie.PATH_ATTR, bc.getPath());
-      bc.setAttribute(ClientCookie.DOMAIN_ATTR, bc.getDomain());
-    });
-
 
     boolean hasOtnCredentials = StringUtils.isNotBlank(otnUsername) && StringUtils.isNotBlank(otnPassword);
 
@@ -205,6 +193,26 @@ public class OracleWebsiteTransport implements ITransport {
     }
 
     throw new IOException("Could not download jdk after " + retries + " attempts");
+  }
+
+  private BasicCookieStore initCookieStore() {
+    if (cookieStore == null) {
+      synchronized (this) {
+        if (cookieStore == null) {
+          cookieStore = new BasicCookieStore();
+          cookieStore.addCookie(new BasicClientCookie("oraclelicense", "accept-securebackup-cookie"));
+          cookieStore.addCookie(new BasicClientCookie("gpw_e24", "http%3A%2F%2Fwww.oracle.com"));
+          cookieStore.getCookies().forEach(c -> {
+            BasicClientCookie bc = (BasicClientCookie) c;
+            bc.setDomain(".oracle.com");
+            bc.setPath("/");
+            bc.setAttribute(ClientCookie.PATH_ATTR, bc.getPath());
+            bc.setAttribute(ClientCookie.DOMAIN_ATTR, bc.getDomain());
+          });
+        }
+      }
+    }
+    return cookieStore;
   }
 
   private static String cleanUrl(String url) {

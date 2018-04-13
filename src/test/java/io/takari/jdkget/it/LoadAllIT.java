@@ -5,8 +5,6 @@ import static org.junit.Assert.assertFalse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
@@ -15,7 +13,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import io.takari.jdkget.Arch;
-import io.takari.jdkget.IOutput;
+import io.takari.jdkget.CachingOutput;
 import io.takari.jdkget.ITransport;
 import io.takari.jdkget.JdkGetter;
 import io.takari.jdkget.JdkGetter.Builder;
@@ -75,7 +73,7 @@ public class LoadAllIT {
     boolean[] failed = new boolean[] {false};
     a.forEach(arch -> {
       File jdktmp = new File("target/tmp/" + arch);
-      O o = new O();
+      CachingOutput o = new CachingOutput();
       try {
         if (jdktmp.exists()) {
           FileUtils.forceDelete(jdktmp);
@@ -120,32 +118,5 @@ public class LoadAllIT {
     System.out.println("    MEM: " + (occ / 1024L / 1024L) + " (" + (occBefore / 1024L / 1024L) + ")");
 
     return failed[0];
-  }
-
-  private static class O implements IOutput {
-
-    private List<String> msgs = new ArrayList<>();
-
-    @Override
-    public void info(String message) {
-      msgs.add("[INFO] " + message);
-    }
-
-    @Override
-    public void error(String message) {
-      msgs.add("[ERROR] " + message);
-    }
-
-    @Override
-    public void error(String message, Throwable t) {
-      error(message + ": " + t);
-    }
-
-    public void output(PrintStream out) {
-      for (String msg : msgs) {
-        out.println(msg);
-      }
-    }
-
   }
 }

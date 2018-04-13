@@ -6,8 +6,12 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -346,9 +350,10 @@ public class JdkGetter {
     cliOptions.addOption("otnUser", true, "OTN username");
     cliOptions.addOption("otnPassword", true, "OTN password");
     cliOptions.addOption("mirror", false, "Mirror remote storage by only downloading binaries; can be used with -v, -vf, -vt, -t and -a, otherwise will download everything");
+    cliOptions.addOption("threads", true, "Number of threads to run mirror with");
     cliOptions.addOption("vf", true, "When used with -mirror, specifies version range 'from'");
     cliOptions.addOption("vt", true, "When used with -mirror, specifies version range 'to'");
-    cliOptions.addOption("s", false , "Silence download messages");
+    cliOptions.addOption("s", false, "Silence download messages");
     cliOptions.addOption("?", "help", false, "Help");
   }
 
@@ -373,10 +378,8 @@ public class JdkGetter {
     String otnp = cli.getOptionValue("otnPassword");
 
     boolean mirror = cli.hasOption("mirror");
-    String vf = cli.getOptionValue("vf");
-    String vt = cli.getOptionValue("vt");
     String v = cli.getOptionValue("v");// "1.8.0_92-b14";
-    String a = cli.getOptionValue("a");
+    String[] a = cli.getOptionValues("a");
     String[] t = cli.getOptionValues("t");
     boolean silent = cli.hasOption("s");
 
@@ -394,10 +397,7 @@ public class JdkGetter {
     }
 
     File outDir = new File(o);
-    Arch arch = null;
-    if (a != null) {
-      arch = parseArch(a);
-    }
+    Set<Arch> arches = parseArches(a);
 
     ITransport transport = null;
     if (u != null) {
@@ -407,7 +407,15 @@ public class JdkGetter {
     }
 
     if (mirror) {
-      mirrorRemote(transport, v != null ? v : vf, v != null ? v : vt, arch, t, outDir, silent);
+      String vf = cli.getOptionValue("vf");
+      String vt = cli.getOptionValue("vt");
+
+      int threads = 1;
+      if (cli.hasOption("threads")) {
+        threads = Integer.parseInt(cli.getOptionValue("threads"));
+      }
+
+      mirrorRemote(transport, v != null ? v : vf, v != null ? v : vt, arches, t, outDir, threads, silent);
       return;
     }
 
@@ -417,6 +425,14 @@ public class JdkGetter {
       return;
     }
 
+    Arch arch = null;
+    if (!arches.isEmpty()) {
+      if (arches.size() == 1) {
+        arch = arches.iterator().next();
+      } else {
+        System.err.println("Only one arch is allowed");
+      }
+    }
     if (arch == null) {
       usage();
       return;
@@ -455,11 +471,12 @@ public class JdkGetter {
     b.build().get();
   }
 
-  private static void mirrorRemote(ITransport transport, String vfrom, String vto, Arch arch, String[] types, File outDir, boolean silent) throws IOException, InterruptedException {
+  private static void mirrorRemote(ITransport transport, String vfrom, String vto, Set<Arch> arch, String[] types, File outDir, int threads, boolean silent) throws IOException, InterruptedException {
     JdkReleases rels = JdkReleases.get();
     JdkVersion vf = vfrom != null ? JdkVersion.parse(vfrom) : null;
     JdkVersion vt = vto != null ? rels.select(JdkVersion.parse(vto)).getVersion() : null;
 
+    ExecutorService ex = Executors.newFixedThreadPool(threads);
     for (JdkRelease rel : rels.getReleases()) {
       JdkVersion v = rel.getVersion();
       if (vt != null && vt.compareTo(v) < 0) {
@@ -475,56 +492,75 @@ public class JdkGetter {
       }
 
       for (String t : binTypes) {
-        Collection<Arch> arches = rel.getArchs(t);
-        if (arch != null) {
-          if (!arches.contains(arch)) {
-            continue;
-          }
-          arches = Collections.singleton(arch);
+        Set<Arch> reqArches = EnumSet.copyOf(arch);
+        if (reqArches.isEmpty()) {
+          reqArches.addAll(rel.getArchs(t));
+        } else {
+          reqArches.retainAll(rel.getArchs(t));
         }
-        mirrorRemoteDownloading(transport, outDir, rels, rel, v, arches, t, silent);
+        if (reqArches.isEmpty()) {
+          continue;
+        }
+        mirrorRemoteDownloading(transport, outDir, rels, rel, v, reqArches, t, silent || threads > 1, ex);
       }
     }
+    ex.shutdown();
+    ex.awaitTermination(7, TimeUnit.DAYS);
   }
 
   private static void mirrorRemoteDownloading(ITransport transport, File outDir, JdkReleases rels,
-      JdkRelease rel, JdkVersion v, Collection<Arch> arches, String type, boolean silent)
+      JdkRelease rel, JdkVersion v, Collection<Arch> arches, String type, boolean silent, ExecutorService ex)
       throws IOException, InterruptedException {
     for (Arch a : arches) {
       JdkBinary bin = rel.getBinary(type, a);
-      File out = new File(outDir, bin.getPath()).getAbsoluteFile();
-      FileUtils.forceMkdir(out.getParentFile());
 
-      JdkContext ctx = new JdkContext(rels, v, a, type, StdOutput.INSTANCE);
-      ctx.setSilent(silent);
-      ctx.getOutput().info("\n** Downloading " + type + " " + v.shortBuild() + " for " + a.name() + " to " + out);
-      if (out.exists()) {
-        if (transport.validate(ctx, out)) {
-          ctx.getOutput().info("Valid file already exists");
-          continue;
-        } else {
-          ctx.getOutput().info("Existing file failed validation, deleting");
-          FileUtils.forceDelete(out);
+      ex.submit(() -> {
+        CachingOutput output = new CachingOutput();
+        JdkContext ctx = new JdkContext(rels, v, a, type, output);
+        ctx.setSilent(silent);
+        try {
+          File out = new File(outDir, bin.getPath()).getAbsoluteFile();
+          output.info("** Downloading " + type + " " + v.shortBuild() + " for " + a.name() + " to " + out);
+          if (out.exists()) {
+            if (transport.validate(ctx, out)) {
+              ctx.getOutput().info("Valid file already exists");
+              return;
+            } else {
+              ctx.getOutput().info("Existing file failed validation, deleting");
+              FileUtils.forceDelete(out);
+            }
+          }
+          FileUtils.forceMkdir(out.getParentFile());
+          transport.downloadJdk(ctx, out);
+          ctx.getOutput().info("Validating downloaded file");
+          if (!transport.validate(ctx, out)) {
+            ctx.getOutput().error("Invalid image file " + out);
+          }
+        } catch (Exception e) {
+          output.error("Error downloading", e);
+        } finally {
+          output.output(System.out);
+          System.out.println();
         }
-      }
-      transport.downloadJdk(ctx, out);
-      ctx.getOutput().info("Validating downloaded file");
-      if (!transport.validate(ctx, out)) {
-        ctx.getOutput().error("Invalid image file " + out);
-      }
+
+      });
     }
   }
 
-  private static Arch parseArch(String a) {
-
-    a = simpleArch(a);
-    for (Arch arch : Arch.values()) {
-      String av = simpleArch(arch.name());
-      if (a.equals(av)) {
-        return arch;
+  private static Set<Arch> parseArches(String[] as) {
+    Set<Arch> arches = EnumSet.noneOf(Arch.class);
+    if (as != null) {
+      for (String a : as) {
+        a = simpleArch(a);
+        for (Arch arch : Arch.values()) {
+          String av = simpleArch(arch.name());
+          if (a.equals(av)) {
+            arches.add(arch);
+          }
+        }
       }
     }
-    return null;
+    return arches;
   }
 
   private static String simpleArch(String a) {

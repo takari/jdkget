@@ -1,24 +1,4 @@
 ---
-defaults:
-  url: "java/jdk/${version}${build}/${typeName}-${version}-${arch}.${ext}"
-  typeName:
-    jdk: "jdk"
-    serverjre: "serverjre"
-    jre: "jre"
-  archCls:
-    linux-x64: "nix_64"
-    solaris-sparcv9: "sol_sparc"
-    macosx-x64: "osx_64"
-    windows-i586-p: "win_32"
-    windows-i586: "win_32"
-    windows-x64-p: "win_64"
-    solaris-amd64: "sol_64"
-    linux-i586: "nix_32"
-    linux-amd64: "nix_64"
-    windows-x64: "win_64"
-    solaris-x64: "sol_64"
-    windows-amd64: "win_64"
-    osx-x64: "osx_64"
 jce:
 - version: "8"
   url: "java/jce/8/jce_policy-8.zip"
@@ -26,8 +6,8 @@ jce:
   url: "java/jce/7/UnlimitedJCEPolicyJDK7.zip"
 - version: "6"
   url: "java/jce_policy/6/jce_policy-6.zip"
-java:
 
+java:
 - version: "10+46"
   url: "java/jdk/${version}${build}/76eac37278c24557a3c4199677f19b62/${typeName}-${version}_${arch}_bin.${ext}"
   jdk:
@@ -118,7 +98,7 @@ java:
   jdk:
   - { arch: "linux-i586", ext: "tar.gz", sha256: "eecf88dbcf7c78d236251d44350126f1297a522f2eab974b4027ef20f7a6fb24" }
   - { arch: "linux-x64", ext: "tar.gz", sha256: "68ec82d47fd9c2b8eb84225b6db398a72008285fafc98631b1ff8d2229680257" }
-  - { cls: "win_32", arch: "windows-i586", ext: "exe", sha256: "4a705bd74171eb003a1485d1b2d7a3fb735452f252d39a7beee5117f08614c1f" }
+  - { arch: "windows-i586", ext: "exe", sha256: "4a705bd74171eb003a1485d1b2d7a3fb735452f252d39a7beee5117f08614c1f" }
   - { arch: "windows-x64", ext: "exe", sha256: "f05aa9904c373b2e0aad7a5ce1006aa3aff096842f256d66c6cfc268d9c48026" }
   - { arch: "macosx-x64", ext: "dmg", sha256: "56f7c30eb737ab46cbfb2aed925e4df2a3d24c03ce027ae1eb57c50aa0e29d3e" }
   - { arch: "solaris-x64", ext: "tar.gz", sha256: "a16f4f30f0ec5737f5d498b579d1f4d16eab7fe40f9039113b98c7b346705320" }
@@ -149,7 +129,7 @@ java:
   jdk:
   - { arch: "linux-i586", ext: "tar.gz", sha256: "cf69617a74cccb262f06f7948f38e1c004d2663801e7724e7a7a0dabeb48d7dc" }
   - { arch: "linux-x64", ext: "tar.gz", sha256: "6dbc56a0e3310b69e91bb64db63a485bd7b6a8083f08e48047276380a0e2021e" }
-  - { cls: "win_32", arch: "windows-i586", ext: "exe", sha256: "91af93793e9ffb37696a1fccb0a037ba4fe6b61eb43fe1471d53da78cfaddf96" }
+  - { arch: "windows-i586", ext: "exe", sha256: "91af93793e9ffb37696a1fccb0a037ba4fe6b61eb43fe1471d53da78cfaddf96" }
   - { arch: "windows-x64", ext: "exe", sha256: "261a0adb39c0ac2ad34aa0b5d3cfc924b801d4369fc2d587c3eae6a6af40d516" }
   - { arch: "macosx-x64", ext: "dmg", sha256: "8498a3e6314e227c5f2028048363a64c49eeb7316d6c0c5de7d54e38980f9c59" }
   - { arch: "solaris-x64", ext: "tar.gz", sha256: "63ec435f77091dfd2b8390c5c2303ad5bf6807a962e1bc2239e0ba59989f958f" }
@@ -181,7 +161,7 @@ java:
   jdk:
   - { arch: "linux-i586", ext: "tar.gz", sha256: "fc60b121d4b194fa70084fd0ca0d69e8b78e5db01a071efe200e90eed83c4c3e" }
   - { arch: "linux-x64", ext: "tar.gz", sha256: "218b3b340c3f6d05d940b817d0270dfe0cfd657a636bad074dcabe0c111961bf" }
-  - { cls: "win_32", arch: "windows-i586", ext: "exe", sha256: "9d559f0aad8bf014a3647f231bcabd76512aadd16c2314bca919a461f458b8ce" }
+  - { arch: "windows-i586", ext: "exe", sha256: "9d559f0aad8bf014a3647f231bcabd76512aadd16c2314bca919a461f458b8ce" }
   - { arch: "windows-x64", ext: "exe", sha256: "f9aafc51ae722f50463e7c2d875e8310f8d5145803cd1ed8d9044b358a56f36a" }
   - { arch: "macosx-x64", ext: "dmg", sha256: "9f9008e2b05e431838c8ee5f0d54f7715da386bc70b14d4910766c71e9f7923f" }
   - { arch: "solaris-x64", ext: "tar.gz", sha256: "2bf02d98d0eca1ed55fcf274e6254c3e6e71d8e07700fd1ff9e82c44006abace" }
@@ -212,7 +192,7 @@ java:
   jdk:
   - { arch: "linux-i586", ext: "tar.gz", sha256: "76f8137000bee5bee3e7d0eb49e4e3633e3df2070b463e199e6fd2236f9f4fde" }
   - { arch: "linux-x64", ext: "tar.gz", sha256: "c78200ce409367b296ec39be4427f020e2c585470c4eed01021feada576f027f" }
-  - { cls: "win_32", arch: "windows-i586", ext: "exe", sha256: "96189b6fedf42b23fd99c6e2d15e07d561dd29b4a514160ecea8933d31bc6ea8" }
+  - { arch: "windows-i586", ext: "exe", sha256: "96189b6fedf42b23fd99c6e2d15e07d561dd29b4a514160ecea8933d31bc6ea8" }
   - { arch: "windows-x64", ext: "exe", sha256: "bc3fc7efadc3096ad6c2405a43bc34d0edeb50f9cc58dafe930704e2a40ffe0e" }
   - { arch: "macosx-x64", ext: "dmg", sha256: "2fe720683efbb81f2e137f9d740bd524537a5b4b87ad445faab2c6d139354b5d" }
   - { arch: "solaris-x64", ext: "tar.gz", sha256: "c9420d4a02cec64700108de06452317125f38ad98f990fb5ace79118d57533b9" }
@@ -247,8 +227,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "e8a341ce566f32c3d06f6d0f0eeea9a0f434f538d22af949ae58bc86f2eeaae4"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "f2c6657812986aa4b992173da495cdc3620edcdc26927860d7d920958f12575c"
   - arch: "windows-x64"
@@ -287,7 +266,7 @@ java:
     sha256: "23f2852919804b9bf77c7c041197ab379b06593eba4d22efdb2455e131fcb0da"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "8ba6f1c692518beb0c727c6e1fb8c30a5dfcc38f8ef9f4f7c7c114c01c747ebc"
+    sha256: "4e6e11aad54ae3c716a5607ee88d81f3f1e8b5b23ee474b0272dba351ee9f28a"
   - arch: "macosx-x64"
     ext: "dmg"
     sha256: "0c3be4abb6a5a29c6c5e6a3bea3d987d78bcc718bd0808288ee2abc0cba5beec"
@@ -296,16 +275,16 @@ java:
     sha256: "6430664d0d883e662084c0f3a519bd34640e9bb4f54966476a8ca45b97de8f45"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "947694e7a9abaa4b2d3158e923f1d62b431a49d227cc3e1bd7bdfd9c912f3ea0"
+    sha256: "1f4ff0cfe88308e31995d2e1c05903a7edebb74935727897b1f2e963606747d9"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "d315adb02738fb50f84e5bc20e4fd00d29b781e4ea28c7cd04a158c4e9b04537"
+    sha256: "236e7c386a1d105a9a1a3debabd319c6adff0023f6fcd833557356c7a88be567"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "1cb458c9b8f4ebc91227ec2f685dc6f0078c5cce6b00c39382707dcf0606b415"
   - arch: "windows-x64"
     ext: "tar.gz"
-    sha256: "20d5e1b2b4c789b6d0c378ffa9b2ff12448f31f0224ba482a338790cff18020a"
+    sha256: "6ce4c4c67c231f9dcf02e3063b251b65f30b2e7d3cc3081fe483a265ae909746"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -332,8 +311,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "041d5218fbea6cd7e81c8c15e51d0d32911573af2ed69e066787a8dc8a39ba4f"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "f144354be4bc0df7bba6e97e5c2602b743a87604717d11417de6a1445cfab1e5"
   - arch: "windows-x64"
@@ -372,7 +350,7 @@ java:
     sha256: "d4baaeff713994482f8397e8be7d201800e2fbf048670c36fcd1195622d49f24"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "74e398fcd6c1f9786805bda3e5fb42f458be6baeec5db2b2e2b06801be8148f4"
+    sha256: "f268b4d20577be86e1d98451a27b59fd0e99aacd7e9ad7eb35abc3ffa2370c4d"
   - arch: "macosx-x64"
     ext: "dmg"
     sha256: "97ffac30e8926f4568d1b939e6d07d1689d53fe55268aa5072ad14e704ca9d12"
@@ -381,16 +359,16 @@ java:
     sha256: "71813da2a2950516978aa0453994d023858507a68da34a369b2f3e2b4b129ad7"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "68ecb58fcbc73314cbbd603f9095c6fc6c23e50845217c14cd80bc4df412958b"
+    sha256: "781419c91e90ab97159657561ef0c7a8caef6126027ae6d664e3d5bfc3cfb291"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "3119bfd809a8ba7a85de6e315c6446716d661ef9825a356e4da8f5d240165198"
+    sha256: "d80e04cee969cb1a5d253c10c29303f77c07190fe160a25450f3ddbc940a912c"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "5dd58aa25fa52dd3f35029f5c77ca9d94de6cbce89ab906008e0e3dd887c3f32"
   - arch: "windows-x64"
     ext: "tar.gz"
-    sha256: "db2fb3d09437b1f0284372825cc6953b9611bf93e8e7e2c1a90af80c7b2c74cf"
+    sha256: "a8ab4421ae4bb4e3491717b40455ff3d00bf53f2fe8f0f01b6a2e480c9985259"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -417,8 +395,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "62b215bdfb48bace523723cdbb2157c665e6a25429c73828a32f00e587301236"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "df39112240957b1ddb2469f0cfa1a221e4a7582f403c1fb98ca52b6c677427ba"
   - arch: "windows-x64"
@@ -457,7 +434,7 @@ java:
     sha256: "bd77dc59c6b8c64f9f7177bf1d5ca8d9f0b4a07707024b4f118a245165b7489d"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "a80634d17896fe26e432f6c2b589ef6485685b2e717c82cd36f8f747d40ec84b"
+    sha256: "355e5cdb066d4cada1f9f16f358b6fa6280ff5caf7470cf0d5cdd43083408d35"
   - arch: "macosx-x64"
     ext: "dmg"
     sha256: "9844b251e432ac38c3015e784ead44be82d421e4decd153ad1b077732bbee44b"
@@ -466,16 +443,16 @@ java:
     sha256: "1d868f8de999de7531419b7ed54b73c47923c4f5843da0341c62ee8e4a231ea9"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "1160d551eca2dda1c67143dc81158a6198ab223d1dbabd1ee05eb2ccb2d213ef"
+    sha256: "e994880dacf63e54984b01b6626aee49678436288549ae2d5721b42e42ad49f3"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "255bf25039805f45726b02767638ac64e2814e770bb9105c333fac6dbd760280"
+    sha256: "fe37ea3b6ce31211b0e43101c841cba1624a1789dedd893fdd22f309e23a1a83"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "5083590a30bf069e947dce8968221af21b39836fe013b111de70d6107b577cd3"
   - arch: "windows-x64"
     ext: "tar.gz"
-    sha256: "1806ebe235eab2b21c893acbf0b287a392ce6b5edfea3286fc8ff7d6defb19cb"
+    sha256: "89417f409d558274297ae826fb6a9d399b16a20b99923ea3d81f5b1d6b75ce7d"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -502,8 +479,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "97e30203f1aef324a07c94d9d078f5d19bb6c50e638e4492722debca588210bc"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "b57abcfbcdd42d15626775fb214811328f614a9a9e623d4904bbfd6bb2aac79f"
   - arch: "windows-x64"
@@ -542,7 +518,7 @@ java:
     sha256: "016191a85af80f9dcb56e3019da520946c088ac6e3485fee34317970dccd4684"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "c25a60d02475499109f2bd6aa483721462aa7bfbb86b23ca6ac59be472747e5d"
+    sha256: "30bf5fbac0cfbc9201cac1d6973dbc96e5f55043ab315eda8c7aeb23df4f2644"
   - arch: "macosx-x64"
     ext: "dmg"
     sha256: "9795004c32c5bbc7c76045bf917e019be45f21923caaa7aa52f65f9488c049a8"
@@ -551,16 +527,16 @@ java:
     sha256: "7549541f7843be5cd507bcd91c7195c5dbbe3d222d2b322568e198f2733ba4f0"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "fb4904919d2f32284bb2d40a7535a201dfde5e47d0bd4e6ec2283b7d16cbd163"
+    sha256: "74950457f2532037f5eaa40942a8a9c1f122528fc53e736a9f0bcd9a5480616d"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "394718d5abafd8cf681b74cce62ad7045dfea552df6f30e17d34932b5addeea1"
+    sha256: "578f1a3c5a3b429cbe6a5989f681fc4e978548ed25e8e4e5292838e828fbfed1"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "6741acefeb3845964534b3821d459b95c7dfa079f104c5041d1f95d3b6b7a502"
   - arch: "windows-x64"
     ext: "tar.gz"
-    sha256: "25a9d865ad0c928c54154eab1d37784ed843f482bdacfca8ca0f3aa36ac85e88"
+    sha256: "4b986f866777afc950e7d86f8b26399c84be1e3116875a8f44cc5946f85badbe"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -587,16 +563,14 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "777bd7d5268408a5a94f5e366c2e43e720c6ce4fe8c59d9a71e2961e50d774a5"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "c2126bb16b85ee47f44124d318155c329194e1a60a3a5562a6a4672ca5989c85"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "6c3504185dd06f50b0578766bd913b277fd1ff444023aacd20b969ae76f20f5e"
-  - version: "8u112-b16"
-    cls: "osx_64"
-    arch: "macosx-x64"
+  - arch: "macosx-x64"
+    version: "8u112-b16"
     ext: "dmg"
     sha256: "c9ebb729acb0ee8e6fbeda85751be20b024c45e3ebb83cc7c624908ffb8a466d"
   - arch: "solaris-x64"
@@ -618,6 +592,14 @@ java:
     ext: "tar.Z"
     sha256: "da4f5e5cd2ec7fa69554b71154b2d6bbe4de17c3f8a7e604bf153c78d1ff6f81"
   jre:
+  - arch: "macosx-x64"
+    version: "8u112-b16"
+    ext: "dmg"
+    sha256: "19c47e7b8516ddc0c11e9cf78bda152eb1567f0a0a935e4fde7e08d834762554"
+  - arch: "macosx-x64"
+    version: "8u112-b16"
+    ext: "tar.gz"
+    sha256: "da3e884de099e27d41827453f7f1a4d769c855c6c575af33f4da523f17e1196b"
   - arch: "linux-i586"
     ext: "rpm"
     sha256: "45082b4fcff125f8b6fc0dff51dcca47ca8219a6eb15f634dfbf5af0bdbac724"
@@ -629,19 +611,19 @@ java:
     sha256: "670678cc10da64aa99965752ea028888a9f1b5ba33670ff6dc9b98a88b6a2834"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "eb51dc02c1607be94249dc28b0223be3712b618ef72f48d3e2bfd2645db8b91a"
+    sha256: "94053c6aa4d672b728c7788fb7d2676e5c6d7e7fcdbc1c86beaa796a083b4e5b"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "c2a234457dfe889295c0b4df939292334a76cd4ed48a34a61cdd4ea7e8659c93"
+    sha256: "39df15cbed8b569a621ae2bd61b24e9c37fb64220dfb7e624cd1c967c31b28df"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "8cadd46b17e2c96f8676cc8af7636ee5c48649c3e5732edcd1430e2c6da44bd9"
+    sha256: "f0ed82eb314e8ffe70083045742a96808fd6217ed1e1ab36f2c38df23a2a305c"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "7c9f97efb024debead9f4e94ee96a9429c2c17d5a9cf377689df532f613e46ef"
   - arch: "windows-x64"
     ext: "tar.gz"
-    sha256: "0a4895219f14b6ac7470f4711bfcc1549826bad6d1ff9f03107a10f8bbf5fa91"
+    sha256: "d4af215df68f38f94d5d3ba8cd55d98c0296b317dd46510618f132a500b64cbf"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -667,8 +649,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "187eda2235f812ddb35c352b5f9aa6c5b184d611c2c9d0393afb8031d8198974"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "2bc788869fe09b073067592021ab9f93d2407a078826138a49297badb6b0a06d"
   - arch: "windows-x64"
@@ -707,7 +688,7 @@ java:
     sha256: "97918e36a0542a5256a2047300d89af1b9381a4a2f73de7e34b35bfa6b024267"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "53442420cd9534ded4beca16c32c1d109cf5add637db764c86660c6eea1d88d4"
+    sha256: "a9576f50db99dbb980864ace29e4cf9157b86f68067bda04b8ae52ddf3e6b072"
   - arch: "macosx-x64"
     ext: "dmg"
     sha256: "7bf4fa0ae923ccf0392d8561ae04a76ad075676ad6d4a68283d7de7e60b9a1d5"
@@ -716,16 +697,16 @@ java:
     sha256: "2683617c1a508d70c4dbb1305e83857093606eac00f28c25c468cdd5a52178df"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "474f79167695b16e631c55e7b7adf1e45bbc6f5ddd5b54bda9fbcce651cdd32b"
+    sha256: "f25362dae5945bd87ada0c26485125621a02fea81e04e69596a0520bdbcd099b"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "02b654c212281879b2d1d1d59dde5f35e679fb1945af6da2398e438fbba3c219"
+    sha256: "ea0cf8503b518072fda6e9bcc214a6247108dbb89dc2c87ec70553ef5605a39e"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "932dec1bf86b6361ebcc4dfe3b097c9a76d7ea2c109fc9a3241c69fabb5c12cb"
   - arch: "windows-x64"
     ext: "tar.gz"
-    sha256: "87953cb52ac772bf0f6f7648e4de82d0653b5b4478c30736fc74f339d4d261ea"
+    sha256: "60140fa25ecb80825b74bbb428e99278f7c2820de15118d6d7e4d0ed737b6d60"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -753,8 +734,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "7cfbe0bc0391a4abe60b3e9eb2a541d2315b99b9cb3a24980e618a89229e04b7"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "07b528a12fd89777ba351b7d420ba0c3b325249c0d0ffab6580b357a34ca875c"
   - arch: "windows-x64"
@@ -793,7 +773,7 @@ java:
     sha256: "8a9d56cef7e39ce719a73c1ee65402ddb10fb6da877b0caa444d66631ac5524e"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "50bc7ff61ba064c471adc2ec08e44690f0dac4cd673a3666b6d7b24a48bd7169"
+    sha256: "214ff6b52f5b1bccfc139dca910cea25f6fa19b9b96b4e3c10e699cd3e780dfb"
   - arch: "macosx-x64"
     ext: "dmg"
     sha256: "4346e987d5d13aa3879b11db34c2be72a9d0d74d7970a813f55e75d1009e3777"
@@ -802,16 +782,16 @@ java:
     sha256: "55d5cf0e99531325ebbe6a503ba158cc027afa0e83f4d9fd94bc3b033ff64c9f"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "b37774f4264f8508be3abb2ad84c0568450dbcc76e9eaf268d75a970cd0fe6e6"
+    sha256: "2b3bbaa0db6119efbd10b48756f6f9aee8297f1c677bdfbe0557e49dd0e2093a"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "3e89855cfcfe38e2911eb4e577b49ef1ea9ab5c2743334d70999ee9a551a3ae1"
+    sha256: "3249cfaad5f86fd13056d3314c67b6e1b100f6e5a444bf4f0f03c60836d1fdbc"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "6326d0b8903d66d91bf28234d13cfe92479d60fdf0eb577fb3edd51b5e310809"
   - arch: "windows-x64"
     ext: "tar.gz"
-    sha256: "3f8b6bae4f13897e7a90ed3cc164312175875906b8dfffc45360ad138a2c7e8b"
+    sha256: "74981aadce6d90fad227611f5333e2232bb423db5ae4b3b1beb44b6045a54ba5"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -837,8 +817,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "467f323ba38df2b87311a7818bcbf60fe0feb2139c455dfa0e08ba7ed8581328"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "5b9c0fcdd270f475a43f900346906b55b674cfd4f7744f032b65cb7cb4098d8c"
   - arch: "windows-x64"
@@ -877,7 +856,7 @@ java:
     sha256: "1f9a5ee3877de2205c6ef5413d147fbfd087fa97427a06f634c17c97a34f8379"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "92ac6a6a1e00cc1ab551970ad7e28ddd4630def70f5aff5e0386c33dc7de11a7"
+    sha256: "33026a91f4acb751979f05a5c72b65feaabd5b5c18604e62bc94d2feea7f7523"
   - arch: "macosx-x64"
     ext: "dmg"
     sha256: "48a068543a341b8b6f6d6a334e642b8f67100d3ca79cc674840389b3cb6de402"
@@ -886,16 +865,16 @@ java:
     sha256: "2db8edd826355e469d69fa857c41304923bf89cddea7a455bc06f40ab00d25c7"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "35f9f7e810f0dc8a234cbf0222c9d5d4f1f254aee5ad078e6dc96a560754c104"
+    sha256: "837e4112bedf53de31271dc4a3b1b698ecddde960d2cfa243ad2e6e8173d27d9"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "fdb3cb3664226357a5fadf21811cd5eb03002964ee8de34d074477c521eb3f4d"
+    sha256: "e09d56b6359ff757a18686deac140e59ee8fb097f3491672935f0d9c10eb4917"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "cf92b0dc495eb57d1da1a63eb798cc002a4014a0e938cb7ed17519b6f52ba4f7"
   - arch: "windows-x64"
     ext: "tar.gz"
-    sha256: "9fd7206aaadc82c5944b9d654d642910a2563ace1115c92332f9ca3b22da8ef8"
+    sha256: "1b4f72a5ec32a5496453b4252ad5e73fd73ab43d841dca18d76091016e09f4ed"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -925,8 +904,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "79a3f25e9b466cb9e969d1772ea38550de320c88e9119bf8aa11ce8547c39987"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "9e5ddcbf9f6c967d38f0bfb6d602095874f29e6117929c7cf1206f561fafdf30"
   - arch: "windows-x64"
@@ -1009,14 +987,12 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "6f9b516addfc22907787896517e400a62f35e0de4a7b4d864b26b61dbe1b7552"
-  - version: "8u91-b15"
-    cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
+    version: "8u91-b15"
     ext: "exe"
     sha256: "1293e7067dba04cb67da8a612a7877d1167f37ceecfb275ba0967a1bfa138992"
-  - version: "8u91-b15"
-    cls: "win_64"
-    arch: "windows-x64"
+  - arch: "windows-x64"
+    version: "8u91-b15"
     ext: "exe"
     sha256: "dd2ff1ee1ef9394f6a920aeb5fda0b5a460dcb9112d520240d60b8794893b484"
   - arch: "solaris-x64"
@@ -1038,6 +1014,14 @@ java:
     ext: "tar.Z"
     sha256: "e98e54935a6534e3157bca00935a9e1b6d03011c6ee3cc34b0bfc05b2a4a5a78"
   jre:
+  - arch: "windows-x64"
+    version: "8u91-b15"
+    ext: "exe"
+    sha256: "e5007ab2ba1f78ed460f0a7068bf8831a0aec7ea5d2823097ecfb0f1aa149e50"
+  - arch: "windows-x64"
+    version: "8u91-b15"
+    ext: "tar.gz"
+    sha256: "3b8a4ff3586350d3e50197d6ee321269e5a5be0f859a47f2d12c0a9d659bec53"
   - arch: "linux-i586"
     ext: "rpm"
     sha256: "593b6292a23f97a71487868de3533dc21bdce1ff3d2fee0c0c4422d663603427"
@@ -1049,7 +1033,7 @@ java:
     sha256: "c08b146b9b85bbfbfbb7f4bde31cc581c3f75c40905bb7f93863dcb287507298"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "e5335c3f681f551fd246d358ddbe6678876a5f48c36d0ae0eeefe12c8989f3cb"
+    sha256: "66d8971b240bbd03d114308958fff0fb8068d0589122885d9591727e5472137f"
   - arch: "macosx-x64"
     ext: "dmg"
     sha256: "5f09da7d435f990011cb648d3fd2b6f0dd912dd9ae1152829cd7cf0a1fa58aa1"
@@ -1058,11 +1042,16 @@ java:
     sha256: "0961ef21028f059e9e37a759efdeb646b84fccef6fead3a133250226039a3b93"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "2786872691b5a4c7c99d175c73a6146996f0717e0e718a46128214d415d71405"
+    sha256: "aea84dce39c8c0a6a1c3a35c1bc374423c474c015c73e57bc057ab4ba19dee77"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "15708fb3c28f17b19503829440f722b3f289cacb6bd03f9eb620cb240dced21d"
+    sha256: "c0f8a95d9f82cd8478eaf0e127bee6dc6060dda23d6f297fc350cbfea066bfb4"
   serverjre:
+  - arch: "windows-x64"
+    version: "8u91-b15"
+    ext: "tar.gz"
+    sha256: "44afecc687b670a882733e1c51aa4482403af90979701beb6c8958f3adaf8d05"
+    typeName: "server-jre"
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "e5335c3f681f551fd246d358ddbe6678876a5f48c36d0ae0eeefe12c8989f3cb"
@@ -1086,8 +1075,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "a47dc0962a57b27a0cc00b9f11a53dc3add40c98633ba49a2419b845e4dedf43"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "9b5790b2537c7be05344b9f53f805c1049eb82ae8fde5f119dee541c18d1baa3"
   - arch: "windows-x64"
@@ -1171,8 +1159,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "0bfd5d79f776d448efc64cb47075a52618ef76aabb31fde21c5c1018683cdddd"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "8ae01bd2d1c6e947cd47dec0a0b33560a67649b6a3044f4effd7b652394c7163"
   - arch: "windows-x64"
@@ -1255,8 +1242,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "46a8149efaf9d87a147b244e503f1d7791ec8abbc35a5011c99ed909edb2e3e6"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "c98792ea96512b03238a60616a5cefe936832718d6453fff2a545615fbdf0d87"
   - arch: "windows-x64"
@@ -1340,8 +1326,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "46e7f96271043009995f39f04a9e711cdc0cc5b6a5b67910451678a3d250ec98"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "d0e044b5582060defaf6c0cac7a0c614b181cdb886f5cb54ff8d6bf8a5df4aaf"
   - arch: "windows-x64"
@@ -1424,8 +1409,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "9bdb947fccf31e6ad644b7c1e3c658291facf819e4560a856e4d93bd686e58a2"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "ed830249475d21b8c8e7d27032e1119195fc76b44078304398f53cca62b6e90f"
   - arch: "windows-x64"
@@ -1508,14 +1492,12 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "7e95ad5fa1c75bc65d54aaac9e9986063d0a442f39a53f77909b044cef63dc0a"
-  - version: "8u66-b18"
-    cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
+    version: "8u66-b18"
     ext: "exe"
     sha256: "b7d438b935dcf2a144782701788f7bf1e0e00e2d5aa87a7bba5a9b26116ad258"
-  - version: "8u66-b18"
-    cls: "win_64"
-    arch: "windows-x64"
+  - arch: "windows-x64"
+    version: "8u66-b18"
     ext: "exe"
     sha256: "ce7775bb6322cf5f5576312a25c4a51b5be8cfffefed3295f15c6585e74fc5ae"
   - arch: "solaris-x64"
@@ -1537,6 +1519,14 @@ java:
     ext: "tar.Z"
     sha256: "61d5328c2151f84f39892c9b467ba1d0e25d3cb102807687a926b1563f8716da"
   jre:
+  - arch: "windows-x64"
+    version: "8u66-b18"
+    ext: "exe"
+    sha256: "6a0e84a572bb5808f3bfbaabf2f90dfc114e62ec818ee4a1015b3ad1b1191ca6"
+  - arch: "windows-x64"
+    version: "8u66-b18"
+    ext: "tar.gz"
+    sha256: "f78c27f9567d4330ec21a33120f7b9ecd03b4cac95fc9dff444b27efb91dfe13"
   - arch: "linux-i586"
     ext: "rpm"
     sha256: "bc00b5771a80855ec451e738a1b7cba759187490391df3c2a45f782acf6e04b0"
@@ -1585,8 +1575,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "88db2aacdc222c2add4d92822f528b7a2101552272db4487f33b38b0b47826e7"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "c57d582f18327870dab75bba6b28b6cc367897784af6439252db09945a2c921e"
   - arch: "windows-x64"
@@ -1669,8 +1658,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "ebe51554d2f6c617a4ae8fc9a8742276e65af01bd273e96848b262b3c05424e5"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "2c2eb85ca8db7853cf3a0b074268a4e9095b0126e9e5a3c4b57d030053b99061"
   - arch: "windows-x64"
@@ -1706,7 +1694,7 @@ java:
     sha256: "341eb5b38ea4fbf061e4f153959def4a389728268ce7384c503815e2c4e959f6"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "899d9f09d7c1621a5cce184444b0ba97a8b0391bd85b624ea29f81a759764c55"
+    sha256: "49dadecd043152b3b448288a35a4ee6f3845ce6395734bacc1eae340dff3cbf5"
   - arch: "macosx-x64"
     ext: "dmg"
     sha256: "90cc490b0516aaa77bb39622fa265d77ce177ce390bdf7d758a5554c033c5e90"
@@ -1715,16 +1703,16 @@ java:
     sha256: "cd4bfaad0ccb0d818bb1d17747187cc0fe2cb20ff4785d81d9ba4daea247c045"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "6739cfb7aa00a18231a01b561708344a9f2a551fd8983c573a1de71a0dd9ff33"
+    sha256: "d1736314a702e8b6f4d47ca9cf893fa1261b5fe278576482478e1505f6349f3c"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "4112651655085f6204b8d24433948e736d1ab3202338daa5fa73528da52d988c"
+    sha256: "c9985391cb05a5f902bfaa34dde4e771d3090b6790f3456d6d9338a25d34626c"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "40e0b9ba6dcd2ca218e75e2c3f327c4ef187bf03e541c856b21123764d109ba5"
   - arch: "windows-x64"
     ext: "tar.gz"
-    sha256: "103459356bbeef199d50a4b6972fd02da02f200a84674590661aa4207c4d3c4a"
+    sha256: "e8263922cf307170fb272e0e0d33ab33e58b88b114e75b1ab04926f8998cf795"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -1753,8 +1741,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     sha256: "d7149012cc51c2cdb8d3a1767825e0dfc36ca0419c3dae56d993cb2732cbeff1"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     sha256: "2f2f184c2ec22dbe82a5ed03855c5240019788bdff62df9920bcbcbf4fed3a9f"
   - arch: "windows-x64"
@@ -1790,7 +1777,7 @@ java:
     sha256: "47167709ba70069d7c61106bd79e48c64bd9e9b7531c1f1d89a6bc9588067a14"
   - arch: "linux-x64"
     ext: "tar.gz"
-    sha256: "a1ba6ed5369a868a1315740d73280a8f082f238796420ac64e0dbcde45d45090"
+    sha256: "25c2146b4ff1a12a9449589f8372f7f67cb63d6f6ad2b7f9ec92181cd3a31cee"
   - arch: "macosx-x64"
     ext: "dmg"
     sha256: "713520b178dc2e044a1eb4d2275e65635d9449dc2290b123d6c73d2af3f4b8e2"
@@ -1799,16 +1786,16 @@ java:
     sha256: "975a95795185ae92fd08166e536ff9be9618bcd08319e9d91d36eebc7080f8d3"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    sha256: "f2f49cb9421ffb1134846825e94ef5f547effa3c8189247f031be60b5af8f822"
+    sha256: "5bb3eb01d9766422982de1889f5ceabc94908d06c1e89292139c00ed0208c274"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    sha256: "c5b3d0364641226c8bcbb42430f43631247f69b2ca5a9b2618d409a10ca7c3fe"
+    sha256: "bd206d886e6b33a345cc9cabf14d62217917ee04293775e28ac2d5504db06170"
   - arch: "windows-x64"
     ext: "exe"
     sha256: "3895872bc4cdfb7693c227a435cf6740f968e4fa6ce0f7449e6a074e3e3a0f01"
   - arch: "windows-x64"
     ext: "tar.gz"
-    sha256: "a81d9144671af86856d243dc641d2b92f9a73868e775d1d97dda59de292d186d"
+    sha256: "6f17c3d28aa3abe9d48fbfd436774f4efe20386fbff3e6a06d884c9d55e467e6"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -1837,14 +1824,12 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "1ad9a5be748fb75b31cd3bd3aa339cac"
-  - version: "8u45-b15"
-    cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
+    version: "8u45-b15"
     ext: "exe"
     md5: "2747e20e210bfd649e6087067f439d07"
-  - version: "8u45-b15"
-    cls: "win_64"
-    arch: "windows-x64"
+  - arch: "windows-x64"
+    version: "8u45-b15"
     ext: "exe"
     md5: "979ec7d6c93c6f36b32b8d532d736015"
   - arch: "solaris-x64"
@@ -1866,6 +1851,14 @@ java:
     ext: "tar.Z"
     md5: "044d48757e90109e3740f79d858aed2c"
   jre:
+  - arch: "windows-x64"
+    version: "8u45-b15"
+    ext: "exe"
+    md5: "39871bf18035decf56db8d7d0a467987"
+  - arch: "windows-x64"
+    version: "8u45-b15"
+    ext: "tar.gz"
+    md5: "99e5ba4f9d6bff874aa9904f57af5373"
   - arch: "linux-i586"
     ext: "rpm"
     md5: "f9900062bfb06d146e60d2043eecd45f"
@@ -1891,6 +1884,11 @@ java:
     ext: "tar.gz"
     md5: "ab9f8e271af738b61839924d95408bfa"
   serverjre:
+  - arch: "windows-x64"
+    version: "8u45-b15"
+    ext: "tar.gz"
+    md5: "1b6208ddcb43e8eca7618619bfd7f47e"
+    typeName: "server-jre"
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "04b2497b2a1459d8fd03db95fa7d028e"
@@ -1905,9 +1903,8 @@ java:
     typeName: "server-jre"
 - version: "8u40-b26"
   jdk:
-  - version: "8u40-b27"
-    cls: "osx_64"
-    arch: "macosx-x64"
+  - arch: "macosx-x64"
+    version: "8u40-b27"
     ext: "dmg"
     md5: "d7461e2f9569bc87cec63e9cfc7399a9"
   - arch: "linux-i586"
@@ -1916,8 +1913,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "3b3f74589539b8bbe5d78005e52f4f78"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "c592ec652a58b620d30feb220846bd06"
   - arch: "windows-x64"
@@ -1942,6 +1938,14 @@ java:
     ext: "tar.Z"
     md5: "33bc74531ce5340c18a7fe528139fa60"
   jre:
+  - arch: "macosx-x64"
+    version: "8u40-b27"
+    ext: "dmg"
+    md5: "0a70fd77350a0fe4f245a6306e4fd968"
+  - arch: "macosx-x64"
+    version: "8u40-b27"
+    ext: "tar.gz"
+    md5: "b85ffb2e553872266666b0f0ae4705ac"
   - arch: "linux-i586"
     ext: "rpm"
     md5: "39bbb719f5dd0b09e7012b982f5bb131"
@@ -1994,8 +1998,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "173e24bc2d5d5ca3469b8e34864a80da"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "627553b0a4e5f6882e60a71b7c0036b9"
   - arch: "windows-x64"
@@ -2031,7 +2034,7 @@ java:
     md5: "4d6a99aa7f2addde8f6ad714e788ff61"
   - arch: "linux-x64"
     ext: "tar.gz"
-    md5: "9d69cdc00c536b8c9f5b26a3128bd2a1"
+    md5: "c81a3cdabe4a12439dae08d4311670ff"
   - arch: "macosx-x64"
     ext: "dmg"
     md5: "a4a1eb06cc9de8565a3580f63d1f3293"
@@ -2040,16 +2043,16 @@ java:
     md5: "07383724e4f3a7bfbce59d54ce245015"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    md5: "dede3bc754e15a7a788a6662833aec99"
+    md5: "a9d9cd4f5c1a41b83fb6ec0c50f08511"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    md5: "32ee07ea0dc959472163c794ff77be29"
+    md5: "4b67e9b73c0c85726ffcbca455ee0cde"
   - arch: "windows-x64"
     ext: "exe"
     md5: "a1e56496869c6cad9169ad723a2ccf82"
   - arch: "windows-x64"
     ext: "tar.gz"
-    md5: "90896b9fceb9a3e1a0740e3996edce44"
+    md5: "c7dd81d35aa1f5f670ca3dbbbdadfd8e"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -2078,14 +2081,12 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "e145c03a7edc845215092786bcfba77e"
-  - version: "8u25-b18"
-    cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
+    version: "8u25-b18"
     ext: "exe"
     md5: "d73ec953268159495ab1793dac9d674f"
-  - version: "8u25-b18"
-    cls: "win_64"
-    arch: "windows-x64"
+  - arch: "windows-x64"
+    version: "8u25-b18"
     ext: "exe"
     md5: "462542ffefd3b7822932a0f0d840e355"
   - arch: "solaris-x64"
@@ -2107,6 +2108,14 @@ java:
     ext: "tar.Z"
     md5: "643c4f732cbfa7932e20cf0ebb109926"
   jre:
+  - arch: "windows-x64"
+    version: "8u25-b18"
+    ext: "exe"
+    md5: "733f8838a4fa8cf66fe0799a467e5eb5"
+  - arch: "windows-x64"
+    version: "8u25-b18"
+    ext: "tar.gz"
+    md5: "059be60db40fa0a2af693c37945f4d17"
   - arch: "linux-i586"
     ext: "rpm"
     md5: "53c0cbd1dc8741a16fe28ce4bc6a35a6"
@@ -2118,7 +2127,7 @@ java:
     md5: "96f77d62fe678a27466594ff9359eb0b"
   - arch: "linux-x64"
     ext: "tar.gz"
-    md5: "c3ec171fac394c584a0a5cecb1731efd"
+    md5: "f4f7f7335eaf2e7b5ff455abece9d5ed"
   - arch: "macosx-x64"
     ext: "dmg"
     md5: "2a93845a32a663cb3e21a41bb940b5d7"
@@ -2127,11 +2136,16 @@ java:
     md5: "b8f404cac00381982b08fef197371c28"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    md5: "c65fd2891a5df4992ac37afdbff71d80"
+    md5: "333c006aa95a842b7baa8ac961b7eb8f"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    md5: "62cb1ffa9c273f73ab21a50b6f50e911"
+    md5: "bf3b6b01d086d43407ab2f301cc0817c"
   serverjre:
+  - arch: "windows-x64"
+    version: "8u25-b18"
+    ext: "tar.gz"
+    md5: "f8ea31cedac447410a4fff7720be9817"
+    typeName: "server-jre"
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "c3ec171fac394c584a0a5cecb1731efd"
@@ -2152,8 +2166,7 @@ java:
     ext: "tar.gz"
   - arch: "linux-x64"
     ext: "tar.gz"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "a32589ba83f3aa5a8b1737339604b609"
   - arch: "windows-x64"
@@ -2212,8 +2225,7 @@ java:
     ext: "tar.gz"
   - arch: "linux-x64"
     ext: "tar.gz"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "7a3cdd420628d999453dbec8660d0b6c"
   - arch: "windows-x64"
@@ -2275,8 +2287,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 159008252
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 159077280
   - arch: "windows-x64"
@@ -2341,8 +2352,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 181352138
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 197466680
   - arch: "windows-x64"
@@ -2408,8 +2418,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "6152f8a7561acf795ca4701daa10a965"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "8c6c888993144fdbdec6f5d4e19b57a3"
   - arch: "windows-x64"
@@ -2445,7 +2454,7 @@ java:
     md5: "8ac14c3a8c340189986fba2fe6ed5faf"
   - arch: "linux-x64"
     ext: "tar.gz"
-    md5: "366a145fb3a185264b51555546ce2f87"
+    md5: "c0e01ae8683b2d8924ce79cd6ce6a691"
   - arch: "macosx-x64"
     ext: "dmg"
     md5: "bc48fe6057c51cfa92bdffb98950a176"
@@ -2454,16 +2463,16 @@ java:
     md5: "1ccdbc444fd72f0d4aa7ccecddca4b94"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    md5: "a69617a5670042b85f61b852f4f0488e"
+    md5: "b5e1906891f3eb612cbeaa7b50d791b7"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    md5: "b812276dc76246cd5219a9e74fd24521"
+    md5: "2444033dbc148888e480d21df5cfec55"
   - arch: "windows-x64"
     ext: "exe"
     md5: "c7b6996ba569d80c0ff5ea4414855972"
   - arch: "windows-x64"
     ext: "tar.gz"
-    md5: "e12db780fe283f5fadc4bdf98edeab70"
+    md5: "edc475c7aee0dd6652e846cb5cf7ada8"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -2492,8 +2501,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "9222e097e624800fdd9bfb568169ccad"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "5dbd9dd32597278d5efce7426e2daf85"
   - arch: "windows-x64"
@@ -2529,7 +2537,7 @@ java:
     md5: "28ecc42e74830bc4b69bf072e25377c2"
   - arch: "linux-x64"
     ext: "tar.gz"
-    md5: "beb8f9ddab6b3fd9fee7a8ce7652c815"
+    md5: "fcd884a57920d90fa23240abb403fcf5"
   - arch: "macosx-x64"
     ext: "dmg"
     md5: "2354185c436f6ac583ecb480a01b7b7c"
@@ -2538,16 +2546,16 @@ java:
     md5: "3fed1bdac695d8d4b551cc69731862ed"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    md5: "35815be5eff6029e4cb59557239c572b"
+    md5: "a3e1088a8d36e8636d3bc766e0cc2f4e"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    md5: "3af385193898feb6bdea4d627f7fb100"
+    md5: "d39aa4fb615b435404390347b95f113e"
   - arch: "windows-x64"
     ext: "exe"
     md5: "30f7272829a0cbfa9aabba86dabfe221"
   - arch: "windows-x64"
     ext: "tar.gz"
-    md5: "0aba028b6402fe0026259a06007b1d64"
+    md5: "a606819b6d20fbfd3f3e33490c09590d"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -2577,8 +2585,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "5a98b1a3e4c48363d03f664f173bbb9a"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "f84bf4b2d6b17c66404fd6391e475e87"
   - arch: "windows-x64"
@@ -2614,7 +2621,7 @@ java:
     md5: "02ec5613512692c3d0c41fde4484d4e3"
   - arch: "linux-x64"
     ext: "tar.gz"
-    md5: "45c7474e983a5f97030b951cf3f35f09"
+    md5: "a5ee5fd266453e0209e45fb8bb5acd6d"
   - arch: "macosx-x64"
     ext: "dmg"
     md5: "f5498b6f9d2be5cbaf9c613f1477a6ca"
@@ -2623,16 +2630,16 @@ java:
     md5: "334328452b20ea3846cf9f42f61905bd"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    md5: "e16fb7efff21918f140ecbecc6043edf"
+    md5: "12f597f8550298e28df3463861ac8613"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    md5: "8cb9fd5886c1029e4d11dff73b97de13"
+    md5: "f0bc9fd12e629923227d5d0317752b80"
   - arch: "windows-x64"
     ext: "exe"
     md5: "35a03fc86977f469353bd4a0ce83163a"
   - arch: "windows-x64"
     ext: "tar.gz"
-    md5: "0a63c2818d6d7029cc2b5044f6221a7a"
+    md5: "fb9240bcca096d761a9d46e41107963d"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -2661,8 +2668,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "6f1f81030a34f7a9c987f8b68a24d139"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "b916d1724e29df886fc0858b72547212"
   - arch: "windows-x64"
@@ -2698,7 +2704,7 @@ java:
     md5: "302813994fe51f5177e8f7717d71e13c"
   - arch: "linux-x64"
     ext: "tar.gz"
-    md5: "da1413d48551de3b34be75a1f55dc52c"
+    md5: "1869f0d2dac96372e3c345105543ba3e"
   - arch: "macosx-x64"
     ext: "dmg"
     md5: "e3b26ddd7bf79a54435309d514abbed0"
@@ -2707,16 +2713,16 @@ java:
     md5: "880ee71d909bd753579927ceb744e9bb"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    md5: "c7c82e5cd3e824ad9c797182ecbaf2d1"
+    md5: "52cf23f5354199753583eb68c53bcc9e"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    md5: "fe39a9e3478a18b9cf1aee15f66627a4"
+    md5: "9f3c6a35d5c273674a0b99af674a87da"
   - arch: "windows-x64"
     ext: "exe"
     md5: "eb813c1e16663a75b41f399422867de3"
   - arch: "windows-x64"
     ext: "tar.gz"
-    md5: "b1144521a73b73e839cda04b0704cdd9"
+    md5: "3c91e72633cdc84af84872d0c4e3fbc9"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -2746,8 +2752,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "cfa44b49e50ea06e5c6ab95ff79e5b2a"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "90dbdb9f6aeaddd47fe12c0c0dbc60f4"
   - arch: "windows-x64"
@@ -2783,7 +2788,7 @@ java:
     md5: "e48cdd20ee993726005dbaea26ec0dcc"
   - arch: "linux-x64"
     ext: "tar.gz"
-    md5: "458aac0811046d08523a1b17b130271e"
+    md5: "4ae2ef732dfd309e86a182ca0f7681fe"
   - arch: "macosx-x64"
     ext: "dmg"
     md5: "7ace1ec40113c08d0de3a6f68d4db53b"
@@ -2792,16 +2797,16 @@ java:
     md5: "2c054ad3a6c948edfb19000e04ec4af6"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    md5: "8cb885bfeb8d866cf9c8d54bb02ecd82"
+    md5: "383b225c4df6c144fcd2537fd2e13156"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    md5: "96635a81ec9b37482c2fe52f3590ad68"
+    md5: "23f60cf24d986023c05ad58af1ec84f5"
   - arch: "windows-x64"
     ext: "exe"
     md5: "e667907e4a46c1fce7e695e13ee2ad2c"
   - arch: "windows-x64"
     ext: "tar.gz"
-    md5: "b45dee020723902ef9b8fa52af3a551f"
+    md5: "7b8f4438fe641aa682af4336a5a560e6"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -2830,8 +2835,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     md5: "22761b214b1505f1a9671b124b0f44f4"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "68d7012cca47687e5b318f9b53969728"
   - arch: "windows-x64"
@@ -2867,7 +2871,7 @@ java:
     md5: "764182d4c6ce628c15d173109d266955"
   - arch: "linux-x64"
     ext: "tar.gz"
-    md5: "2e29846da3297c9b2469d69017363bd7"
+    md5: "7605134662f6c87131eca5745895fe84"
   - arch: "macosx-x64"
     ext: "dmg"
     md5: "acbbeab200a21bf23b783fb4745929dd"
@@ -2876,16 +2880,16 @@ java:
     md5: "95220c37c0464a4897096b9187ac4b96"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    md5: "b832611f014fbb2b527b17a0f20c1c50"
+    md5: "2582aa27cab231465323884d7de95ca9"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    md5: "9b4920600abae7007fd9e2deccce3be6"
+    md5: "e2f1c332157484c6058a9ba2726aaf6c"
   - arch: "windows-x64"
     ext: "exe"
     md5: "17c1f28d430b9eb4d117a574354daa4e"
   - arch: "windows-x64"
     ext: "tar.gz"
-    md5: "649a5964b87c9c50e990413c45496136"
+    md5: "fc4d32a1992aed4ec03501ae48128f46"
   serverjre:
   - arch: "linux-x64"
     ext: "tar.gz"
@@ -2911,8 +2915,7 @@ java:
     ext: "tar.gz"
   - arch: "linux-x64"
     ext: "tar.gz"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     md5: "dbe6f185f836cd43221827eae1dfff79"
   - arch: "windows-x64"
@@ -2974,16 +2977,14 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 142384385
-  - version: "7u65-b19"
-    cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
+    version: "7u65-b20"
     ext: "exe"
-    size: 134200736
-  - version: "7u65-b19"
-    cls: "win_64"
-    arch: "windows-x64"
+    size: 134177696
+  - arch: "windows-x64"
+    version: "7u65-b20"
     ext: "exe"
-    size: 135994784
+    size: 135995808
   - arch: "solaris-x64"
     ext: "tar.gz"
     size: 17163099
@@ -2999,6 +3000,12 @@ java:
   - arch: "solaris-sparcv9"
     ext: "tar.Z"
   jre:
+  - arch: "windows-x64"
+    version: "7u65-b20"
+    ext: "exe"
+  - arch: "windows-x64"
+    version: "7u65-b20"
+    ext: "tar.gz"
   - arch: "linux-i586"
     ext: "rpm"
   - arch: "linux-i586"
@@ -3016,6 +3023,10 @@ java:
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
   serverjre:
+  - arch: "windows-x64"
+    version: "7u65-b20"
+    ext: "tar.gz"
+    typeName: "server-jre"
   - arch: "linux-x64"
     ext: "tar.gz"
     typeName: "server-jre"
@@ -3036,8 +3047,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 142362384
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 134122400
   - arch: "windows-x64"
@@ -3102,8 +3112,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 138220064
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 129674656
   - arch: "windows-x64"
@@ -3168,8 +3177,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 138199690
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 129640864
   - arch: "windows-x64"
@@ -3234,8 +3242,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 138094686
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 129487776
   - arch: "windows-x64"
@@ -3300,8 +3307,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 138021223
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 129460128
   - arch: "windows-x64"
@@ -3366,14 +3372,12 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 96316511
-  - version: "7u25-b17"
-    cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
+    version: "7u25-b17"
     ext: "exe"
     size: 93414304
-  - version: "7u25-b17"
-    cls: "win_64"
-    arch: "windows-x64"
+  - arch: "windows-x64"
+    version: "7u25-b17"
     ext: "exe"
     size: 95060896
   - arch: "solaris-x64"
@@ -3391,6 +3395,12 @@ java:
   - arch: "solaris-sparcv9"
     ext: "tar.Z"
   jre:
+  - arch: "windows-x64"
+    version: "7u25-b17"
+    ext: "exe"
+  - arch: "windows-x64"
+    version: "7u25-b17"
+    ext: "tar.gz"
   - arch: "linux-i586"
     ext: "rpm"
   - arch: "linux-i586"
@@ -3408,20 +3418,23 @@ java:
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
   serverjre:
+  - arch: "windows-x64"
+    version: "7u25-b17"
+    ext: "tar.gz"
+    typeName: "server-jre"
   - arch: "linux-x64"
     ext: "tar.gz"
-    typeName: "sjre"
+    typeName: "server-jre"
   - arch: "solaris-x64"
     ext: "tar.gz"
-    typeName: "sjre"
+    typeName: "server-jre"
   - arch: "solaris-sparcv9"
     ext: "tar.gz"
-    typeName: "sjre"
+    typeName: "server-jre"
 - version: "7u21-b11"
   jdk:
-  - version: "7u21-b12"
-    cls: "osx_64"
-    arch: "macosx-x64"
+  - arch: "macosx-x64"
+    version: "7u21-b12"
     ext: "dmg"
     size: 151184401
   - arch: "linux-i586"
@@ -3430,8 +3443,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 96272413
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 93300120
   - arch: "windows-x64"
@@ -3452,6 +3464,12 @@ java:
   - arch: "solaris-sparcv9"
     ext: "tar.Z"
   jre:
+  - arch: "macosx-x64"
+    version: "7u21-b12"
+    ext: "dmg"
+  - arch: "macosx-x64"
+    version: "7u21-b12"
+    ext: "tar.gz"
   - arch: "linux-i586"
     ext: "rpm"
   - arch: "linux-i586"
@@ -3492,8 +3510,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 96160926
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 93058456
   - arch: "windows-x64"
@@ -3545,8 +3562,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 96131837
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 93064600
   - arch: "windows-x64"
@@ -3598,8 +3614,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 96146544
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 93055384
   - arch: "windows-x64"
@@ -3651,8 +3666,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 96158031
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 93087128
   - arch: "windows-x64"
@@ -3695,6 +3709,49 @@ java:
     ext: "exe"
   - arch: "windows-x64"
     ext: "tar.gz"
+- version: "7u10-b18"
+  jdk:
+  - arch: "linux-i586"
+    ext: "rpm"
+  - arch: "linux-i586"
+    ext: "tar.gz"
+  - arch: "linux-x64"
+    ext: "rpm"
+  - arch: "linux-x64"
+    ext: "tar.gz"
+  - arch: "macosx-x64"
+    ext: "dmg"
+  - arch: "solaris-sparcv9"
+    ext: "tar.Z"
+  - arch: "solaris-sparcv9"
+    ext: "tar.gz"
+  - arch: "solaris-x64"
+    ext: "tar.Z"
+  - arch: "solaris-x64"
+    ext: "tar.gz"
+  - arch: "windows-x64"
+    ext: "exe"
+  jre:
+  - arch: "linux-i586"
+    ext: "rpm"
+  - arch: "linux-i586"
+    ext: "tar.gz"
+  - arch: "linux-x64"
+    ext: "rpm"
+  - arch: "linux-x64"
+    ext: "tar.gz"
+  - arch: "macosx-x64"
+    ext: "dmg"
+  - arch: "macosx-x64"
+    ext: "tar.gz"
+  - arch: "solaris-sparcv9"
+    ext: "tar.gz"
+  - arch: "solaris-x64"
+    ext: "tar.gz"
+  - arch: "windows-x64"
+    ext: "exe"
+  - arch: "windows-x64"
+    ext: "tar.gz"
 - version: "7u9-b05"
   jdk:
   - arch: "macosx-x64"
@@ -3706,8 +3763,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 96043498
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 92640736
   - arch: "windows-x64"
@@ -3759,14 +3815,12 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 96039818
-  - version: "7u7-b11"
-    cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
+    version: "7u7-b11"
     ext: "exe"
     size: 92654560
-  - version: "7u7-b11"
-    cls: "win_64"
-    arch: "windows-x64"
+  - arch: "windows-x64"
+    version: "7u7-b11"
     ext: "exe"
     size: 94372320
   - arch: "solaris-x64"
@@ -3784,6 +3838,9 @@ java:
   - arch: "solaris-sparcv9"
     ext: "tar.Z"
   jre:
+  - arch: "windows-x64"
+    version: "7u7-b11"
+    ext: "exe"
   - arch: "linux-i586"
     ext: "rpm"
   - arch: "linux-i586"
@@ -3809,8 +3866,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 96036590
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 92624352
   - arch: "windows-x64"
@@ -3858,8 +3914,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 81443471
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 92227048
   - arch: "windows-x64"
@@ -3896,9 +3951,8 @@ java:
     ext: "exe"
 - version: "7u4-b20"
   jdk:
-  - version: "7u4-b21"
-    cls: "osx_64"
-    arch: "macosx-x64"
+  - arch: "macosx-x64"
+    version: "7u4-b21"
     ext: "dmg"
     size: 102002567
   - arch: "linux-i586"
@@ -3907,14 +3961,12 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 81439019
-  - version: "7u4-b22"
-    cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
+    version: "7u4-b22"
     ext: "exe"
     size: 92242888
-  - version: "7u4-b22"
-    cls: "win_64"
-    arch: "windows-x64"
+  - arch: "windows-x64"
+    version: "7u4-b22"
     ext: "exe"
     size: 96813000
   - arch: "solaris-x64"
@@ -3932,6 +3984,9 @@ java:
   - arch: "solaris-x64"
     ext: "tar.Z"
   jre:
+  - arch: "windows-x64"
+    version: "7u4-b22"
+    ext: "exe"
   - arch: "linux-i586"
     ext: "rpm"
   - arch: "linux-i586"
@@ -3953,13 +4008,11 @@ java:
     ext: "tar.gz"
     size: 81056556
   - version: "7u3-b05"
-    cls: "win_32"
     arch: "windows-i586"
     ext: "exe"
     size: 88210392
-  - version: "7u3-b05"
-    cls: "win_64"
-    arch: "windows-x64"
+  - arch: "windows-x64"
+    version: "7u3-b05"
     ext: "exe"
     size: 91662296
   - arch: "solaris-x64"
@@ -3977,6 +4030,9 @@ java:
   - arch: "solaris-x64"
     ext: "tar.Z"
   jre:
+  - arch: "windows-x64"
+    version: "7u3-b05"
+    ext: "exe"
   - arch: "linux-i586"
     ext: "rpm"
   - arch: "linux-i586"
@@ -3997,8 +4053,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 81225513
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 88125328
   - arch: "windows-x64"
@@ -4041,8 +4096,7 @@ java:
   - arch: "linux-x64"
     ext: "tar.gz"
     size: 94972183
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 83316104
   - arch: "windows-x64"
@@ -4077,44 +4131,54 @@ java:
     ext: "tar.gz"
   - arch: "windows-x64"
     ext: "exe"
-- version: "7u0"
+- version: "7"
+  url: "java/jdk/${version}/${typeName}-${version}-${arch}.${ext}"
   jdk:
-  - cls: "nix_32"
-    arch: "linux-i586"
+  - arch: "linux-i586"
+    ext: "rpm"
+  - arch: "linux-i586"
     ext: "tar.gz"
-    size: 154773078
-  - cls: "nix_64"
-    arch: "linux-x64"
+  - arch: "linux-x64"
+    ext: "rpm"
+  - arch: "linux-x64"
     ext: "tar.gz"
-    size: 153512879
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "solaris-sparcv9"
+    ext: "tar.Z"
+  - arch: "solaris-sparcv9"
+    ext: "tar.gz"
+  - arch: "solaris-x64"
+    ext: "tar.Z"
+  - arch: "solaris-x64"
+    ext: "tar.gz"
+  - arch: "windows-x64"
     ext: "exe"
-    size: 145030048
-  - cls: "win_64"
-    arch: "windows-x64"
+  jre:
+  - arch: "linux-i586"
+    ext: "rpm"
+  - arch: "linux-i586"
+    ext: "tar.gz"
+  - arch: "linux-x64"
+    ext: "rpm"
+  - arch: "linux-x64"
+    ext: "tar.gz"
+  - arch: "solaris-sparcv9"
+    ext: "tar.gz"
+  - arch: "solaris-x64"
+    ext: "tar.gz"
+  - arch: "windows-x64"
     ext: "exe"
-    size: 146861984
-  - cls: "sol_64"
-    arch: "solaris-x64"
-    ext: "tar.gz"
-    size: 17171897
-  - cls: "sol_sparc"
-    arch: "solaris-sparcv9"
-    ext: "tar.gz"
-    size: 19289002
+
 - version: "6u45-b06"
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 71799552
+    size: 68637258
     url: "java/jdk/6u45-b06/jdk-6u45-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72087592
+    size: 68881069
     url: "java/jdk/6u45-b06/jdk-6u45-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 73247144
   - arch: "windows-x64"
@@ -4147,14 +4211,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 71771602
+    size: 68610828
     url: "java/jdk/6u43-b01/jdk-6u43-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72039626
+    size: 68834886
     url: "java/jdk/6u43-b01/jdk-6u43-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 73152936
   - arch: "windows-x64"
@@ -4187,14 +4250,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 71769939
+    size: 68609922
     url: "java/jdk/6u41-b02/jdk-6u41-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72041996
+    size: 68830726
     url: "java/jdk/6u41-b02/jdk-6u41-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 73136552
   - arch: "windows-x64"
@@ -4227,14 +4289,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 71756435
+    size: 68593776
     url: "java/jdk/6u39-b04/jdk-6u39-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72037515
+    size: 68830394
     url: "java/jdk/6u39-b04/jdk-6u39-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 73116072
   - arch: "windows-x64"
@@ -4267,14 +4328,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 71771782
+    size: 68611884
     url: "java/jdk/6u38-b05/jdk-6u38-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72058033
+    size: 68850903
     url: "java/jdk/6u38-b05/jdk-6u38-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 73123824
   - arch: "windows-x64"
@@ -4307,14 +4367,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 71764073
+    size: 68604823
     url: "java/jdk/6u37-b06/jdk-6u37-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72048548
+    size: 68843455
     url: "java/jdk/6u37-b06/jdk-6u37-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 73103344
   - arch: "windows-x64"
@@ -4347,14 +4406,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 71758261
+    size: 68601226
     url: "java/jdk/6u35-b10/jdk-6u35-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72039455
+    size: 68834864
     url: "java/jdk/6u35-b10/jdk-6u35-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 73099248
   - arch: "windows-x64"
@@ -4387,14 +4445,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 71755291
+    size: 68593746
     url: "java/jdk/6u34-b04/jdk-6u34-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72036348
+    size: 68833578
     url: "java/jdk/6u34-b04/jdk-6u34-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 73086960
   - arch: "windows-x64"
@@ -4427,20 +4484,18 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 71748681
+    size: 68589914
     url: "java/jdk/6u33-b04/jdk-6u33-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72029394
+    size: 68825113
     url: "java/jdk/6u33-b04/jdk-6u33-linux-x64-rpm.bin"
-  - version: "6u33-b05"
-    cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
+    version: "6u33-b05"
     ext: "exe"
     size: 73049896
-  - version: "6u33-b05"
-    cls: "win_64"
-    arch: "windows-x64"
+  - arch: "windows-x64"
+    version: "6u33-b05"
     ext: "exe"
     size: 62569256
   - arch: "solaris-x64"
@@ -4454,6 +4509,9 @@ java:
   - arch: "solaris-x64"
     ext: "sh"
   jre:
+  - arch: "windows-x64"
+    version: "6u33-b05"
+    ext: "exe"
   - arch: "linux-i586"
     ext: "bin"
     url: "java/jdk/6u33-b04/jre-6u33-linux-i586-rpm.bin"
@@ -4468,14 +4526,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 71746385
+    size: 68593311
     url: "java/jdk/6u32-b05/jdk-6u32-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72033964
+    size: 68835673
     url: "java/jdk/6u32-b05/jdk-6u32-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 73053976
   - arch: "windows-x64"
@@ -4508,20 +4565,18 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 85292206
+    size: 80812741
     url: "java/jdk/6u31-b04/jdk-6u31-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 85581913
+    size: 81071431
     url: "java/jdk/6u31-b04/jdk-6u31-linux-x64-rpm.bin"
-  - version: "6u31-b05"
-    cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
+    version: "6u31-b05"
     ext: "exe"
     size: 82818840
-  - version: "6u31-b05"
-    cls: "win_64"
-    arch: "windows-x64"
+  - arch: "windows-x64"
+    version: "6u31-b05"
     ext: "exe"
     size: 72938776
   - arch: "solaris-x64"
@@ -4535,6 +4590,9 @@ java:
   - arch: "solaris-x64"
     ext: "sh"
   jre:
+  - arch: "windows-x64"
+    version: "6u31-b05"
+    ext: "exe"
   - arch: "linux-i586"
     ext: "bin"
     url: "java/jdk/6u31-b04/jre-6u31-linux-i586-rpm.bin"
@@ -4549,14 +4607,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 85282052
+    size: 80810875
     url: "java/jdk/6u30-b12/jdk-6u30-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 85570714
+    size: 81053867
     url: "java/jdk/6u30-b12/jdk-6u30-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 82761496
   - arch: "windows-x64"
@@ -4589,16 +4646,15 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 85146345
+    size: 80671698
     url: "java/jdk/6u29-b11/jdk-6u29-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 85411605
+    size: 80904447
     url: "java/jdk/6u29-b11/jdk-6u29-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
-    size: 80545560
+    size: 78154400
   - arch: "windows-x64"
     ext: "exe"
     size: 70687000
@@ -4629,14 +4685,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 85147250
+    size: 80680219
     url: "java/jdk/6u27-b07/jdk-6u27-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 85418489
+    size: 80910542
     url: "java/jdk/6u27-b07/jdk-6u27-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 80541464
   - arch: "windows-x64"
@@ -4669,14 +4724,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 85141056
+    size: 80669688
     url: "java/jdk/6u26-b03/jdk-6u26-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 85407904
+    size: 80895878
     url: "java/jdk/6u26-b03/jdk-6u26-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 80545560
   - arch: "windows-x64"
@@ -4709,14 +4763,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 85052342
+    size: 80582692
     url: "java/jdk/6u25-b06/jdk-6u25-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 85315136
+    size: 80804489
     url: "java/jdk/6u25-b06/jdk-6u25-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 80381720
   - arch: "windows-x64"
@@ -4749,14 +4802,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 84927175
+    size: 80452446
     url: "java/jdk/6u24-b07/jdk-6u24-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 84909359
+    size: 80410316
     url: "java/jdk/6u24-b07/jdk-6u24-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 80307992
   - arch: "windows-x64"
@@ -4789,14 +4841,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 84461758
+    size: 80090512
     url: "java/jdk/6u23-b05/jdk-6u23-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 84459425
+    size: 80058012
     url: "java/jdk/6u23-b05/jdk-6u23-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 80029464
   - arch: "windows-x64"
@@ -4829,14 +4880,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 83761756
+    size: 79402775
     url: "java/jdk/6u22-b04/jdk-6u22-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 83790617
+    size: 79408576
     url: "java/jdk/6u22-b04/jdk-6u22-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 79578904
   - arch: "windows-x64"
@@ -4869,14 +4919,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 83855932
+    size: 79490656
     url: "java/jdk/6u21-b07/jdk-6u21-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 83884465
+    size: 79502622
     url: "java/jdk/6u21-b07/jdk-6u21-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 79595288
   - arch: "windows-x64"
@@ -4909,14 +4958,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 84796967
+    size: 80367391
     url: "java/jdk/6u20-b02/jdk-6u20-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 84853474
+    size: 80394012
     url: "java/jdk/6u20-b02/jdk-6u20-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 80398104
   - arch: "windows-x64"
@@ -4949,14 +4997,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 84796753
+    size: 80366029
     url: "java/jdk/6u19-b04/jdk-6u19-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 84852515
+    size: 80394080
     url: "java/jdk/6u19-b04/jdk-6u19-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 80394008
   - arch: "windows-x64"
@@ -4989,14 +5036,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 84738557
+    size: 80314190
     url: "java/jdk/6u18-b07/jdk-6u18-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 84794182
+    size: 80340240
     url: "java/jdk/6u18-b07/jdk-6u18-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 79992600
   - arch: "windows-x64"
@@ -5029,14 +5075,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 81792634
+    size: 77584134
     url: "java/jdk/6u17-b04/jdk-6u17-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 81873605
+    size: 69788798
     url: "java/jdk/6u17-b04/jdk-6u17-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 77125400
   - arch: "windows-x64"
@@ -5069,14 +5114,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 81790339
+    size: 77575456
     url: "java/jdk/6u16-b01/jdk-6u16-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 81871260
+    size: 77638145
     url: "java/jdk/6u16-b01/jdk-6u16-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 77117208
   - arch: "windows-x64"
@@ -5109,14 +5153,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 81787792
+    size: 77573160
     url: "java/jdk/6u15-b03/jdk-6u15-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 81864052
+    size: 77642055
     url: "java/jdk/6u15-b03/jdk-6u15-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 77113112
   - arch: "windows-x64"
@@ -5149,14 +5192,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 81771117
+    size: 77574031
     url: "java/jdk/6u14-b08/jdk-6u14-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 81849212
+    size: 77610422
     url: "java/jdk/6u14-b08/jdk-6u14-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 77047184
   - arch: "windows-x64"
@@ -5189,18 +5231,16 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 80129716
+    size: 75904432
     url: "java/jdk/6u13-b03/jdk-6u13-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 80255395
+    size: 76023610
     url: "java/jdk/6u13-b03/jdk-6u13-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 76658072
-  - cls: "win_64"
-    arch: "windows-x64-p"
+  - arch: "windows-x64-p"
     ext: "exe"
     size: 67545496
   - arch: "solaris-x64"
@@ -5234,18 +5274,16 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 80105323
+    size: 75873807
     url: "java/jdk/6u12-b04/jdk-6u12-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 80238916
+    size: 76004933
     url: "java/jdk/6u12-b04/jdk-6u12-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 76633496
-  - cls: "win_64"
-    arch: "windows-x64-p"
+  - arch: "windows-x64-p"
     ext: "exe"
     size: 67515288
   - arch: "solaris-x64"
@@ -5279,14 +5317,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 80028140
+    size: 75797370
     url: "java/jdk/6u11-b03/jdk-6u11-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72775198
+    size: 69217096
     url: "java/jdk/6u11-b03/jdk-6u11-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 76445080
   - arch: "solaris-x64"
@@ -5318,14 +5355,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 80009636
+    size: 75782916
     url: "java/jdk/6u10/jdk-6u10-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 72753411
+    size: 69188759
     url: "java/jdk/6u10/jdk-6u10-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 76502424
   - arch: "solaris-x64"
@@ -5357,14 +5393,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 78482905
+    size: 74397909
     url: "java/jdk/6u7/jdk-6u7-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 71671121
+    size: 68251845
     url: "java/jdk/6u7/jdk-6u7-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 81208728
   - arch: "solaris-x64"
@@ -5396,14 +5431,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 70514910
+    size: 66590171
     url: "java/jdk/6u6/jdk-6u6-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 63725602
+    size: 60464900
     url: "java/jdk/6u6/jdk-6u6-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 74966424
   - arch: "solaris-x64"
@@ -5441,8 +5475,7 @@ java:
     ext: "bin"
     size: 63724381
     url: "java/jdk/6u5b/jdk-6u5-linux-x64.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 74868120
   - arch: "solaris-x64"
@@ -5482,14 +5515,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 70418455
+    size: 66488684
     url: "java/jdk/6u4-b12/jdk-6u4-linux-i586-rpm.bin"
   - arch: "linux-x64"
     ext: "bin"
-    size: 63678797
+    size: 60417714
     url: "java/jdk/6u4-b12/jdk-6u4-linux-x64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 74745240
   - arch: "solaris-x64"
@@ -5521,14 +5553,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 68573254
+    size: 64638719
     url: "java/jdk/6u3/jdk-6u3-linux-i586-rpm.bin"
   - arch: "linux-amd64"
     ext: "bin"
-    size: 62140783
+    size: 58887895
     url: "java/jdk/6u3/jdk-6u3-linux-amd64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 68830616
   - arch: "solaris-amd64"
@@ -5560,14 +5591,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 58367939
+    size: 64621177
     url: "java/jdk/6u2/jdk-6u2-linux-i586-rpm.bin"
   - arch: "linux-amd64"
     ext: "bin"
-    size: 51945670
+    size: 58862290
     url: "java/jdk/6u2/jdk-6u2-linux-amd64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 68752792
   - arch: "solaris-amd64"
@@ -5599,14 +5629,13 @@ java:
   jdk:
   - arch: "linux-i586"
     ext: "bin"
-    size: 62772481
+    size: 60680996
     url: "java/jdk/6u1/jdk-6u1-linux-i586-rpm.bin"
   - arch: "linux-amd64"
     ext: "bin"
-    size: 56344628
+    size: 54929341
     url: "java/jdk/6u1/jdk-6u1-linux-amd64-rpm.bin"
-  - cls: "win_32"
-    arch: "windows-i586-p"
+  - arch: "windows-i586-p"
     ext: "exe"
     size: 58779296
   - arch: "solaris-amd64"
@@ -5636,354 +5665,21 @@ java:
     ext: "exe"
 - version: "6u0"
   jdk:
-  - cls: "nix_32"
-    arch: "linux-i586"
+  - arch: "linux-i586"
     ext: "bin"
     size: 62678298
-  - cls: "nix_64"
-    arch: "linux-amd64"
+  - arch: "linux-amd64"
     ext: "bin"
     size: 56307268
-  - cls: "win_32"
-    arch: "windows-i586"
+  - arch: "windows-i586"
     ext: "exe"
     size: 55740040
-  - cls: "sol_64"
-    arch: "solaris-amd64"
+  - arch: "solaris-amd64"
     ext: "tar.Z"
     size: 10549995
-  - cls: "sol_sparc"
-    arch: "solaris-sparcv9"
+  - arch: "solaris-sparcv9"
     ext: "tar.Z"
     size: 14069779
-- version: "8u151-b12-demos"
-  url: "java/jdk/${version}${build}/e758a0de34e24606bca991d704f6dcbf/${typeName}-${version}-${arch}-demos.${ext}"
-  jdk:
-  - arch: "linux-i586"
-    ext: "rpm"
-  - arch: "linux-i586"
-    ext: "tar.gz"
-  - arch: "linux-x64"
-    ext: "rpm"
-  - arch: "linux-x64"
-    ext: "tar.gz"
-  - arch: "solaris-sparcv9"
-    ext: "tar.Z"
-  - arch: "solaris-sparcv9"
-    ext: "tar.gz"
-  - arch: "solaris-x64"
-    ext: "tar.Z"
-  - arch: "solaris-x64"
-    ext: "tar.gz"
-  - arch: "windows-x64"
-    ext: "zip"
-- version: "8u152-b16-demos"
-  url: "java/jdk/${version}${build}/aa0333dd3019491ca4f6ddbe78cdb6d0/${typeName}-${version}-${arch}-demos.${ext}"
-  jdk:
-  - arch: "linux-i586"
-    ext: "rpm"
-  - arch: "linux-i586"
-    ext: "tar.gz"
-  - arch: "linux-x64"
-    ext: "rpm"
-  - arch: "linux-x64"
-    ext: "tar.gz"
-  - arch: "solaris-sparcv9"
-    ext: "tar.Z"
-  - arch: "solaris-sparcv9"
-    ext: "tar.gz"
-  - arch: "solaris-x64"
-    ext: "tar.Z"
-  - arch: "solaris-x64"
-    ext: "tar.gz"
-  - arch: "windows-x64"
-    ext: "zip"
-- version: "8u112-b16"
-  jdk:
-  - arch: "macosx-x64"
-    ext: "dmg"
-    sha256: "c9ebb729acb0ee8e6fbeda85751be20b024c45e3ebb83cc7c624908ffb8a466d"
-  jre:
-  - arch: "macosx-x64"
-    ext: "dmg"
-    sha256: "19c47e7b8516ddc0c11e9cf78bda152eb1567f0a0a935e4fde7e08d834762554"
-  - arch: "macosx-x64"
-    ext: "tar.gz"
-    sha256: "da3e884de099e27d41827453f7f1a4d769c855c6c575af33f4da523f17e1196b"
-- version: "8u91-b15"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-    sha256: "dd2ff1ee1ef9394f6a920aeb5fda0b5a460dcb9112d520240d60b8794893b484"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-    sha256: "e5007ab2ba1f78ed460f0a7068bf8831a0aec7ea5d2823097ecfb0f1aa149e50"
-  - arch: "windows-x64"
-    ext: "tar.gz"
-    sha256: "830e9444e2646db189636ff573c7520ad5c1cd5d4293545e3e143773de4e2200"
-  serverjre:
-  - arch: "windows-x64"
-    ext: "tar.gz"
-    sha256: "830e9444e2646db189636ff573c7520ad5c1cd5d4293545e3e143773de4e2200"
-    typeName: "server-jre"
-- version: "8u66-b18"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-    sha256: "ce7775bb6322cf5f5576312a25c4a51b5be8cfffefed3295f15c6585e74fc5ae"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-    sha256: "6a0e84a572bb5808f3bfbaabf2f90dfc114e62ec818ee4a1015b3ad1b1191ca6"
-  - arch: "windows-x64"
-    ext: "tar.gz"
-    sha256: "f78c27f9567d4330ec21a33120f7b9ecd03b4cac95fc9dff444b27efb91dfe13"
-- version: "8u45-b15"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-    md5: "979ec7d6c93c6f36b32b8d532d736015"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-    md5: "39871bf18035decf56db8d7d0a467987"
-  - arch: "windows-x64"
-    ext: "tar.gz"
-    md5: "99e5ba4f9d6bff874aa9904f57af5373"
-  serverjre:
-  - arch: "windows-x64"
-    ext: "tar.gz"
-    md5: "1b6208ddcb43e8eca7618619bfd7f47e"
-    typeName: "server-jre"
-- version: "8u40-b27"
-  jdk:
-  - arch: "macosx-x64"
-    ext: "dmg"
-    md5: "d7461e2f9569bc87cec63e9cfc7399a9"
-  jre:
-  - arch: "macosx-x64"
-    ext: "dmg"
-    md5: "0a70fd77350a0fe4f245a6306e4fd968"
-  - arch: "macosx-x64"
-    ext: "tar.gz"
-    md5: "b85ffb2e553872266666b0f0ae4705ac"
-- version: "8u25-b18"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-    md5: "462542ffefd3b7822932a0f0d840e355"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-    md5: "733f8838a4fa8cf66fe0799a467e5eb5"
-  - arch: "windows-x64"
-    ext: "tar.gz"
-    md5: "f8ea31cedac447410a4fff7720be9817"
-  serverjre:
-  - arch: "windows-x64"
-    ext: "tar.gz"
-    md5: "f8ea31cedac447410a4fff7720be9817"
-    typeName: "server-jre"
-- version: "7u65-b20"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-  - arch: "windows-x64"
-    ext: "tar.gz"
-  serverjre:
-  - arch: "windows-x64"
-    ext: "tar.gz"
-    typeName: "server-jre"
-- version: "7u25-b17"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-  - arch: "windows-x64"
-    ext: "tar.gz"
-  serverjre:
-  - arch: "windows-x64"
-    ext: "tar.gz"
-    typeName: "sjre"
-- version: "7u21-b12"
-  jdk:
-  - arch: "macosx-x64"
-    ext: "dmg"
-  jre:
-  - arch: "macosx-x64"
-    ext: "dmg"
-  - arch: "macosx-x64"
-    ext: "tar.gz"
-- version: "7u10-b18"
-  jdk:
-  - arch: "linux-i586"
-    ext: "rpm"
-  - arch: "linux-i586"
-    ext: "tar.gz"
-  - arch: "linux-x64"
-    ext: "rpm"
-  - arch: "linux-x64"
-    ext: "tar.gz"
-  - arch: "macosx-x64"
-    ext: "dmg"
-  - arch: "solaris-sparcv9"
-    ext: "tar.Z"
-  - arch: "solaris-sparcv9"
-    ext: "tar.gz"
-  - arch: "solaris-x64"
-    ext: "tar.Z"
-  - arch: "solaris-x64"
-    ext: "tar.gz"
-  - arch: "windows-x64"
-    ext: "exe"
-  jre:
-  - arch: "linux-i586"
-    ext: "rpm"
-  - arch: "linux-i586"
-    ext: "tar.gz"
-  - arch: "linux-x64"
-    ext: "rpm"
-  - arch: "linux-x64"
-    ext: "tar.gz"
-  - arch: "macosx-x64"
-    ext: "dmg"
-  - arch: "macosx-x64"
-    ext: "tar.gz"
-  - arch: "solaris-sparcv9"
-    ext: "tar.gz"
-  - arch: "solaris-x64"
-    ext: "tar.gz"
-  - arch: "windows-x64"
-    ext: "exe"
-  - arch: "windows-x64"
-    ext: "tar.gz"
-- version: "7u7-b11"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-- version: "7u4-b21"
-  jdk:
-  - arch: "macosx-x64"
-    ext: "dmg"
-- version: "7u4-b22"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-- version: "7u3-b05"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-- version: "7"
-  url: "java/jdk/${version}/${typeName}-${version}-${arch}.${ext}"
-  jdk:
-  - arch: "linux-i586"
-    ext: "rpm"
-  - arch: "linux-i586"
-    ext: "tar.gz"
-  - arch: "linux-x64"
-    ext: "rpm"
-  - arch: "linux-x64"
-    ext: "tar.gz"
-  - arch: "solaris-sparcv9"
-    ext: "tar.Z"
-  - arch: "solaris-sparcv9"
-    ext: "tar.gz"
-  - arch: "solaris-x64"
-    ext: "tar.Z"
-  - arch: "solaris-x64"
-    ext: "tar.gz"
-  - arch: "windows-x64"
-    ext: "exe"
-  jre:
-  - arch: "linux-i586"
-    ext: "rpm"
-  - arch: "linux-i586"
-    ext: "tar.gz"
-  - arch: "linux-x64"
-    ext: "rpm"
-  - arch: "linux-x64"
-    ext: "tar.gz"
-  - arch: "solaris-sparcv9"
-    ext: "tar.gz"
-  - arch: "solaris-x64"
-    ext: "tar.gz"
-  - arch: "windows-x64"
-    ext: "exe"
-- version: "6u33-b05"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-- version: "6u31-b05"
-  jdk:
-  - arch: "windows-x64"
-    ext: "exe"
-  jre:
-  - arch: "windows-x64"
-    ext: "exe"
-- version: "6u6-p2"
-  url: "java/jdk/${version}${build}/${typeName}-${version}-p-${arch}.${ext}"
-  jdk:
-  - arch: "linux-x64"
-    ext: "tar.gz"
-  - arch: "solaris-x64"
-    ext: "tar"
-  - arch: "windows-x64"
-    ext: "tar"
-  jre:
-  - arch: "linux-x64"
-    ext: "zip"
-  - arch: "solaris-x64"
-    ext: "zip"
-  - arch: "windows-x64"
-    ext: "zip"
-- version: "6u6p"
-  url: "java/jre/${version}/${typeName}-6u6-p-${arch}.${ext}"
-  jdk:
-  - arch: "solaris-sparcv9"
-    ext: "tar"
-  jre:
-  - arch: "solaris-sparcv9"
-    ext: "zip"
-- version: "6u5-p"
-  url: "java/jre/${version}${build}/${typeName}-${version}${build}-${arch}.${ext}"
-  jre:
-  - arch: "linux-x64"
-    ext: "zip"
-  - arch: "solaris-sparcv9"
-    ext: "zip"
-  - arch: "solaris-x64"
-    ext: "zip"
-  - arch: "windows-x64"
-    ext: "zip"
-- version: "6u4-p"
-  url: "java/jre/${version}${build}/${typeName}-${version}${build}-${arch}.${ext}"
-  jre:
-  - arch: "linux-x64"
-    ext: "zip"
-  - arch: "solaris-sparcv9"
-    ext: "zip"
-  - arch: "solaris-x64"
-    ext: "zip"
-  - arch: "windows-x64"
-    ext: "zip"
 - version: "6"
   url: "java/jdk/${version}/${typeName}-${version}-${arch}.${ext}"
   jdk:
@@ -6016,3 +5712,25 @@ java:
     ext: "sh"
   - arch: "windows-amd64"
     ext: "exe"
+
+
+defaults:
+  url: "java/jdk/${version}${build}/${typeName}-${version}-${arch}.${ext}"
+  typeName:
+    jdk: "jdk"
+    serverjre: "serverjre"
+    jre: "jre"
+  archCls:
+    linux-x64: "nix_64"
+    linux-amd64: "nix_64"
+    linux-i586: "nix_32"
+    macosx-x64: "osx_64"
+    osx-x64: "osx_64"
+    windows-x64: "win_64"
+    windows-x64-p: "win_64"
+    windows-amd64: "win_64"
+    windows-i586: "win_32"
+    windows-i586-p: "win_32"
+    solaris-sparcv9: "sol_sparc"
+    solaris-x64: "sol_64"
+    solaris-amd64: "sol_64"
