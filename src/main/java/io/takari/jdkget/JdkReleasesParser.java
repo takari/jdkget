@@ -48,6 +48,10 @@ public class JdkReleasesParser {
       buildReleaseBinary(v, url, r.getJre(), builder, defaults, JavaReleaseType.JRE.getName());
       buildReleaseBinary(v, url, r.getServerJre(), builder, defaults, JavaReleaseType.SERVERJRE.getName());
     });
+
+    for (String unp : jrd.getUnpackable()) {
+      builder.addUnpackable(unp);
+    }
   }
   
   private void buildReleaseBinary(String ver, String urlTemplate, List<BinaryData> bins, Builder builder,
@@ -55,10 +59,15 @@ public class JdkReleasesParser {
     if(bins == null) { return; }
     
     bins.forEach(b -> {
-      Arch cls = Arch.valueOf(defaults.getArchCls().get(b.getArch()).toUpperCase());
+      String arch = b.getArch();
+
+      String clsName = defaults.getArchCls().get(arch);
+      if(clsName == null) {
+        throw new IllegalStateException("No classifier for arch " + arch);
+      }
+      Arch cls = Arch.valueOf(clsName.toUpperCase());
       String binVersion = b.getVersion() == null ? ver : b.getVersion();
       String typeName = b.getTypeName() == null ? defaults.getTypeName().get(type) : b.getTypeName();
-      String arch = b.getArch();
       String ext = b.getExt();
       String md5 = b.getMd5();
       String sha256 = b.getSha256();
@@ -66,7 +75,9 @@ public class JdkReleasesParser {
       String url = b.getUrl() == null ? urlTemplate : b.getUrl();
       
       String path = path(url, typeName, JdkVersion.parse(binVersion), arch, ext);
-      builder.addBinary(ver, type, cls, path, md5, sha256, size);
+
+      String descriptor = arch + "." + ext;
+      builder.addBinary(ver, type, cls, descriptor, path, md5, sha256, size);
     });
   }
 

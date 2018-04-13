@@ -512,38 +512,38 @@ public class JdkGetter {
       JdkRelease rel, JdkVersion v, Collection<Arch> arches, String type, boolean silent, ExecutorService ex)
       throws IOException, InterruptedException {
     for (Arch a : arches) {
-      JdkBinary bin = rel.getBinary(type, a);
+      for(JdkBinary bin: rel.getBinaries(type, a)) {
 
-      ex.submit(() -> {
-        CachingOutput output = new CachingOutput();
-        JdkContext ctx = new JdkContext(rels, v, a, type, output);
-        ctx.setSilent(silent);
-        try {
-          File out = new File(outDir, bin.getPath()).getAbsoluteFile();
-          output.info("** Downloading " + type + " " + v.shortBuild() + " for " + a.name() + " to " + out);
-          if (out.exists()) {
-            if (transport.validate(ctx, out)) {
-              ctx.getOutput().info("Valid file already exists");
-              return;
-            } else {
-              ctx.getOutput().info("Existing file failed validation, deleting");
-              FileUtils.forceDelete(out);
+        ex.submit(() -> {
+          CachingOutput output = new CachingOutput();
+          JdkContext ctx = new JdkContext(rels, v, a, type, output);
+          ctx.setSilent(silent);
+          ctx.setBinDescriptor(bin.getDescriptor());
+          try {
+            File out = new File(outDir, bin.getPath()).getAbsoluteFile();
+            if (out.exists()) {
+              output.info("** Checking " + type + "-" + v.shortBuild() + " (" + a.name() + ") in " + out);
+              if (transport.validate(ctx, out)) {
+                return;
+              } else {
+                ctx.getOutput().info("Existing file failed validation, deleting");
+                FileUtils.forceDelete(out);
+              }
             }
+            output.info("** Downloading " + type + "-" + v.shortBuild() + " (" + a.name() + ") to " + out);
+            FileUtils.forceMkdir(out.getParentFile());
+            transport.downloadJdk(ctx, out);
+            if (!transport.validate(ctx, out)) {
+              ctx.getOutput().error("Invalid image file " + out);
+            }
+          } catch (Exception e) {
+            output.error("Error downloading", e);
+          } finally {
+            output.output(System.out);
           }
-          FileUtils.forceMkdir(out.getParentFile());
-          transport.downloadJdk(ctx, out);
-          ctx.getOutput().info("Validating downloaded file");
-          if (!transport.validate(ctx, out)) {
-            ctx.getOutput().error("Invalid image file " + out);
-          }
-        } catch (Exception e) {
-          output.error("Error downloading", e);
-        } finally {
-          output.output(System.out);
-          System.out.println();
-        }
+        });
 
-      });
+      }
     }
   }
 

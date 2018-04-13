@@ -8,6 +8,7 @@ public class JdkContext {
   private IOutput output;
 
   private boolean silent;
+  private String binDescriptor;
 
   public JdkContext(JdkReleases releases, JdkVersion version, Arch arch, String type, IOutput output) {
     this.releases = releases;
@@ -43,5 +44,13 @@ public class JdkContext {
 
   public void setSilent(boolean silent) {
     this.silent = silent;
+  }
+
+  public String getBinDescriptor() {
+    return binDescriptor;
+  }
+
+  public void setBinDescriptor(String binDescriptor) {
+    this.binDescriptor = binDescriptor;
   }
 }

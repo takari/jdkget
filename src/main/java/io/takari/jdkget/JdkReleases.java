@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 public class JdkReleases implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  private static final String JAVA_RELEASES_CNF_FILENAME = "java_releases_v1.yml";
+  private static final String JAVA_RELEASES_CNF_FILENAME = "java_releases_v2.yml";
   private static final String REMOTE_XML = "https://raw.githubusercontent.com/takari/jdkget/master/src/main/resources/" + JAVA_RELEASES_CNF_FILENAME;
   private static final long MAX_CACHE = 24L * 60L * 60L * 1000L; // cache it for a day
   private static final int TIMEOUT_VALUE = 10000;
@@ -149,10 +149,12 @@ public class JdkReleases implements Serializable {
 
   private List<JdkRelease> releases;
   private List<JCE> jces;
+  private List<String> unpackables;
 
-  JdkReleases(List<JdkRelease> releases, List<JCE> jces) {
+  JdkReleases(List<JdkRelease> releases, List<JCE> jces, List<String> unpackables) {
     this.releases = releases;
     this.jces = jces;
+    this.unpackables = unpackables;
   }
 
   public JCE getJCE(JdkVersion ver) {
@@ -165,6 +167,22 @@ public class JdkReleases implements Serializable {
     }
     return null;
   }
+
+  public JdkBinary selectUnpackable(List<JdkBinary> binaries) {
+    JdkBinary match = null;
+    if (binaries != null) {
+      int lowest = Integer.MAX_VALUE;
+      for (JdkBinary bin : binaries) {
+        int idx = unpackables.indexOf(bin.descriptor);
+        if (idx != -1 && idx < lowest) {
+          lowest = idx;
+          match = bin;
+        }
+      }
+    }
+    return match;
+  }
+
 
   public List<JdkRelease> getReleases() {
     return releases;
@@ -247,13 +265,13 @@ public class JdkReleases implements Serializable {
 
     private final JdkVersion version;
     private final boolean psu;
-    private final Map<String, Map<Arch, JdkBinary>> binaries;
+    private final Map<String, Map<Arch, List<JdkBinary>>> binaries;
 
     JdkRelease(JdkVersion version, boolean psu, Map<String, List<JdkBinary>> binaries) {
       this.version = version;
       this.psu = psu;
       
-      Map<String, Map<Arch, JdkBinary>> binMap = new LinkedHashMap<>();
+      Map<String, Map<Arch, List<JdkBinary>>> binMap = new LinkedHashMap<>();
       binaries.entrySet().forEach(e -> {
         binMap.put(e.getKey(), Collections.unmodifiableMap(toMap(e.getValue())));
       });
@@ -261,10 +279,14 @@ public class JdkReleases implements Serializable {
       this.binaries = Collections.unmodifiableMap(binMap);
     }
 
-    private Map<Arch, JdkBinary> toMap(List<JdkBinary> binaries) {
-      Map<Arch, JdkBinary> binMap = new LinkedHashMap<>();
+    private Map<Arch, List<JdkBinary>> toMap(List<JdkBinary> binaries) {
+      Map<Arch, List<JdkBinary>> binMap = new LinkedHashMap<>();
       for (JdkBinary binary : binaries) {
-        binMap.put(binary.getArch(), binary);
+        List<JdkBinary> archBins = binMap.get(binary.getArch());
+        if (archBins == null) {
+          binMap.put(binary.getArch(), archBins = new ArrayList<>());
+        }
+        archBins.add(binary);
       }
       return binMap;
     }
@@ -277,8 +299,8 @@ public class JdkReleases implements Serializable {
       return psu;
     }
 
-    public JdkBinary getBinary(String type, Arch arch) {
-      JdkBinary b = binaries.get(type).get(arch);
+    public List<JdkBinary> getBinaries(String type, Arch arch) {
+      List<JdkBinary> b = binaries.get(type).get(arch);
       if (b == null) {
         throw new IllegalStateException("No binary for " + arch + " in " + version);
       }
@@ -300,13 +322,15 @@ public class JdkReleases implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final Arch arch;
+    private final String descriptor; // combination of original architecture name and extension
     private final String path;
     private final String md5;
     private final String sha256;
     private final long size;
 
-    JdkBinary(Arch arch, String path, String md5, String sha256, long size) {
+    JdkBinary(Arch arch, String descriptor, String path, String md5, String sha256, long size) {
       this.arch = arch;
+      this.descriptor = descriptor;
       this.path = path;
       this.md5 = md5;
       this.sha256 = sha256;
@@ -315,6 +339,10 @@ public class JdkReleases implements Serializable {
 
     public Arch getArch() {
       return arch;
+    }
+
+    public String getDescriptor() {
+      return descriptor;
     }
 
     public String getPath() {
@@ -354,9 +382,8 @@ public class JdkReleases implements Serializable {
       r.binaries.entrySet().stream()
       .filter( e -> releaseTypes.contains(e.getKey()))
       .forEach(typedBins -> {
-        typedBins.getValue().values().stream().forEach(bin -> 
-          b.addBinary(v, typedBins.getKey(), bin.getArch(), bin.getPath(), bin.getMd5(),
-            bin.getSha256(), bin.getSize())
+        typedBins.getValue().values().stream().forEach(bins -> 
+          bins.forEach( bin -> b.addBinary(v, typedBins.getKey(), bin.getArch(), bin.getPath(), bin.getMd5(), bin.getSha256(), bin.getSize()))
         );
       });
     }
@@ -365,6 +392,8 @@ public class JdkReleases implements Serializable {
       b.addJCE(jce.getMajorVersion(), jce.getPath());
     }
 
+    b.unpackables.addAll(rels.unpackables);
+
     return b;
   }
 
@@ -372,16 +401,18 @@ public class JdkReleases implements Serializable {
     private Map<String, Map<String,List<JdkBinary>>> binaries;
     private List<JCE> jces;
     private Set<String> psuVersions;
+    private List<String> unpackables;
 
     public Builder() {
       binaries = new LinkedHashMap<>();
       jces = new ArrayList<>();
+      unpackables = new ArrayList<>();
     }
 
     public Builder addBinary(String version, Arch arch, String path) {
-      return addBinary(version, null, arch, path, null, null, -1);
+      return addBinary(version, arch, path, null, null, -1);
     }
-    
+
     public Builder addBinary(String version, String type, Arch arch, String path) {
       return addBinary(version, type, arch, path, null, null, -1);
     }
@@ -389,8 +420,12 @@ public class JdkReleases implements Serializable {
     public Builder addBinary(String version, Arch arch, String path, String md5, String sha256, long size) {
       return addBinary(version, null, arch, path, md5, sha256, size);
     }
-    
+
     public Builder addBinary(String version, String type, Arch arch, String path, String md5, String sha256, long size) {
+      return addBinary(version, type, arch, "?", path, md5, sha256, size);
+    }
+
+    public Builder addBinary(String version, String type, Arch arch, String descriptor, String path, String md5, String sha256, long size) {
       String binType = JavaReleaseType.validateTypeName(type);
       Map<String, List<JdkBinary>> bv = binaries.get(version);
       if (bv == null) {
@@ -400,7 +435,7 @@ public class JdkReleases implements Serializable {
       if (bt == null) {
         bv.put(binType, bt = new ArrayList<>());
       }
-      bt.add(new JdkBinary(arch, path, md5, sha256, size));
+      bt.add(new JdkBinary(arch, descriptor, path, md5, sha256, size));
       return this;
     }
 
@@ -414,6 +449,11 @@ public class JdkReleases implements Serializable {
 
     public Builder addJCE(int major, String path) {
       jces.add(new JCE(major, path));
+      return this;
+    }
+
+    public Builder addUnpackable(String desc) {
+      unpackables.add(desc);
       return this;
     }
 
@@ -433,7 +473,8 @@ public class JdkReleases implements Serializable {
         }
       });
 
-      return new JdkReleases(rels, jces);
+      return new JdkReleases(rels, jces, unpackables);
     }
   }
+
 }

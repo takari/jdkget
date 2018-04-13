@@ -174,9 +174,6 @@ public class JavaReleasesData {
     @JacksonXmlProperty(isAttribute = true)
     private Boolean psu;
 
-    @JacksonXmlProperty(isAttribute = true)
-    private String ext;
-
     private String url;
 
     @JsonProperty("jdk")
@@ -208,14 +205,6 @@ public class JavaReleasesData {
 
     public void setPsu(Boolean psu) {
       this.psu = psu;
-    }
-
-    public String getExt() {
-      return ext;
-    }
-
-    public void setExt(String ext) {
-      this.ext = ext;
     }
 
     public String getUrl() {
@@ -262,6 +251,11 @@ public class JavaReleasesData {
   @JacksonXmlProperty(localName = "jdk")
   @JacksonXmlElementWrapper(useWrapping = false)
   private List<JavaReleaseData> releases;
+  
+  @JsonProperty("unpackable")
+  @JacksonXmlProperty(localName = "unpackable")
+  @JacksonXmlElementWrapper(useWrapping = false)
+  private List<String> unpackable;
 
   public List<JceData> getJces() {
     return jces;
@@ -285,6 +279,14 @@ public class JavaReleasesData {
 
   public void setReleases(List<JavaReleaseData> releases) {
     this.releases = releases;
+  }
+
+  public List<String> getUnpackable() {
+    return unpackable;
+  }
+
+  public void setUnpackable(List<String> unpackable) {
+    this.unpackable = unpackable;
   }
 
 }
