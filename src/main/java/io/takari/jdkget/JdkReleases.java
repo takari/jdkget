@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 public class JdkReleases implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  private static final String JAVA_RELEASES_CNF_FILENAME = "java_releases_v2.yml";
+  private static final String JAVA_RELEASES_CNF_FILENAME = "java_releases_v1.yml";
   private static final String REMOTE_XML = "https://raw.githubusercontent.com/takari/jdkget/master/src/main/resources/" + JAVA_RELEASES_CNF_FILENAME;
   private static final long MAX_CACHE = 24L * 60L * 60L * 1000L; // cache it for a day
   private static final int TIMEOUT_VALUE = 10000;

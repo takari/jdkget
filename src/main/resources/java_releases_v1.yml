@@ -22,33 +22,32 @@ defaults:
     solaris-sparcv9: "sol_sparc"
     solaris-x64: "sol_64"
     solaris-amd64: "sol_64"
-
-unpackable: 
-- "linux-x64.tar.gz"
-- "linux-x64.bin"
-- "linux-amd64.bin"
-- "linux-i586.tar.gz"
-- "linux-i586.bin"
-- "macosx-x64.tar.gz"
-- "macosx-x64.dmg"
-- "osx-x64.tar.gz"
-- "osx-x64.dmg"
-- "windows-x64.tar.gz"
-- "windows-x64.exe"
-- "windows-x64-p.exe"
-- "windows-amd64.exe"
-- "windows-i586.tar.gz"
-- "windows-i586.exe"
-- "windows-i586-p.exe"
-- "solaris-sparcv9.tar.gz"
-- "solaris-sparcv9.tar.Z"
-- "solaris-sparcv9.sh"
-- "solaris-x64.tar.gz"
-- "solaris-x64.tar.Z"
-- "solaris-x64.sh"
-- "solaris-amd64.tar.gz"
-- "solaris-amd64.tar.Z"
-- "solaris-amd64.sh"
+  unpackable: 
+  - "linux-x64.tar.gz"
+  - "linux-x64.bin"
+  - "linux-amd64.bin"
+  - "linux-i586.tar.gz"
+  - "linux-i586.bin"
+  - "macosx-x64.tar.gz"
+  - "macosx-x64.dmg"
+  - "osx-x64.tar.gz"
+  - "osx-x64.dmg"
+  - "windows-x64.tar.gz"
+  - "windows-x64.exe"
+  - "windows-x64-p.exe"
+  - "windows-amd64.exe"
+  - "windows-i586.tar.gz"
+  - "windows-i586.exe"
+  - "windows-i586-p.exe"
+  - "solaris-sparcv9.tar.gz"
+  - "solaris-sparcv9.tar.Z"
+  - "solaris-sparcv9.sh"
+  - "solaris-x64.tar.gz"
+  - "solaris-x64.tar.Z"
+  - "solaris-x64.sh"
+  - "solaris-amd64.tar.gz"
+  - "solaris-amd64.tar.Z"
+  - "solaris-amd64.sh"
 
 jce: 
 - { version: "8", url: "java/jce/8/jce_policy-8.zip" }
@@ -582,11 +581,7 @@ java:
   - { arch: "windows-i586", version: "8u91-b15", ext: "exe", sha256: "f34168660e16b4ab8dc87d4c14c5515ce748b54d5a38fc7a2854ffb5c0bdd346" }
   - { arch: "windows-i586", version: "8u91-b15", ext: "tar.gz", sha256: "65a899a966376110a69c3346850f9b96491ed29704261c2390815ac550819248" }
   serverjre: 
-  - arch: "windows-x64"
-    version: "8u91-b15"
-    ext: "tar.gz"
-    sha256: "44afecc687b670a882733e1c51aa4482403af90979701beb6c8958f3adaf8d05"
-    typeName: "server-jre"
+  - { arch: "windows-x64", version: "8u91-b15", ext: "tar.gz", sha256: "44afecc687b670a882733e1c51aa4482403af90979701beb6c8958f3adaf8d05", typeName: "server-jre" }
   - { arch: "linux-x64", ext: "tar.gz", sha256: "e5335c3f681f551fd246d358ddbe6678876a5f48c36d0ae0eeefe12c8989f3cb", typeName: "server-jre" }
   - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "2786872691b5a4c7c99d175c73a6146996f0717e0e718a46128214d415d71405", typeName: "server-jre" }
   - { arch: "solaris-x64", ext: "tar.gz", sha256: "15708fb3c28f17b19503829440f722b3f289cacb6bd03f9eb620cb240dced21d", typeName: "server-jre" }
@@ -897,11 +892,7 @@ java:
   - { arch: "solaris-sparcv9", ext: "tar.gz", md5: "fd1b4e145cde0252aab7d8931e721283" }
   - { arch: "solaris-x64", ext: "tar.gz", md5: "ab9f8e271af738b61839924d95408bfa" }
   serverjre: 
-  - arch: "windows-x64"
-    version: "8u45-b15"
-    ext: "tar.gz"
-    md5: "1b6208ddcb43e8eca7618619bfd7f47e"
-    typeName: "server-jre"
+  - { arch: "windows-x64", version: "8u45-b15", ext: "tar.gz", md5: "1b6208ddcb43e8eca7618619bfd7f47e", typeName: "server-jre" }
   - { arch: "linux-x64", ext: "tar.gz", md5: "04b2497b2a1459d8fd03db95fa7d028e", typeName: "server-jre" }
   - { arch: "solaris-sparcv9", ext: "tar.gz", md5: "1205fa6564bc5a1ef39937f8fd75b427", typeName: "server-jre" }
   - { arch: "solaris-x64", ext: "tar.gz", md5: "d44fbb8c2cd866a3ac7cba9f09d224bc", typeName: "server-jre" }
@@ -994,11 +985,7 @@ java:
   - { arch: "solaris-sparcv9", ext: "tar.gz", md5: "333c006aa95a842b7baa8ac961b7eb8f" }
   - { arch: "solaris-x64", ext: "tar.gz", md5: "bf3b6b01d086d43407ab2f301cc0817c" }
   serverjre: 
-  - arch: "windows-x64"
-    version: "8u25-b18"
-    ext: "tar.gz"
-    md5: "f8ea31cedac447410a4fff7720be9817"
-    typeName: "server-jre"
+  - { arch: "windows-x64", version: "8u25-b18", ext: "tar.gz", md5: "f8ea31cedac447410a4fff7720be9817", typeName: "server-jre" }
   - { arch: "linux-x64", ext: "tar.gz", md5: "c3ec171fac394c584a0a5cecb1731efd", typeName: "server-jre" }
   - { arch: "solaris-sparcv9", ext: "tar.gz", md5: "c65fd2891a5df4992ac37afdbff71d80", typeName: "server-jre" }
   - { arch: "solaris-x64", ext: "tar.gz", md5: "62cb1ffa9c273f73ab21a50b6f50e911", typeName: "server-jre" }
@@ -1374,11 +1361,7 @@ java:
   - { arch: "solaris-x64", ext: "tar.gz", sha256: "976ec9d141084317fbe9400dfda3bf5e76cc8d3ab7fcd77aa3d8cc7cf1a323af" }
   - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "5c96a33f6434aae5fc1f2abfe61db7cbcb688364e10ba48249e65f75ed89b366" }
   serverjre: 
-  - arch: "windows-x64"
-    version: "7u65-b20"
-    ext: "tar.gz"
-    sha256: "b2fc39c4042a96282903927f05313cb764fb67e60c4b5ae0784a700a82f66d80"
-    typeName: "server-jre"
+  - { arch: "windows-x64", version: "7u65-b20", ext: "tar.gz", sha256: "b2fc39c4042a96282903927f05313cb764fb67e60c4b5ae0784a700a82f66d80", typeName: "server-jre" }
   - { arch: "linux-x64", ext: "tar.gz", sha256: "ba7e4250a0b76ad94155f87133286f4ed6c4c6d5c2153c211bbdafd6e3254848", typeName: "server-jre" }
   - { arch: "solaris-x64", ext: "tar.gz", sha256: "59a49418ed0bfa02031c01c03c24e2919bc4681c123edfb3d8399ea9ff8ce7fb", typeName: "server-jre" }
   - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "19b5554b79a9aabcd52ed626ee9c4baa4798b3f6c80ddc7277cfafb3ca93179e", typeName: "server-jre" }
@@ -1564,11 +1547,7 @@ java:
   - { arch: "solaris-x64", ext: "tar.gz", sha256: "706b46e57175064529120bb9fd5c3dacc034b09e538fb86636176d44417f8bd7" }
   - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "680d4017fd691af82019360d3df00959eea63fb58bc78dca107baf7ab7a32423" }
   serverjre: 
-  - arch: "windows-x64"
-    version: "7u25-b17"
-    ext: "tar.gz"
-    sha256: "a5aca3060d3b535cada18595916204030d442dfd13af6a2c30e9ba563f8d2494"
-    typeName: "server-jre"
+  - { arch: "windows-x64", version: "7u25-b17", ext: "tar.gz", sha256: "a5aca3060d3b535cada18595916204030d442dfd13af6a2c30e9ba563f8d2494", typeName: "server-jre" }
   - { arch: "linux-x64", ext: "tar.gz", sha256: "8a74fa3f93b7cb43284a7ce8e11ef433f15d386de786151f194080fa6004a674", typeName: "server-jre" }
   - { arch: "solaris-x64", ext: "tar.gz", sha256: "60e944592e0983ec175a20f5ea9cfe44d0272e3d8b30a1431d1280fb782591b2", typeName: "server-jre" }
   - { arch: "solaris-sparcv9", ext: "tar.gz", sha256: "dde4511ac364927da30ab0307b36c28d32cbb316000b792815e343475b1b9800", typeName: "server-jre" }

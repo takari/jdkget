@@ -24,10 +24,9 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
   @Override
   public boolean extractJdk(JdkContext context, File jdkImage, File outputDir, File workDir) throws IOException, InterruptedException {
 
-    context.getOutput().info("Extracting jdk image into " + outputDir);
+    context.getOutput().info("Extracting " + context.getType() + " image into " + outputDir);
 
-    String versionPrefix1 = "jdk" + context.getVersion().longVersion();
-    String versionPrefix2 = "jdk-" + context.getVersion().longVersion(); // 9+ has this prefix
+    String versionLine = context.getVersion().longVersion();
 
     try (InputStream in = new FileInputStream(jdkImage)) {
       TarArchiveInputStream t = new TarArchiveInputStream(wrap(in));
@@ -38,11 +37,9 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
 
         String entryName = te.getName();
 
-        if (entryName.startsWith(versionPrefix1)) {
-          entryName = entryName.substring(versionPrefix1.length());
-        }
-        if (entryName.startsWith(versionPrefix2)) {
-          entryName = entryName.substring(versionPrefix2.length());
+        int idx = entryName.indexOf(versionLine);
+        if (idx != -1) {
+          entryName = entryName.substring(idx + versionLine.length());
         }
 
         File f = new File(outputDir, entryName);

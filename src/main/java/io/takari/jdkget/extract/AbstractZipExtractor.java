@@ -15,14 +15,17 @@ import io.takari.jdkget.Util;
 
 public abstract class AbstractZipExtractor implements IJdkExtractor {
 
-  protected void extractEntry(File outputDir, String versionPrefix, ZipEntry e, InputStream zip) throws IOException, InterruptedException {
+  protected void extractEntry(File outputDir, String versionLine, ZipEntry e, InputStream zip) throws IOException, InterruptedException {
     Util.checkInterrupt();
 
     boolean unpack200 = false;
     String name = e.getName();
 
-    if (versionPrefix != null && name.startsWith(versionPrefix)) {
-      name = name.substring(versionPrefix.length());
+    if (versionLine != null) {
+      int idx = name.indexOf(versionLine);
+      if (idx != -1) {
+        name = name.substring(idx + versionLine.length());
+      }
     }
 
     if (name.endsWith(".pack")) {

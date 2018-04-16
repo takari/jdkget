@@ -21,9 +21,9 @@ public class BinJDKExtractor extends AbstractZipExtractor {
   @Override
   public boolean extractJdk(JdkContext context, File jdkImage, File outputDir, File workDir) throws IOException, InterruptedException {
 
-    context.getOutput().info("Extracting jdk image into " + outputDir);
+    context.getOutput().info("Extracting " + context.getType() + " image into " + outputDir);
 
-    String versionPrefix = "jdk" + context.getVersion().longVersion();
+    String versionLine = context.getVersion().longVersion();
     outputDir.mkdir();
 
     try (InputStream in = new BufferedInputStream(new FileInputStream(jdkImage))) {
@@ -34,12 +34,14 @@ public class BinJDKExtractor extends AbstractZipExtractor {
 
       ZipEntry e;
       while ((e = zip.getNextEntry()) != null) {
-        extractEntry(outputDir, versionPrefix, e, zip);
+        extractEntry(outputDir, versionLine, e, zip);
       }
     }
 
     // make sure bin files are executables
-    updateExecutables(outputDir);
+    if (File.pathSeparatorChar != ';') {
+      updateExecutables(outputDir);
+    }
 
     return true;
   }

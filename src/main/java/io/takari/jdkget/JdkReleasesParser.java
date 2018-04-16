@@ -49,7 +49,7 @@ public class JdkReleasesParser {
       buildReleaseBinary(v, url, r.getServerJre(), builder, defaults, JavaReleaseType.SERVERJRE.getName());
     });
 
-    for (String unp : jrd.getUnpackable()) {
+    for (String unp : defaults.getUnpackable()) {
       builder.addUnpackable(unp);
     }
   }

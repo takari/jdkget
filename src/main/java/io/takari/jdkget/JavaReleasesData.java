@@ -1,5 +1,6 @@
 package io.takari.jdkget;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,9 @@ public class JavaReleasesData {
 
   public static class DefaultsData {
     private String url;
-    private Map<String,String> typeName;
-    private Map<String,String> archCls;
+    private Map<String, String> typeName;
+    private Map<String, String> archCls;
+    private List<String> unpackable;
 
     public String getUrl() {
       return url;
@@ -47,27 +49,38 @@ public class JavaReleasesData {
     }
 
     public Map<String, String> getTypeName() {
-      if(typeName == null) {
-        typeName = new HashMap<String,String>();
+      if (typeName == null) {
+        typeName = new HashMap<String, String>();
       }
-      
+
       return typeName;
     }
 
     public void setTypeName(Map<String, String> typeName) {
-     this.typeName = typeName;
+      this.typeName = typeName;
     }
 
-    public Map<String,String> getArchCls() {
-      if(archCls == null) {
-        archCls = new HashMap<String,String>();
+    public Map<String, String> getArchCls() {
+      if (archCls == null) {
+        archCls = new HashMap<String, String>();
       }
-      
+
       return archCls;
     }
 
-    public void setArchCls(Map<String,String> archCls) {
+    public void setArchCls(Map<String, String> archCls) {
       this.archCls = archCls;
+    }
+
+    public List<String> getUnpackable() {
+      if (unpackable == null) {
+        unpackable = new ArrayList<String>();
+      }
+      return unpackable;
+    }
+
+    public void setUnpackable(List<String> unpackable) {
+      this.unpackable = unpackable;
     }
   }
 
@@ -89,7 +102,7 @@ public class JavaReleasesData {
     private String md5;
 
     private Long size;
-    
+
     private String url;
 
     private String typeName;
@@ -161,12 +174,12 @@ public class JavaReleasesData {
     public void setTypeName(String typeName) {
       this.typeName = typeName;
     }
-    
+
     public String getTypeName() {
       return typeName;
     }
   }
-  
+
   public static class JavaReleaseData {
     @JacksonXmlProperty(isAttribute = true)
     private String version;
@@ -180,7 +193,7 @@ public class JavaReleasesData {
     @JacksonXmlProperty(localName = "bin")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<BinaryData> jdk;
-    
+
     @JsonProperty("jre")
     @JacksonXmlProperty(localName = "jre")
     @JacksonXmlElementWrapper(useWrapping = false)
@@ -190,7 +203,7 @@ public class JavaReleasesData {
     @JacksonXmlProperty(localName = "serverjre")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<BinaryData> serverJre;
-    
+
     public String getVersion() {
       return version;
     }
@@ -251,11 +264,6 @@ public class JavaReleasesData {
   @JacksonXmlProperty(localName = "jdk")
   @JacksonXmlElementWrapper(useWrapping = false)
   private List<JavaReleaseData> releases;
-  
-  @JsonProperty("unpackable")
-  @JacksonXmlProperty(localName = "unpackable")
-  @JacksonXmlElementWrapper(useWrapping = false)
-  private List<String> unpackable;
 
   public List<JceData> getJces() {
     return jces;
@@ -279,14 +287,6 @@ public class JavaReleasesData {
 
   public void setReleases(List<JavaReleaseData> releases) {
     this.releases = releases;
-  }
-
-  public List<String> getUnpackable() {
-    return unpackable;
-  }
-
-  public void setUnpackable(List<String> unpackable) {
-    this.unpackable = unpackable;
   }
 
 }
