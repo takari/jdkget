@@ -24,6 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.databind.ext.Java7SupportImpl;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
+
+import io.takari.jdkget.JdkReleases.JCE;
 import io.takari.jdkget.JdkReleases.JavaReleaseType;
 import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;
@@ -475,6 +477,21 @@ public class JdkGetter {
     JdkReleases rels = JdkReleases.get();
     JdkVersion vf = vfrom != null ? JdkVersion.parse(vfrom) : null;
     JdkVersion vt = vto != null ? rels.select(JdkVersion.parse(vto)).getVersion() : null;
+
+    for (String v : Arrays.asList("8", "7", "6")) {
+      JdkVersion version = JdkVersion.parse(v);
+      JCE jce = rels.getJCE(version);
+      File jceFile = new File(outDir, jce.getPath());
+      if (!jceFile.exists()) {
+        CachingOutput output = new CachingOutput();
+        jceFile.getParentFile().mkdirs();
+        JdkContext ctx = new JdkContext(rels, version, null, null, output);
+        ctx.setSilent(true);
+        output.info("** Downloading jce policy files to " + jceFile);
+        transport.downloadJce(ctx, jceFile);
+        output.output(System.out);
+      }
+    }
 
     ExecutorService ex = Executors.newFixedThreadPool(threads);
     for (JdkRelease rel : rels.getReleases()) {
