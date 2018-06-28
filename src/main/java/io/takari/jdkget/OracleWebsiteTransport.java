@@ -21,6 +21,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -54,6 +55,10 @@ public class OracleWebsiteTransport implements ITransport {
   private String website;
   private String otnUsername;
   private String otnPassword;
+
+  private int socketTimeout;
+  private int connectTimeout;
+  private int connectionRequestTimeout;
 
   public OracleWebsiteTransport() {
     this(ORACLE_WEBSITE);
@@ -121,7 +126,16 @@ public class OracleWebsiteTransport implements ITransport {
     output.info("Downloading " + cleanUrl(url));
 
     BasicCookieStore cookieStore = new BasicCookieStore();
-    CloseableHttpClient cl = HttpClientBuilder.create().setDefaultCookieStore(cookieStore)
+
+    RequestConfig requestConfig = RequestConfig.custom()
+            .setSocketTimeout(socketTimeout)
+            .setConnectTimeout(connectTimeout)
+            .setConnectionRequestTimeout(connectionRequestTimeout)
+            .build();
+
+    CloseableHttpClient cl = HttpClientBuilder.create()
+        .setDefaultRequestConfig(requestConfig)
+        .setDefaultCookieStore(cookieStore)
         .disableRedirectHandling()
         //.setUserAgent("curl/7.47.0")
         //User Agent String of Safari
