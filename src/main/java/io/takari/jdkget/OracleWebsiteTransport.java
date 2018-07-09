@@ -21,6 +21,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -39,7 +40,7 @@ import io.takari.jdkget.JdkReleases.JCE;
 import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;
 
-public class OracleWebsiteTransport implements ITransport {
+public class OracleWebsiteTransport implements ITransport.Configurable {
 
   private static final List<String> supportedBinaryContentTypes = Arrays.asList("application/x-gzip", 
       "application/gzip",
@@ -118,10 +119,21 @@ public class OracleWebsiteTransport implements ITransport {
   }
 
   private void doDownload(final String url, boolean cookie, File target, IOutput output) throws IOException, InterruptedException {
+    
+    output.info("Downloading config:: connect timeout: "+ connectTimeout() +"ms, socket timeout: " + socketTimeout() +"ms");
     output.info("Downloading " + cleanUrl(url));
 
     BasicCookieStore cookieStore = new BasicCookieStore();
-    CloseableHttpClient cl = HttpClientBuilder.create().setDefaultCookieStore(cookieStore)
+    
+    RequestConfig requestConfig = RequestConfig.custom()
+        .setSocketTimeout(socketTimeout())
+        .setConnectTimeout(connectTimeout())
+        .setConnectionRequestTimeout(connectionRequestTimeout())
+        .build();
+        
+    CloseableHttpClient cl = HttpClientBuilder.create()
+        .setDefaultRequestConfig(requestConfig)
+        .setDefaultCookieStore(cookieStore)
         .disableRedirectHandling()
         //.setUserAgent("curl/7.47.0")
         //User Agent String of Safari
