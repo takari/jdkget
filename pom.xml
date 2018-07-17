@@ -8,7 +8,7 @@
   </parent>
   <packaging>takari-jar</packaging>
   <artifactId>jdkget</artifactId>
-  <version>0.0.17-SNAPSHOT</version>
+  <version>0.0.18-SNAPSHOT</version>
   <properties>
     <takari.javaSourceVersion>1.8</takari.javaSourceVersion>
     <maven.test.redirectTestOutputToFile>false</maven.test.redirectTestOutputToFile>
