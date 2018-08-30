@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
@@ -41,12 +40,6 @@ import io.takari.jdkget.JdkReleases.JdkBinary;
 import io.takari.jdkget.JdkReleases.JdkRelease;
 
 public class OracleWebsiteTransport implements ITransport.Configurable {
-
-  private static final List<String> supportedBinaryContentTypes = Arrays.asList("application/x-gzip", 
-      "application/gzip",
-      "application/zip",
-      "application/octet-stream",
-      "application/x-redhat-package-manager");
 
   public static final String ORACLE_WEBSITE = "http://download.oracle.com/otn-pub";
 
@@ -212,12 +205,6 @@ public class OracleWebsiteTransport implements ITransport.Configurable {
 
   private void downloadResponse(HttpResponse res, File target, IOutput output)
       throws IOException, InterruptedException, FileNotFoundException {
-    Header contentType = res.getFirstHeader("Content-Type");
-    
-    if(contentType == null || !supportedBinaryContentTypes.contains(contentType.getValue().trim())) {
-      throw new IOException("Unsupported content type: " + contentType);
-    }
-    
     Header contentLength = res.getFirstHeader("Content-Length");
     long totalHint = -1;
     if (contentLength != null) {
