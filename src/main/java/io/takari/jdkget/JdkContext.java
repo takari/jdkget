@@ -1,7 +1,6 @@
 package io.takari.jdkget;
 
 public class JdkContext {
-  private JdkReleases releases;
   private JdkVersion version;
   private Arch arch;
   private String type;
@@ -10,16 +9,11 @@ public class JdkContext {
   private boolean silent;
   private String binDescriptor;
 
-  public JdkContext(JdkReleases releases, JdkVersion version, Arch arch, String type, IOutput output) {
-    this.releases = releases;
+  public JdkContext(JdkVersion version, Arch arch, String type, IOutput output) {
     this.version = version;
     this.arch = arch;
     this.type = type;
     this.output = output;
-  }
-
-  public JdkReleases getReleases() {
-    return releases;
   }
 
   public JdkVersion getVersion() {

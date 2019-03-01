@@ -8,3 +8,5 @@ target/
 *.iws
 .DS_Store
 image
+mirrortest
+jdkdistro

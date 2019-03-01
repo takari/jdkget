@@ -37,7 +37,6 @@ import io.takari.jdkget.extract.WindowsJDKExtractor;
 
 public class JdkGetter {
 
-  private JdkReleases releases;
   private final JdkVersion jdkVersion;
   private final boolean unrestrictedJCE;
   private final Arch arch;
@@ -49,16 +48,15 @@ public class JdkGetter {
   private IOutput output;
   private boolean silent;
 
-  private JdkGetter(JdkReleases releases, String version, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output, boolean silent) {
-    this(releases, version, false, arch, type, outputDirectory, retries, transport, output, silent);
+  private JdkGetter(String version, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output, boolean silent) {
+    this(version, false, arch, type, outputDirectory, retries, transport, output, silent);
   }
 
-  private JdkGetter(JdkReleases releases, String version, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output, boolean silent) {
-    this(releases, version == null || version.equals("latest") ? null : JdkVersion.parse(version), unrestrictedJCE, arch, type, outputDirectory, retries, transport, output, silent);
+  private JdkGetter(String version, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output, boolean silent) {
+    this(version == null || version.equals("latest") ? null : JdkVersion.parse(version), unrestrictedJCE, arch, type, outputDirectory, retries, transport, output, silent);
   }
 
-  private JdkGetter(JdkReleases releases, JdkVersion jdkVersion, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output, boolean silent) {
-    this.releases = releases;
+  private JdkGetter(JdkVersion jdkVersion, boolean unrestrictedJCE, Arch arch, String type, File outputDirectory, int retries, ITransport transport, IOutput output, boolean silent) {
     this.jdkVersion = jdkVersion;
     this.unrestrictedJCE = unrestrictedJCE;
     this.retries = retries;
@@ -87,13 +85,6 @@ public class JdkGetter {
     this.inProcessDirectory = new File(outputDirectory.getPath() + ".in-process");
   }
 
-  protected JdkReleases getReleases() throws IOException {
-    if (releases == null) {
-      releases = JdkReleases.get(output);
-    }
-    return releases;
-  }
-
   public Arch getArch() {
     return arch;
   }
@@ -116,7 +107,7 @@ public class JdkGetter {
 
     output.info("Getting jdk " + theVersion.shortBuild() + " for " + arch.toString().toLowerCase().replace("_", ""));
 
-    JdkContext context = new JdkContext(getReleases(), theVersion, arch, type, output);
+    JdkContext context = new JdkContext(theVersion, arch, type, output);
     context.setSilent(silent);
 
     File jdkImage = transport.getImageFile(context, inProcessDirectory);
@@ -264,10 +255,8 @@ public class JdkGetter {
   }
 
   public static class Builder {
-    private JdkReleases releases;
     private JdkVersion jdkVersion;
     private boolean unrestrictedJCE;
-    private String version;
     private Arch arch;
     private File outputDirectory;
     private int retries = 0;
@@ -277,20 +266,7 @@ public class JdkGetter {
     private boolean silent;
 
     public JdkGetter build() {
-      if (jdkVersion != null) {
-        return new JdkGetter(releases, jdkVersion, unrestrictedJCE, arch, type, outputDirectory, retries, transport, output, silent);
-      }
-      return new JdkGetter(releases, version, unrestrictedJCE, arch, type, outputDirectory, retries, transport, output, silent);
-    }
-
-    public Builder releases(JdkReleases releases) {
-      this.releases = releases;
-      return this;
-    }
-
-    public Builder version(String version) {
-      this.version = version;
-      return this;
+      return new JdkGetter(jdkVersion, unrestrictedJCE, arch, type, outputDirectory, retries, transport, output, silent);
     }
 
     public Builder version(JdkVersion version) {

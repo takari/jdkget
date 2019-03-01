@@ -42,15 +42,6 @@ import io.takari.jdkget.JdkReleases.JdkRelease;
 
 public class OracleWebsiteTransport implements ITransport.Configurable {
 
-  private static final List<String> supportedBinaryContentTypes = Arrays.asList(
-      "application/x-gzip",
-      "application/gzip",
-      "application/zip",
-      "application/octet-stream",
-      "application/x-redhat-package-manager",
-      "application/x-compress",
-      "application/x-sh");
-
   public static final String ORACLE_WEBSITE = "http://download.oracle.com/otn-pub";
 
   public static final String JDK_URL_FORMAT = "/java/jdk/%s/jdk-%s-%s.%s";
@@ -243,12 +234,6 @@ public class OracleWebsiteTransport implements ITransport.Configurable {
 
   private void downloadResponse(JdkContext context, HttpResponse res, File target)
       throws IOException, InterruptedException, FileNotFoundException {
-    Header contentType = res.getFirstHeader("Content-Type");
-
-    if (contentType == null || !supportedBinaryContentTypes.contains(contentType.getValue().trim())) {
-      throw new IOException("Unsupported content type: " + contentType);
-    }
-
     Header contentLength = res.getFirstHeader("Content-Length");
     long totalHint = -1;
     if (contentLength != null) {
