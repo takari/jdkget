@@ -14,23 +14,23 @@ import org.apache.commons.io.FileUtils;
 
 public class JCEExtractor {
 
-  public void extractJCE(JdkContext context, File jceImage, File outputDir, File workDir) throws IOException, InterruptedException {
+  public void extractJCE(JdkGetter context, File jceImage, File outputDir) throws IOException, InterruptedException {
     File secDir = new File(outputDir, "jre/lib/security");
     if (!secDir.exists()) {
       throw new IllegalStateException("Cannot find JCE target dir");
     }
 
-    context.getOutput().info("Installing unrestricted JCE policy files");
-    unzip(jceImage, secDir, context.getOutput());
+    context.getLog().info("Installing unrestricted JCE policy files");
+    unzip(jceImage, secDir, context.getLog());
   }
 
-  public void fixJce(JdkContext context, File outputDir) throws IOException {
+  public void fixJce(JdkGetter context, File outputDir) throws IOException {
     File secDir = new File(outputDir, "jre/lib/security");
     if (!secDir.exists()) {
       throw new IllegalStateException("Cannot find JCE target dir");
     }
 
-    context.getOutput().info("Unrestricting JCE policy");
+    context.getLog().info("Unrestricting JCE policy");
     File security = new File(secDir, "java.security");
     if (!security.isFile()) {
       throw new IOException("Cannot unrestrict JCE policy, no java.security file found");

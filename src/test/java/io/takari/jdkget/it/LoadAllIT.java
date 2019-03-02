@@ -16,11 +16,11 @@ import io.takari.jdkget.Arch;
 import io.takari.jdkget.CachingOutput;
 import io.takari.jdkget.ITransport;
 import io.takari.jdkget.JdkGetter;
-import io.takari.jdkget.JdkGetter.Builder;
-import io.takari.jdkget.JdkReleases;
-import io.takari.jdkget.JdkReleases.JdkRelease;
-import io.takari.jdkget.JdkVersion;
-import io.takari.jdkget.OracleWebsiteTransport;
+import io.takari.jdkget.model.JCE;
+import io.takari.jdkget.model.BinaryType;
+import io.takari.jdkget.model.JdkRelease;
+import io.takari.jdkget.model.JdkReleases;
+import io.takari.jdkget.model.JdkVersion;
 
 public class LoadAllIT {
 
@@ -29,10 +29,8 @@ public class LoadAllIT {
   public void testDownloadUnpack() throws Exception {
     String ver = "9+181";
 
-    String otnu = System.getProperty("io.takari.jdkget.otn.username");
-    String otnp = System.getProperty("io.takari.jdkget.otn.password");
-    ITransport transport = new OracleWebsiteTransport(OracleWebsiteTransport.ORACLE_WEBSITE, otnu, otnp);
     JdkReleases releases = JdkReleases.readFromClasspath();
+    ITransport transport = releases.createTransportFactory().createTransport();
 
     JdkRelease r = releases.select(JdkVersion.parse(ver));
     boolean failed = downloadUnpack(releases, r, Arch.WIN_64, true, transport);
@@ -43,10 +41,8 @@ public class LoadAllIT {
   @Test
   public void testDownloadAndUnpackAll() throws IOException {
     String startWith = System.getProperty("io.takari.jdkget.startWith");
-    String otnu = System.getProperty("io.takari.jdkget.otn.username");
-    String otnp = System.getProperty("io.takari.jdkget.otn.password");
-    ITransport transport = new OracleWebsiteTransport(OracleWebsiteTransport.ORACLE_WEBSITE, otnu, otnp);
     JdkReleases releases = JdkReleases.readFromClasspath();
+    ITransport transport = releases.createTransportFactory().createTransport();
 
     JdkVersion start = null;
     if (StringUtils.isNotBlank(startWith)) {
@@ -65,36 +61,41 @@ public class LoadAllIT {
     assertFalse(failed);
   }
 
-  private boolean downloadUnpack(JdkReleases releases, JdkRelease r, Arch selArch, boolean jce, ITransport transport) {
-    JdkVersion v = r.getVersion();
-    System.out.println(v.longBuild() + " / " + v.shortBuild() + (r.isPsu() ? " PSU" : ""));
-    Stream<Arch> a = selArch != null ? Stream.of(selArch) : r.getArchs("jdk").parallelStream();
+  private boolean downloadUnpack(JdkReleases releases, JdkRelease rel, Arch selArch, boolean unrestrictJce,
+      ITransport transport) {
+    JdkVersion ver = rel.getVersion();
+    System.out.println(ver.longBuild() + " / " + ver.shortBuild() + (rel.isPsu() ? " PSU" : ""));
+    Stream<Arch> a = selArch != null ? Stream.of(selArch) : rel.getArchs(BinaryType.JDK).parallelStream();
 
     boolean[] failed = new boolean[] {false};
     a.forEach(arch -> {
-      File jdktmp = new File("target/tmp/" + arch);
       CachingOutput o = new CachingOutput();
       try {
-        if (jdktmp.exists()) {
-          FileUtils.forceDelete(jdktmp);
-        }
-        FileUtils.forceMkdir(jdktmp);
 
-        Builder b = JdkGetter.builder() //
-            .releases(releases) //
-            .transport(transport) //
-            .version(r.getVersion()) //
-            .arch(arch) //
-            .outputDirectory(jdktmp) //
-            .output(o);
-        if (jce) {
-          b = b.unrestrictedJCE();
+        JCE jce = null;
+        if (unrestrictJce) {
+          jce = releases.getJCE(rel.getVersion());
         }
 
-        b.build().get();
+        for (BinaryType bt : BinaryType.values()) {
+          File jdktmp = new File("target/tmp/" + arch + "_" + bt);
 
-        System.out.println("  " + arch + " >> OK");
-        try (PrintStream out = new PrintStream(new File("target/tmp/" + v.toString() + "_" + arch + ".log"))) {
+          if (jdktmp.exists()) {
+            FileUtils.forceDelete(jdktmp);
+          }
+          FileUtils.forceMkdir(jdktmp);
+
+          if (rel.getUnpackableBinary(bt, arch, null) == null) {
+            continue;
+          }
+
+          JdkGetter jdkGet = new JdkGetter(transport, o);
+          jdkGet.get(rel, jce, arch, bt, jdktmp);
+
+          System.out.println("  " + arch + " " + bt + " >> OK");
+        }
+        try (PrintStream out =
+            new PrintStream(new File("target/tmp/" + rel.getVersion().toString() + "_" + arch + ".log"))) {
           o.output(out);
         }
       } catch (Throwable e) {

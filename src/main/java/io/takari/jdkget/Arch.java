@@ -42,4 +42,8 @@ public enum Arch {
   public boolean isWindows() {
     return this == WIN_32 || this == WIN_64;
   }
+
+  public boolean isOsx() {
+    return this == OSX_64;
+  }
 }

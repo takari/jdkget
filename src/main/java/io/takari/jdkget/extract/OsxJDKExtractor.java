@@ -18,11 +18,14 @@ import java.util.zip.GZIPInputStream;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.cpio.CpioArchiveEntry;
 import org.apache.commons.compress.archivers.cpio.CpioArchiveInputStream;
+import org.apache.commons.io.FileUtils;
+
 import com.sprylab.xar.XarEntry;
 import com.sprylab.xar.XarFile;
 import io.takari.jdkget.IJdkExtractor;
-import io.takari.jdkget.JdkContext;
+import io.takari.jdkget.JdkGetter;
 import io.takari.jdkget.Util;
+import io.takari.jdkget.model.JdkBinary;
 import io.takari.jdkget.osx.PosixModes;
 import io.takari.jdkget.osx.UnHFS;
 
@@ -31,16 +34,31 @@ public class OsxJDKExtractor implements IJdkExtractor {
   private static final String JDK6_PREFIX = "./Library/Java/JavaVirtualMachines/1.6.0.jdk/";
 
   @Override
-  public boolean extractJdk(JdkContext context, File jdkImage, File outputDir, File workDir) throws IOException, InterruptedException {
+  public boolean extractJdk(JdkGetter context, JdkBinary bin, File jdkImage, File outputDir)
+      throws IOException, InterruptedException {
 
-    context.getOutput().info("Extracting osx dmg image into " + outputDir);
+    context.getLog().info("Extracting osx dmg image into " + outputDir);
+    File workDir = new File(outputDir.getParentFile(), outputDir.getName() + ".tmp");
+    if(workDir.exists()) {
+      FileUtils.deleteDirectory(workDir);
+    }
+    FileUtils.forceMkdir(workDir);
+    try {
+      return doExtract(context, jdkImage, outputDir, workDir);
+    } finally {
+      FileUtils.deleteDirectory(workDir);
+    }
+  }
+
+  private boolean doExtract(JdkGetter context, File jdkImage, File outputDir, File workDir)
+      throws IOException, InterruptedException {
 
     // DMG <-- XAR <-- GZ <-- CPIO
     UnHFS.unhfs(jdkImage, workDir);
 
-    List<File> payloads = new ArrayList<>(); 
+    List<File> payloads = new ArrayList<>();
     File jdkPkg = getJdkPackage(workDir);
-    
+
     // validate
     XarFile xarFile = new XarFile(jdkPkg);
     for (XarEntry entry : xarFile.getEntries()) {
@@ -71,7 +89,8 @@ public class OsxJDKExtractor implements IJdkExtractor {
     for (File jdkGz : payloads) {
       Util.checkInterrupt();
       File cpio = new File(workDir, "temp" + System.currentTimeMillis() + ".cpio");
-      try (GZIPInputStream is = new GZIPInputStream(new FileInputStream(jdkGz)); FileOutputStream os = new FileOutputStream(cpio)) {
+      try (GZIPInputStream is = new GZIPInputStream(new FileInputStream(jdkGz));
+          FileOutputStream os = new FileOutputStream(cpio)) {
         Util.copyInterruptibly(is, os);
       }
 
@@ -100,7 +119,7 @@ public class OsxJDKExtractor implements IJdkExtractor {
                 }
 
                 if (File.pathSeparatorChar == ';') {
-                  context.getOutput().info("Not creating symbolic link " + name + " -> " + target);
+                  context.getLog().info("Not creating symbolic link " + name + " -> " + target);
                 } else {
                   Files.createSymbolicLink(path, Paths.get(target));
                 }
@@ -122,7 +141,7 @@ public class OsxJDKExtractor implements IJdkExtractor {
       try {
         Files.setPosixFilePermissions(path, PosixModes.intModeToPosix(mode));
       } catch (IOException ex) {
-        context.getOutput().error("Cannot set file permissions on " + path, ex);
+        context.getLog().error("Cannot set file permissions on " + path, ex);
       }
     }
 

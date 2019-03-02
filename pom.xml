@@ -140,7 +140,7 @@
               <minimizeJar>true</minimizeJar>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>io.takari.jdkget.JdkGetter</mainClass>
+                  <mainClass>io.takari.jdkget.Main</mainClass>
                 </transformer>
               </transformers>
               <filters> 

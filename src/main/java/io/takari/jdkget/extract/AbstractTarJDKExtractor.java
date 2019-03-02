@@ -13,8 +13,9 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 
 import io.takari.jdkget.IJdkExtractor;
-import io.takari.jdkget.JdkContext;
+import io.takari.jdkget.JdkGetter;
 import io.takari.jdkget.Util;
+import io.takari.jdkget.model.JdkBinary;
 import io.takari.jdkget.osx.PosixModes;
 
 public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
@@ -22,11 +23,12 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
   protected abstract InputStream wrap(InputStream in) throws IOException;
 
   @Override
-  public boolean extractJdk(JdkContext context, File jdkImage, File outputDir, File workDir) throws IOException, InterruptedException {
+  public boolean extractJdk(JdkGetter context, JdkBinary bin, File jdkImage, File outputDir)
+      throws IOException, InterruptedException {
 
-    context.getOutput().info("Extracting " + context.getType() + " image into " + outputDir);
+    context.getLog().info("Extracting " + jdkImage.getName() + " image into " + outputDir);
 
-    String versionLine = context.getVersion().longVersion();
+    String versionLine = bin.getRelease().getVersion().longVersion();
 
     try (InputStream in = new FileInputStream(jdkImage)) {
       TarArchiveInputStream t = new TarArchiveInputStream(wrap(in));
@@ -35,11 +37,9 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
 
         Util.checkInterrupt();
 
-        String entryName = te.getName();
-
-        int idx = entryName.indexOf(versionLine);
-        if (idx != -1) {
-          entryName = entryName.substring(idx + versionLine.length());
+        String entryName = Util.cleanEntryName(te.getName(), versionLine);
+        if (entryName == null) {
+          continue;
         }
 
         File f = new File(outputDir, entryName);
@@ -53,7 +53,7 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
 
           if (te.isSymbolicLink()) {
             if (File.pathSeparatorChar == ';') {
-              context.getOutput().info("Not creating symbolic link " + entryName + " -> " + te.getLinkName());
+              context.getLog().info("Not creating symbolic link " + entryName + " -> " + te.getLinkName());
             } else {
               Path p = f.toPath();
               Files.createSymbolicLink(p, p.getParent().resolve(te.getLinkName()));

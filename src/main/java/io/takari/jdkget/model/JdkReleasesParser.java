@@ -1,14 +1,15 @@
-package io.takari.jdkget;
+package io.takari.jdkget.model;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.takari.jdkget.JavaReleasesData.BinaryData;
-import io.takari.jdkget.JavaReleasesData.DefaultsData;
-import io.takari.jdkget.JdkReleases.Builder;
-import io.takari.jdkget.JdkReleases.JavaReleaseType;
+
+import io.takari.jdkget.Arch;
+import io.takari.jdkget.model.JavaReleasesData.BinaryData;
+import io.takari.jdkget.model.JavaReleasesData.DefaultsData;
+import io.takari.jdkget.model.JdkReleases.Builder;
 
 public class JdkReleasesParser {
   public JdkReleases parse(InputStream in) throws IOException {
@@ -24,6 +25,8 @@ public class JdkReleasesParser {
     if(jrd == null) { return; }
 
     DefaultsData defaults = jrd.getDefaults();
+    
+    builder.transport(defaults.getTransport());
 
     if(jrd.getJces() != null) {
       jrd.getJces().stream()
@@ -44,14 +47,11 @@ public class JdkReleasesParser {
         builder.setPSU(v);
       }
 
-      buildReleaseBinary(v, url, r.getJdk(), builder, defaults, JavaReleaseType.JDK.getName());
-      buildReleaseBinary(v, url, r.getJre(), builder, defaults, JavaReleaseType.JRE.getName());
-      buildReleaseBinary(v, url, r.getServerJre(), builder, defaults, JavaReleaseType.SERVERJRE.getName());
+      buildReleaseBinary(v, url, r.getJdk(), builder, defaults, BinaryType.JDK.getName());
+      buildReleaseBinary(v, url, r.getJre(), builder, defaults, BinaryType.JRE.getName());
+      buildReleaseBinary(v, url, r.getServerJre(), builder, defaults, BinaryType.SERVERJRE.getName());
     });
 
-    for (String unp : defaults.getUnpackable()) {
-      builder.addUnpackable(unp);
-    }
   }
   
   private void buildReleaseBinary(String ver, String urlTemplate, List<BinaryData> bins, Builder builder,
@@ -77,7 +77,7 @@ public class JdkReleasesParser {
       String path = path(url, typeName, JdkVersion.parse(binVersion), arch, ext);
 
       String descriptor = arch + "." + ext;
-      builder.addBinary(ver, type, cls, descriptor, path, md5, sha256, size);
+      builder.addBinary(ver, BinaryType.forName(type), cls, descriptor, path, md5, sha256, size);
     });
   }
 

@@ -1,4 +1,4 @@
-package io.takari.jdkget;
+package io.takari.jdkget.model;
 
 import java.io.Serializable;
 

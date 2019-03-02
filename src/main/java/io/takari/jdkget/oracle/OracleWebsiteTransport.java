@@ -1,4 +1,4 @@
-package io.takari.jdkget;
+package io.takari.jdkget.oracle;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,9 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,11 +36,15 @@ import org.apache.http.message.BasicNameValuePair;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-import io.takari.jdkget.JdkReleases.JCE;
-import io.takari.jdkget.JdkReleases.JdkBinary;
-import io.takari.jdkget.JdkReleases.JdkRelease;
 
-public class OracleWebsiteTransport implements ITransport.Configurable {
+import io.takari.jdkget.IOutput;
+import io.takari.jdkget.ITransport;
+import io.takari.jdkget.JdkGetter;
+import io.takari.jdkget.Util;
+import io.takari.jdkget.model.JCE;
+import io.takari.jdkget.model.JdkBinary;
+
+public class OracleWebsiteTransport implements ITransport {
 
   public static final String ORACLE_WEBSITE = "http://download.oracle.com/otn-pub";
 
@@ -60,70 +64,27 @@ public class OracleWebsiteTransport implements ITransport.Configurable {
   }
 
   public OracleWebsiteTransport(String website, String otnUsername, String otnPassword) {
-    this.website = website;
+    this.website = website == null ? ORACLE_WEBSITE : website;
     this.otnUsername = otnUsername;
     this.otnPassword = otnPassword;
   }
 
-  private JdkBinary binary(JdkContext context) throws IOException {
-    JdkRelease rel = context.getReleases().select(context.getVersion());
-    List<JdkBinary> bins = rel.getBinaries(context.getType(), context.getArch());
-    String binDesc = context.getBinDescriptor();
-    if (binDesc != null) {
-      for (JdkBinary bin : bins) {
-        if (binDesc.equals(bin.getDescriptor())) {
-          return bin;
-        }
-      }
-    } else {
-      return context.getReleases().selectUnpackable(bins);
-    }
-    return null;
-  }
-
-  private boolean isApple(JdkContext context) {
-    // osx jdk6 image really wants to be installed globally and would not work in a separate dir
-    // return arch == Arch.OSX_64 && jdkVersion != null && jdkVersion.major == 6 &&
-    // website.equals(ORACLE_WEBSITE);
-    return false;
+  @Override
+  public void downloadJdk(JdkGetter context, JdkBinary bin, File jdkImage) throws IOException, InterruptedException {
+    doDownload(context, website + "/" + bin.getPath(), jdkImage);
   }
 
   @Override
-  public File getImageFile(JdkContext context, File parent) throws IOException {
-    if (isApple(context)) {
-      return new File(parent, "javaforosx.dmg");
-    }
-    JdkBinary bin = binary(context);
-    return new File(parent, new File(bin.getPath()).getName());
-  }
-
-  @Override
-  public void downloadJdk(JdkContext context, File jdkImage) throws IOException, InterruptedException {
-
-    String url;
-    if (isApple(context)) {
-      // for osx, jdk6* is only available from here
-      url = "http://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg";
-    } else {
-      JdkBinary bin = binary(context);
-      url = website + "/" + bin.getPath();
-    }
-
-    doDownload(context, url, jdkImage);
-  }
-
-  @Override
-  public void downloadJce(JdkContext context, File jceImage) throws IOException, InterruptedException {
-    JCE jce = context.getReleases().getJCE(context.getVersion());
+  public void downloadJce(JdkGetter context, JCE jce, File jceImage) throws IOException, InterruptedException {
     if (jce == null) {
-      throw new IllegalStateException("No JCE for JDK " + context.getVersion());
+      throw new IllegalStateException("No JCE provided");
     }
 
     doDownload(context, website + "/" + jce.getPath(), jceImage);
   }
 
-  private void doDownload(JdkContext context, final String url, File target) throws IOException, InterruptedException {
-    IOutput output = context.getOutput();
+  private void doDownload(JdkGetter context, final String url, File target) throws IOException, InterruptedException {
+    IOutput output = context.getLog();
     boolean echo = !context.isSilent();
     if (echo) {
       output.info("Downloading " + cleanUrl(url));
@@ -131,13 +92,12 @@ public class OracleWebsiteTransport implements ITransport.Configurable {
 
     BasicCookieStore cookieStore = initCookieStore();
 
-    
     RequestConfig requestConfig = RequestConfig.custom()
-        .setSocketTimeout(socketTimeout())
-        .setConnectTimeout(connectTimeout())
-        .setConnectionRequestTimeout(connectionRequestTimeout())
+        .setSocketTimeout(context.getSocketTimeout())
+        .setConnectTimeout(context.getConnectTimeout())
+        .setConnectionRequestTimeout(context.getConnectionRequestTimeout())
         .build();
-        
+
     CloseableHttpClient cl = HttpClientBuilder.create()
         .setDefaultRequestConfig(requestConfig)
         .setDefaultCookieStore(cookieStore)
@@ -232,7 +192,7 @@ public class OracleWebsiteTransport implements ITransport.Configurable {
     return q != -1 ? url.substring(0, q) : url;
   }
 
-  private void downloadResponse(JdkContext context, HttpResponse res, File target)
+  private void downloadResponse(JdkGetter context, HttpResponse res, File target)
       throws IOException, InterruptedException, FileNotFoundException {
     Header contentLength = res.getFirstHeader("Content-Length");
     long totalHint = -1;
@@ -244,7 +204,7 @@ public class OracleWebsiteTransport implements ITransport.Configurable {
     }
 
     try (InputStream is = res.getEntity().getContent(); OutputStream os = new FileOutputStream(target)) {
-      IOutput output = context.isSilent() ? IOutput.NULL_OUTPUT : context.getOutput();
+      IOutput output = context.isSilent() ? IOutput.NULL_OUTPUT : context.getLog();
       Util.copyWithProgress(is, os, totalHint, output);
     }
   }
@@ -331,44 +291,39 @@ public class OracleWebsiteTransport implements ITransport.Configurable {
   }
 
   @Override
-  public boolean validate(JdkContext context, File jdkImage) throws IOException, InterruptedException {
-    if (isApple(context)) {
-      return jdkImage.length() == 66724162L;
-    } else {
-      JdkBinary bin = binary(context);
+  public boolean validate(JdkGetter context, JdkBinary bin, File jdkImage) throws IOException, InterruptedException {
 
-      IOutput output = context.getOutput();
+    IOutput output = context.getLog();
 
-      int checks = 0;
-      int failed = 0;
+    int checks = 0;
+    int failed = 0;
 
-      if (bin.getSha256() != null) {
-        checks++;
-        String fileHash = hash(jdkImage, Hashing.sha256());
-        if (!bin.getSha256().equals(fileHash)) {
-          failed++;
-          output.error("File sha256 `" + fileHash + "` differs from `" + bin.getSha256() + "`");
-        }
+    if (bin.getSha256() != null) {
+      checks++;
+      String fileHash = hash(jdkImage, Hashing.sha256());
+      if (!bin.getSha256().equals(fileHash)) {
+        failed++;
+        output.error("File sha256 `" + fileHash + "` differs from `" + bin.getSha256() + "`");
       }
-      if (bin.getMd5() != null) {
-        checks++;
-        String fileHash = hash(jdkImage, Hashing.md5());
-        if (!bin.getMd5().equals(fileHash)) {
-          failed++;
-          output.error("File md5 `" + fileHash + "` differs from `" + bin.getMd5() + "`");
-        }
+    }
+    if (bin.getMd5() != null) {
+      checks++;
+      String fileHash = hash(jdkImage, Hashing.md5());
+      if (!bin.getMd5().equals(fileHash)) {
+        failed++;
+        output.error("File md5 `" + fileHash + "` differs from `" + bin.getMd5() + "`");
       }
-      if (bin.getSize() != -1) {
-        checks++;
-        if (bin.getSize() != jdkImage.length()) {
-          failed++;
-          output.error("File size `" + jdkImage.length() + "` differs from `" + bin.getSize() + "`");
-        }
+    }
+    if (bin.getSize() != -1) {
+      checks++;
+      if (bin.getSize() != jdkImage.length()) {
+        failed++;
+        output.error("File size `" + jdkImage.length() + "` differs from `" + bin.getSize() + "`");
       }
+    }
 
-      if (checks != 0 && failed > 0) {
-        return false;
-      }
+    if (checks != 0 && failed > 0) {
+      return false;
     }
     return true;
   }

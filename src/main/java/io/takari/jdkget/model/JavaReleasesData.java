@@ -1,6 +1,5 @@
-package io.takari.jdkget;
+package io.takari.jdkget.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +34,18 @@ public class JavaReleasesData {
   }
 
   public static class DefaultsData {
+    private String transport;
     private String url;
     private Map<String, String> typeName;
     private Map<String, String> archCls;
-    private List<String> unpackable;
+
+    public String getTransport() {
+      return transport;
+    }
+
+    public void setTransport(String transport) {
+      this.transport = transport;
+    }
 
     public String getUrl() {
       return url;
@@ -72,16 +79,6 @@ public class JavaReleasesData {
       this.archCls = archCls;
     }
 
-    public List<String> getUnpackable() {
-      if (unpackable == null) {
-        unpackable = new ArrayList<String>();
-      }
-      return unpackable;
-    }
-
-    public void setUnpackable(List<String> unpackable) {
-      this.unpackable = unpackable;
-    }
   }
 
   public static class BinaryData {
