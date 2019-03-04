@@ -5,15 +5,19 @@ JdkGet is a Java utility that allows you to download Linux/OSX/Windows JDKs from
 To install a JDK you can use something like the following:
 
 ```java
-JdkGetter getter = JdkGetter.builder()
-  .version("1.8.0_92-b14")
-  .outputDirectory(jdkDirectory)
-  .build();  
-    
-getter.get();  
+JdkReleases rels = JdkReleases.get();
+ITransport transport = createTransportFactory().createTransport();
+
+JdkRelease rel = rels.select("8u201");
+JCE jce = rels.getJCE(rel.getVersion());
+
+JdkGetter getter = new JdkGetter(transport, StdOutput.INSTANCE);
+
+File outputDir = ...;
+getter.getJdk(rel, jce, Arch.autodetect(), outputDir);
 ```
 
-You can find a list of available JDKs [here](Jdks.md).
+You can find a list of available JDKs [here](src/main/resources/java_releases_v1.yml).
 
 By using this utilitiy you agree to the [Oracle Binary Code License Agreement for Java SE][1].
 
@@ -30,10 +34,10 @@ To build JDKGet use the Maven Wrapper script provided with the project:
 Testing downloads of all versions can be performed using `it` profile and providing your OTN credentials:
 
 ```
-mvn clean verify -Pit -Djdkget.otn.username=<otnUsername> -Djdkget.otn.password=<otnPassword>
+mvn clean verify -Pit -Dio.takari.jdkget.username=<otnUsername> -Dio.takari.jdkget.password=<otnPassword>
 ```
 
-The result will produce a shaded JAR in the `target/` directory which can we executued using `java -jar jdkget-${version}.jar`
+The result will produce a shaded JAR in the `target/` directory which can we executed using `java -jar jdkget-${version}.jar`
 
 ## *nix and Solaris
 Downloads and extracts a .tar.gz, simple and easy
