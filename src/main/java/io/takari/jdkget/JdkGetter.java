@@ -36,6 +36,7 @@ public class JdkGetter {
   private final ITransport transport;
   private final IOutput log;
 
+  private boolean removeDownloads = true;
   private boolean silent = false;
   private int retries = DEFAULT_RETRIES;
   private int socketTimeout = SOCKET_TIMEOUT;
@@ -53,6 +54,14 @@ public class JdkGetter {
 
   public IOutput getLog() {
     return log;
+  }
+
+  public boolean isRemoveDownloads() {
+    return removeDownloads;
+  }
+
+  public void setRemoveDownloads(boolean removeDownloads) {
+    this.removeDownloads = removeDownloads;
   }
 
   public boolean isSilent() {
@@ -130,7 +139,7 @@ public class JdkGetter {
       if (theVersion.major == 8 && theVersion.minor >= 151) {
         jceFix = true;
       } else {
-        jceImage = new File(jdkImage.getParentFile(), jdkImage.getName() + "-jce.zip");
+        jceImage = new File(jdkImage.getParentFile(), new File(jce.getPath()).getName());
       }
     }
 
@@ -201,12 +210,12 @@ public class JdkGetter {
       throw new IOException("Cannot detect jdk installation");
     }
 
-    if (jceImage != null) {
+    if (jceImage != null && !jceImage.exists()) {
       transport.downloadJce(this, jce, jceImage);
-      new JCEExtractor().extractJCE(this, jceImage, jdkHome);
+      new JCEExtractor().extractJCE(this, type, jceImage, jdkHome);
     }
     if (jceFix) {
-      new JCEExtractor().fixJce(this, jdkHome);
+      new JCEExtractor().fixJce(this, type, jdkHome);
     }
 
     // rebuild jsa cache (https://docs.oracle.com/javase/9/vm/class-data-sharing.htm)
@@ -215,7 +224,14 @@ public class JdkGetter {
       rebuildJsa(arch, jdkHome);
     }
 
-    FileUtils.forceDelete(jdkImage);
+    if (removeDownloads) {
+      if (jdkImage.exists()) {
+        FileUtils.forceDelete(jdkImage);
+      }
+      if (jceImage.exists()) {
+        FileUtils.forceDelete(jceImage);
+      }
+    }
   }
 
   private void rebuildJsa(Arch arch, File jdkHome) throws IOException, InterruptedException {

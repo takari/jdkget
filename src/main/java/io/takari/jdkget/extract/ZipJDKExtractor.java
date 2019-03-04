@@ -21,7 +21,6 @@ public class ZipJDKExtractor extends AbstractZipExtractor {
 
     context.getLog().info("Extracting " + jdkImage.getName() + " into " + outputDir);
 
-    String versionLine = bin.getRelease().getVersion().longVersion();
     outputDir.mkdir();
 
     try (InputStream in = new BufferedInputStream(new FileInputStream(jdkImage))) {
@@ -29,7 +28,7 @@ public class ZipJDKExtractor extends AbstractZipExtractor {
 
       ZipEntry e;
       while ((e = zip.getNextEntry()) != null) {
-        extractEntry(outputDir, versionLine, e, zip);
+        extractEntry(outputDir, bin.getRelease().getVersion(), e, zip);
       }
     }
 

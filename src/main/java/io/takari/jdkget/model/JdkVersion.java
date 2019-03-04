@@ -26,6 +26,8 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
   public abstract String longBuild();
 
   public abstract String longVersion();
+  
+  public abstract String release();
 
   public String toString() {
     return longBuild();
@@ -187,6 +189,13 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
     }
 
     @Override
+    public String release() {
+      StringBuilder sb = new StringBuilder();
+      sb.append("1.").append(major).append(".0");
+      return sb.toString();
+    }
+
+    @Override
     public String longVersion() {
       StringBuilder sb = new StringBuilder();
       sb.append("1.").append(major).append(".0");
@@ -230,6 +239,11 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
 
     protected JdkVersionPost9(int major, int minor, int security, String buildNumber) {
       super(major, minor, security, buildNumber);
+    }
+    
+    @Override
+    public String release() {
+      return longVersion();
     }
 
     @Override

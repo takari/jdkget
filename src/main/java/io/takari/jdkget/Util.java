@@ -5,9 +5,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 
+import io.takari.jdkget.model.JdkVersion;
+
 public class Util {
 
-  public static String cleanEntryName(String entryName, String versionLine) {
+  public static String cleanEntryName(String entryName, JdkVersion jdkVersion) {
+    String release = jdkVersion.release();
+
     if (entryName.startsWith("./")) {
       entryName = entryName.substring(2);
     }
@@ -18,14 +22,9 @@ public class Util {
     int sl = entryName.indexOf('/');
     if (sl != -1) {
       String root = entryName.substring(0, sl);
-      if (root.contains(versionLine)) {
+      if (root.contains(release)) {
         entryName = entryName.substring(sl + 1);
       }
-    }
-
-    int idx = entryName.indexOf(versionLine);
-    if (idx != -1) {
-      entryName = entryName.substring(idx + versionLine.length());
     }
     return entryName;
   }

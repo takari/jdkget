@@ -28,8 +28,6 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
 
     context.getLog().info("Extracting " + jdkImage.getName() + " image into " + outputDir);
 
-    String versionLine = bin.getRelease().getVersion().longVersion();
-
     try (InputStream in = new FileInputStream(jdkImage)) {
       TarArchiveInputStream t = new TarArchiveInputStream(wrap(in));
       TarArchiveEntry te;
@@ -37,7 +35,7 @@ public abstract class AbstractTarJDKExtractor implements IJdkExtractor {
 
         Util.checkInterrupt();
 
-        String entryName = Util.cleanEntryName(te.getName(), versionLine);
+        String entryName = Util.cleanEntryName(te.getName(), bin.getRelease().getVersion());
         if (entryName == null) {
           continue;
         }

@@ -3,6 +3,7 @@ package io.takari.jdkget.it;
 import static org.junit.Assert.assertFalse;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.stream.Stream;
@@ -69,16 +70,16 @@ public class LoadAllIT {
 
     boolean[] failed = new boolean[] {false};
     a.forEach(arch -> {
-      CachingOutput o = new CachingOutput();
-      try {
+      for (BinaryType bt : BinaryType.values()) {
+        CachingOutput o = new CachingOutput();
+        try {
 
-        JCE jce = null;
-        if (unrestrictJce) {
-          jce = releases.getJCE(rel.getVersion());
-        }
+          JCE jce = null;
+          if (unrestrictJce) {
+            jce = releases.getJCE(rel.getVersion());
+          }
 
-        for (BinaryType bt : BinaryType.values()) {
-          File jdktmp = new File("target/tmp/" + arch + "_" + bt);
+          File jdktmp = new File("target/tmp/" + bt + "_" + arch);
 
           if (jdktmp.exists()) {
             FileUtils.forceDelete(jdktmp);
@@ -90,19 +91,23 @@ public class LoadAllIT {
           }
 
           JdkGetter jdkGet = new JdkGetter(transport, o);
+          jdkGet.setRemoveDownloads(false);
           jdkGet.get(rel, jce, arch, bt, jdktmp);
 
-          System.out.println("  " + arch + " " + bt + " >> OK");
+          System.out.println("  " + bt + " / " + arch + " >> OK");
+        } catch (Throwable e) {
+          failed[0] = true;
+          System.err.println("  " + bt + " / " + arch + " >> FAIL");
+          e.printStackTrace();
+          o.error("", e);
+          o.output(System.err);
+          try (PrintStream out =
+              new PrintStream(new File("target/tmp/" + rel.getVersion().toString() + "_" + bt + "_" + arch + "_error.log"))) {
+            o.output(out);
+          } catch (IOException ee) {
+            ee.printStackTrace();
+          }
         }
-        try (PrintStream out =
-            new PrintStream(new File("target/tmp/" + rel.getVersion().toString() + "_" + arch + ".log"))) {
-          o.output(out);
-        }
-      } catch (Throwable e) {
-        failed[0] = true;
-        System.err.println("  " + arch + " >> FAIL");
-        o.output(System.err);
-        e.printStackTrace();
       }
     });
 
