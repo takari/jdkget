@@ -1,6 +1,9 @@
 package io.takari.jdkget;
 
 import static org.junit.Assert.assertEquals;
+
+import io.takari.jdkget.model.JdkVersion;
+
 import org.junit.Test;
 
 public class VersionsTest {

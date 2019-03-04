@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import io.takari.jdkget.JdkContext;
+import io.takari.jdkget.JdkGetter;
 import io.takari.jdkget.Util;
+import io.takari.jdkget.model.JdkBinary;
 import io.takari.jdkget.win.CabEntry;
 import io.takari.jdkget.win.CabInput;
 import io.takari.jdkget.win.Cabinet;
@@ -15,7 +16,7 @@ import io.takari.jdkget.win.Cabinet;
 public class WindowsJDKExtractor extends AbstractZipExtractor {
 
   @Override
-  public boolean extractJdk(JdkContext context, File jdkImage, File outputDir, File workDir) throws IOException, InterruptedException {
+  public boolean extractJdk(JdkGetter context, JdkBinary bin, File jdkImage, File outputDir) throws IOException, InterruptedException {
 
     // <= 1.7: PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)
     // > 1.7: PE EXE <- PE EXE <- CAB <- tools.zip (some jars are pack200'd as .pack)

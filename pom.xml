@@ -12,6 +12,7 @@
   <properties>
     <takari.javaSourceVersion>1.8</takari.javaSourceVersion>
     <maven.test.redirectTestOutputToFile>false</maven.test.redirectTestOutputToFile>
+    <jackson-2-version>2.9.0</jackson-2-version>
   </properties>
 
   <scm>
@@ -23,10 +24,30 @@
 
   <dependencies>
     <dependency>
-      <groupId>de.pdark</groupId>
-      <artifactId>decentxml</artifactId>
-      <version>1.4</version>
-    </dependency>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-core</artifactId>
+     <version>${jackson-2-version}</version>
+   </dependency>
+   <dependency>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-annotations</artifactId>
+     <version>${jackson-2-version}</version>
+  </dependency>
+  <dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>${jackson-2-version}</version>
+  </dependency>
+  <dependency>
+    <groupId>com.fasterxml.jackson.dataformat</groupId>
+    <artifactId>jackson-dataformat-xml</artifactId>
+    <version>${jackson-2-version}</version>
+  </dependency>
+  <dependency>
+    <groupId>com.fasterxml.jackson.dataformat</groupId>
+    <artifactId>jackson-dataformat-yaml</artifactId>
+    <version>${jackson-2-version}</version>
+  </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
@@ -91,8 +112,9 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
-      <version>1.11</version>
+      <version>1.18</version>
     </dependency>
+    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -118,7 +140,7 @@
               <minimizeJar>true</minimizeJar>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>io.takari.jdkget.JdkGetter</mainClass>
+                  <mainClass>io.takari.jdkget.Main</mainClass>
                 </transformer>
               </transformers>
               <filters> 

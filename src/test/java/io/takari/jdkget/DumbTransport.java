@@ -3,6 +3,8 @@ package io.takari.jdkget;
 import java.io.File;
 import java.io.IOException;
 
+import io.takari.jdkget.model.JdkBinary;
+
 public class DumbTransport implements ITransport {
   private boolean valid;
   int tries;
@@ -13,18 +15,16 @@ public class DumbTransport implements ITransport {
   }
 
   @Override
-  public void downloadJdk(JdkContext context, File jdkImage) throws IOException, InterruptedException {
+  public void downloadJdk(JdkGetter context, JdkBinary binary, File jdkImage)
+      throws IOException, InterruptedException {
     jdkImage.createNewFile();
     tries++;
   }
 
   @Override
-  public boolean validate(JdkContext context, File jdkImage) throws IOException, InterruptedException {
+  public boolean validate(JdkGetter context, JdkBinary binary, File jdkImage)
+      throws IOException, InterruptedException {
     return valid;
   }
 
-  @Override
-  public File getImageFile(JdkContext context, File parent) throws IOException {
-    return new File("image");
-  }
 }

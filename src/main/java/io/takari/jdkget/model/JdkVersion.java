@@ -1,4 +1,4 @@
-package io.takari.jdkget;
+package io.takari.jdkget.model;
 
 import java.io.Serializable;
 
@@ -26,6 +26,8 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
   public abstract String longBuild();
 
   public abstract String longVersion();
+  
+  public abstract String release();
 
   public String toString() {
     return longBuild();
@@ -100,7 +102,7 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
       String revision = x[0];
 
       String buildNumber;
-      if (revision.endsWith("b")) { // 6u5b
+      if (revision.endsWith("b") || revision.endsWith("p")) { // 6u5b
         buildNumber = revision.substring(revision.length() - 1);
         revision = revision.substring(0, revision.length() - 1);
       } else {
@@ -141,7 +143,7 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
     if (b.startsWith("-")) {
       b = b.substring(1);
     }
-    if (b.startsWith("b")) {
+    if (b.startsWith("b") || b.startsWith("p")) {
       b = b.substring(1);
     }
     if (b.isEmpty()) {
@@ -184,6 +186,13 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
 
     protected JdkVersionPre9(int major, int revision, String buildNumber) {
       super(major, revision, -1, buildNumber);
+    }
+
+    @Override
+    public String release() {
+      StringBuilder sb = new StringBuilder();
+      sb.append("1.").append(major).append(".0");
+      return sb.toString();
     }
 
     @Override
@@ -230,6 +239,11 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
 
     protected JdkVersionPost9(int major, int minor, int security, String buildNumber) {
       super(major, minor, security, buildNumber);
+    }
+    
+    @Override
+    public String release() {
+      return longVersion();
     }
 
     @Override

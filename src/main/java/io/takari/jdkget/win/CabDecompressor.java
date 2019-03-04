@@ -188,16 +188,22 @@ public class CabDecompressor implements AutoCloseable {
         lzx.init(fol.getCompLevel(), 0, params[MSCABD_PARAM_DECOMPBUF], 0L, false);
         d.decompressor = lzx;
         break;
-      /*
-       * case cffoldCOMPTYPE_NONE: self->d->decompress = (int (*)(void *, off_t)) &noned_decompress; self->d->state =
-       * noned_init(&self->d->sys, fh, fh, self->param[MSCABD_PARAM_DECOMPBUF]); break; case cffoldCOMPTYPE_MSZIP:
-       * self->d->decompress = (int (*)(void *, off_t)) &mszipd_decompress; self->d->state = mszipd_init(&self->d->sys, fh,
-       * fh, self->param[MSCABD_PARAM_DECOMPBUF], self->param[MSCABD_PARAM_FIXMSZIP]); break; case cffoldCOMPTYPE_QUANTUM:
-       * self->d->decompress = (int (*)(void *, off_t)) &qtmd_decompress; self->d->state = qtmd_init(&self->d->sys, fh, fh,
-       * (int) (ct >> 8) & 0x1f, self->param[MSCABD_PARAM_DECOMPBUF]); break;
-       */
+      
+       case cffoldCOMPTYPE_MSZIP:
+         //self->d->decompress = (int (*)(void *, off_t)) &mszipd_decompress;
+         //self->d->state = mszipd_init(&self->d->sys, fh, fh, self->param[MSCABD_PARAM_DECOMPBUF], self->param[MSCABD_PARAM_FIXMSZIP]); 
+         //break; 
+       case cffoldCOMPTYPE_NONE: 
+         //self->d->decompress = (int (*)(void *, off_t)) &noned_decompress;
+         //self->d->state = noned_init(&self->d->sys, fh, fh, self->param[MSCABD_PARAM_DECOMPBUF]) 
+         //break; 
+       case cffoldCOMPTYPE_QUANTUM: 
+         //self->d->decompress = (int (*)(void *, off_t)) &qtmd_decompress; 
+         //self->d->state = qtmd_init(&self->d->sys, fh, fh, (int) (ct >> 8) & 0x1f, self->param[MSCABD_PARAM_DECOMPBUF]); 
+         //break;
+       
       default:
-        throw new IOException("unsupported compression format");
+        throw new IOException("unsupported compression format: " + d.comp_type);
     }
   }
 

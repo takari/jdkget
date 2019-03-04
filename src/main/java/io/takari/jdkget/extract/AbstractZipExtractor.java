@@ -12,17 +12,22 @@ import java.util.zip.ZipEntry;
 
 import io.takari.jdkget.IJdkExtractor;
 import io.takari.jdkget.Util;
+import io.takari.jdkget.model.JdkVersion;
 
 public abstract class AbstractZipExtractor implements IJdkExtractor {
 
-  protected void extractEntry(File outputDir, String versionPrefix, ZipEntry e, InputStream zip) throws IOException, InterruptedException {
+  protected void extractEntry(File outputDir, JdkVersion version, ZipEntry e, InputStream zip)
+      throws IOException, InterruptedException {
     Util.checkInterrupt();
 
     boolean unpack200 = false;
     String name = e.getName();
 
-    if (versionPrefix != null && name.startsWith(versionPrefix)) {
-      name = name.substring(versionPrefix.length());
+    if (version != null) {
+      name = Util.cleanEntryName(name, version);
+      if (name == null) {
+        return;
+      }
     }
 
     if (name.endsWith(".pack")) {

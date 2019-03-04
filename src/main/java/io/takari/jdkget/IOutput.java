@@ -1,13 +1,27 @@
 package io.takari.jdkget;
 
 public interface IOutput {
-  
+
+  public static final IOutput NULL_OUTPUT = new IOutput() {
+    @Override
+    public void info(String message) {}
+
+    @Override
+    public void error(String message) {}
+
+    @Override
+    public void error(String message, Throwable t) {}
+
+    @Override
+    public void printProgress(long time, long copiedBytes, long totalBytes) {}
+  };
+
   void info(String message);
-  
+
   void error(String message);
-  
+
   void error(String message, Throwable t);
-  
+
   default void printProgress(long time, long copiedBytes, long totalBytes) {
 
     // spd

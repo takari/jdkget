@@ -12,25 +12,22 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 
+import io.takari.jdkget.model.BinaryType;
+
 public class JCEExtractor {
 
-  public void extractJCE(JdkContext context, File jceImage, File outputDir, File workDir) throws IOException, InterruptedException {
-    File secDir = new File(outputDir, "jre/lib/security");
-    if (!secDir.exists()) {
-      throw new IllegalStateException("Cannot find JCE target dir");
-    }
+  public void extractJCE(JdkGetter context, BinaryType type, File jceImage, File outputDir)
+      throws IOException, InterruptedException {
+    File secDir = getSecDir(type, outputDir);
 
-    context.getOutput().info("Installing unrestricted JCE policy files");
-    unzip(jceImage, secDir, context.getOutput());
+    context.getLog().info("Installing unrestricted JCE policy files");
+    unzip(jceImage, secDir, context.getLog());
   }
 
-  public void fixJce(JdkContext context, File outputDir) throws IOException {
-    File secDir = new File(outputDir, "jre/lib/security");
-    if (!secDir.exists()) {
-      throw new IllegalStateException("Cannot find JCE target dir");
-    }
+  public void fixJce(JdkGetter context, BinaryType type, File outputDir) throws IOException {
+    File secDir = getSecDir(type, outputDir);
 
-    context.getOutput().info("Unrestricting JCE policy");
+    context.getLog().info("Unrestricting JCE policy");
     File security = new File(secDir, "java.security");
     if (!security.isFile()) {
       throw new IOException("Cannot unrestrict JCE policy, no java.security file found");
@@ -50,6 +47,19 @@ public class JCEExtractor {
       lines.add("crypto.policy=unlimited");
     }
     FileUtils.writeLines(security, lines);
+  }
+
+  private File getSecDir(BinaryType type, File outputDir) {
+    String secPath = "lib/security";
+    if (type == BinaryType.JDK || type == BinaryType.SERVERJRE) {
+      secPath = "jre/lib/security";
+    }
+
+    File secDir = new File(outputDir, secPath);
+    if (!secDir.exists()) {
+      throw new IllegalStateException("Cannot find JCE target dir " + secPath);
+    }
+    return secDir;
   }
 
   private void unzip(File file, File dir, IOutput output) throws IOException, InterruptedException {

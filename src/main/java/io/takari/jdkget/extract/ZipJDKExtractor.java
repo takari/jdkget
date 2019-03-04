@@ -14,21 +14,16 @@ import io.takari.jdkget.JdkGetter;
 import io.takari.jdkget.model.JdkBinary;
 import io.takari.jdkget.osx.PosixModes;
 
-public class BinJDKExtractor extends AbstractZipExtractor {
-
-  private static final int[] ZIP_PREFIX = new int[] {0x50, 0x4b, 0x03, 0x04};
-  private static final int MAX_ZIP_READ = 0x20000;
+public class ZipJDKExtractor extends AbstractZipExtractor {
 
   @Override
   public boolean extractJdk(JdkGetter context, JdkBinary bin, File jdkImage, File outputDir) throws IOException, InterruptedException {
 
     context.getLog().info("Extracting " + jdkImage.getName() + " into " + outputDir);
+
     outputDir.mkdir();
 
     try (InputStream in = new BufferedInputStream(new FileInputStream(jdkImage))) {
-      // find start of zip
-      findZipStream(in);
-
       ZipInputStream zip = new ZipInputStream(in);
 
       ZipEntry e;
@@ -43,38 +38,6 @@ public class BinJDKExtractor extends AbstractZipExtractor {
     }
 
     return true;
-  }
-
-  private void findZipStream(InputStream in) throws IOException {
-
-    int total = 0;
-    int idx = 0;
-    while (true) {
-      if (idx == 0) {
-        in.mark(ZIP_PREFIX.length);
-      }
-
-      int b = in.read();
-      if (b == -1) {
-        break;
-      }
-      total++;
-      if (b == ZIP_PREFIX[idx]) {
-        idx++;
-        if (idx >= ZIP_PREFIX.length) {
-          // found it!
-          in.reset();
-          return;
-        }
-      } else {
-        idx = 0;
-      }
-
-      if (total > MAX_ZIP_READ) {
-        break;
-      }
-    }
-    throw new IllegalStateException("Cannot find start of zip stream");
   }
 
   private void updateExecutables(File outputDir) throws IOException {
