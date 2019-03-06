@@ -126,6 +126,9 @@ public class JdkGetter {
     if (arch == null) {
       arch = Arch.autodetect();
     }
+    if(type == null) {
+      type = BinaryType.getDefault();
+    }
 
     JdkVersion theVersion = rel.getVersion();
     getLog()
@@ -228,7 +231,7 @@ public class JdkGetter {
       if (jdkImage.exists()) {
         FileUtils.forceDelete(jdkImage);
       }
-      if (jceImage.exists()) {
+      if (jceImage != null && jceImage.exists()) {
         FileUtils.forceDelete(jceImage);
       }
     }
