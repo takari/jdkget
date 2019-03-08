@@ -16,6 +16,9 @@ import io.takari.jdkget.model.BinaryType;
 
 public class JCEExtractor {
 
+  private static final String CRYPTO_POLICY_UNLIMITED = "crypto.policy=unlimited";
+  private static final String CRYPTO_POLICY_UNLIMITED_COMMENTED = '#' + CRYPTO_POLICY_UNLIMITED;
+
   public void extractJCE(JdkGetter context, BinaryType type, File jceImage, File outputDir)
       throws IOException, InterruptedException {
     File secDir = getSecDir(type, outputDir);
@@ -37,14 +40,18 @@ public class JCEExtractor {
     List<String> lines = FileUtils.readLines(security);
     for (int i = 0; i < lines.size(); i++) {
       String line = lines.get(i);
-      if (line.contains("crypto.policy=unlimited") && line.startsWith("#")) {
+      if (line.equals(CRYPTO_POLICY_UNLIMITED)) {
+        found = true;
+        break;
+      }
+      if (line.equals(CRYPTO_POLICY_UNLIMITED_COMMENTED)) {
         lines.set(i, line.substring(1));
         found = true;
         break;
       }
     }
     if (!found) {
-      lines.add("crypto.policy=unlimited");
+      lines.add(CRYPTO_POLICY_UNLIMITED);
     }
     FileUtils.writeLines(security, lines);
   }
