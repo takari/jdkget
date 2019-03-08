@@ -82,8 +82,17 @@ public class JdkRelease implements Serializable {
     if (bins != null) {
       int lowest = Integer.MAX_VALUE;
       for (JdkBinary bin : bins) {
-        int idx = UNPACKABLES.indexOf(ext(bin.getPath()).toLowerCase());
-        if (idx != -1 && idx < lowest) {
+        String fname = filename(bin.getPath()).toLowerCase();
+
+        int idx = 0;
+        for (String ext : UNPACKABLES) {
+          if (fname.endsWith(ext)) {
+            break;
+          }
+          idx++;
+        }
+
+        if (idx < UNPACKABLES.size() && idx < lowest) {
           lowest = idx;
           match = bin;
         }
@@ -92,13 +101,11 @@ public class JdkRelease implements Serializable {
     return match;
   }
 
-  private static String ext(String path) {
+  private static String filename(String path) {
     int sl = path.lastIndexOf('/');
-    String name = sl == -1 ? path : path.substring(sl + 1);
-    int dot = name.indexOf('.');
-    return dot == -1 ? "" : name.substring(dot + 1);
+    return sl == -1 ? path : path.substring(sl + 1);
   }
 
   private final static List<String> UNPACKABLES = Collections.unmodifiableList(Arrays.asList( //
-      "tar.gz", "tar.z", "zip", "bin", "sh", "dmg", "exe"));
+      ".tar.gz", ".tar.z", ".zip", ".bin", ".sh", ".dmg", ".exe"));
 }
