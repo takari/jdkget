@@ -76,8 +76,7 @@ public class JdkReleasesParser {
       
       String path = path(url, typeName, JdkVersion.parse(binVersion), arch, ext);
 
-      String descriptor = arch + "." + ext;
-      builder.addBinary(ver, BinaryType.forName(type), cls, descriptor, path, md5, sha256, size);
+      builder.addBinary(ver, BinaryType.forName(type), cls, path, md5, sha256, size);
     });
   }
 

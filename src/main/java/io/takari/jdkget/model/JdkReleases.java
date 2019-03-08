@@ -194,30 +194,22 @@ public class JdkReleases implements Serializable {
   }
 
   public static Builder newBuilder(JdkReleases rels) {
-    return newBuilder(rels, null);
-  }
-
-  public static Builder newBuilder(JdkReleases rels, List<String> typeNames) {
     Builder b = new Builder();
     b.transport(rels.getTransport());
-    Set<BinaryType> releaseTypes = BinaryType.forNames(typeNames);
     for (JdkRelease r : rels.getReleases()) {
       String v = r.getVersion().shortBuild();
       if (r.isPsu()) {
         b.setPSU(v);
       }
 
-      r.binaries.entrySet().stream()
-          .filter(e -> releaseTypes.contains(e.getKey()))
-          .forEach(typedBins -> {
-            typedBins.getValue().values().stream() //
-                .forEach(bins -> { //
-                  bins.forEach(bin -> { //
-                    b.addBinary(v, typedBins.getKey(), bin.getArch(), bin.getPath(), bin.getMd5(), bin.getSha256(),
-                        bin.getSize());
-                  });
-                });
+      r.binaries.forEach((type, typeBins) -> {
+        typeBins.forEach((arch, bins) -> {
+          bins.forEach(bin -> {
+            b.addBinary(v, type, arch, //
+                bin.getPath(), bin.getMd5(), bin.getSha256(), bin.getSize());
           });
+        });
+      });
     }
 
     for (JCE jce : rels.jces) {
@@ -255,13 +247,7 @@ public class JdkReleases implements Serializable {
       return addBinary(version, null, arch, path, md5, sha256, size);
     }
 
-    public Builder addBinary(String version, BinaryType type, Arch arch, String path, String md5, String sha256,
-        long size) {
-      return addBinary(version, type, arch, "?", path, md5, sha256, size);
-    }
-
-    public Builder addBinary(String version, BinaryType type, Arch arch, String descriptor, String path, String md5,
-        String sha256, long size) {
+    public Builder addBinary(String version, BinaryType type, Arch arch, String path, String md5, String sha256, long size) {
       Map<BinaryType, List<JdkBinary>> bv = binaries.get(version);
       if (bv == null) {
         binaries.put(version, bv = new LinkedHashMap<>());
@@ -270,7 +256,7 @@ public class JdkReleases implements Serializable {
       if (bt == null) {
         bv.put(type, bt = new ArrayList<>());
       }
-      bt.add(new JdkBinary(arch, descriptor, path, md5, sha256, size));
+      bt.add(new JdkBinary(arch, path, md5, sha256, size));
       return this;
     }
 

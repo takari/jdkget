@@ -76,26 +76,13 @@ public class JdkRelease implements Serializable {
         .collect(Collectors.toSet());
   }
 
-  public JdkBinary getUnpackableBinary(BinaryType type, Arch arch, String binDescriptor) throws IOException {
+  public JdkBinary getUnpackableBinary(BinaryType type, Arch arch) throws IOException {
     List<JdkBinary> bins = getBinaries(type, arch);
-    if (binDescriptor != null) {
-      for (JdkBinary bin : bins) {
-        if (binDescriptor.equals(bin.getDescriptor())) {
-          return bin;
-        }
-      }
-    } else {
-      return selectUnpackable(bins);
-    }
-    return null;
-  }
-
-  private static JdkBinary selectUnpackable(List<JdkBinary> binaries) {
     JdkBinary match = null;
-    if (binaries != null) {
+    if (bins != null) {
       int lowest = Integer.MAX_VALUE;
-      for (JdkBinary bin : binaries) {
-        int idx = UNPACKABLES.indexOf(bin.getDescriptor());
+      for (JdkBinary bin : bins) {
+        int idx = UNPACKABLES.indexOf(ext(bin.getPath()).toLowerCase());
         if (idx != -1 && idx < lowest) {
           lowest = idx;
           match = bin;
@@ -105,33 +92,13 @@ public class JdkRelease implements Serializable {
     return match;
   }
 
+  private static String ext(String path) {
+    int sl = path.lastIndexOf('/');
+    String name = sl == -1 ? path : path.substring(sl + 1);
+    int dot = name.indexOf('.');
+    return dot == -1 ? "" : name.substring(dot + 1);
+  }
+
   private final static List<String> UNPACKABLES = Collections.unmodifiableList(Arrays.asList( //
-      "linux-x64.tar.gz", //
-      "linux-x64.bin", //
-      "linux-amd64.bin", //
-      "linux-i586.tar.gz", //
-      "linux-i586.bin", //
-      "macosx-x64.tar.gz", //
-      "macosx-x64.dmg", //
-      "osx-x64.tar.gz", //
-      "osx-x64.dmg", //
-      "windows-x64.zip", //
-      "windows-x64.tar.gz", //
-      "windows-x64.exe", //
-      "windows-x64-p.exe", //
-      "windows-amd64.exe", //
-      "windows-i586.zip", //
-      "windows-i586.tar.gz", //
-      "windows-i586.exe", //
-      "windows-i586-p.exe", //
-      "solaris-sparcv9.tar.gz", //
-      "solaris-sparcv9.tar.Z", //
-      "solaris-sparcv9.sh", //
-      "solaris-x64.tar.gz", //
-      "solaris-x64.tar.Z", //
-      "solaris-x64.sh", //
-      "solaris-amd64.tar.gz", //
-      "solaris-amd64.tar.Z", //
-      "solaris-amd64.sh" //
-  ));
+      "tar.gz", "tar.z", "zip", "bin", "sh", "dmg", "exe"));
 }

@@ -86,7 +86,7 @@ public class LoadAllIT {
           }
           FileUtils.forceMkdir(jdktmp);
 
-          if (rel.getUnpackableBinary(bt, arch, null) == null) {
+          if (rel.getUnpackableBinary(bt, arch) == null) {
             continue;
           }
 

@@ -9,15 +9,13 @@ public class JdkBinary implements Serializable {
 
   private JdkRelease release;
   private final Arch arch;
-  private final String descriptor; // combination of original architecture name and extension
   private final String path;
   private final String md5;
   private final String sha256;
   private final long size;
 
-  JdkBinary(Arch arch, String descriptor, String path, String md5, String sha256, long size) {
+  JdkBinary(Arch arch, String path, String md5, String sha256, long size) {
     this.arch = arch;
-    this.descriptor = descriptor;
     this.path = path;
     this.md5 = md5;
     this.sha256 = sha256;
@@ -37,10 +35,6 @@ public class JdkBinary implements Serializable {
 
   public Arch getArch() {
     return arch;
-  }
-
-  public String getDescriptor() {
-    return descriptor;
   }
 
   public String getPath() {

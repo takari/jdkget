@@ -126,14 +126,19 @@ public class JdkGetter {
     if (arch == null) {
       arch = Arch.autodetect();
     }
-    if(type == null) {
+    if (type == null) {
       type = BinaryType.getDefault();
     }
 
     JdkVersion theVersion = rel.getVersion();
-    getLog()
-        .info("Getting jdk " + theVersion.shortBuild() + " for " + arch.toString().toLowerCase().replace("_", ""));
-    JdkBinary bin = rel.getUnpackableBinary(type, arch, null);
+    String versionDesc = theVersion.shortBuild() + " for " + arch.toString().toLowerCase().replace("_", "");
+    getLog().info("Getting jdk " + versionDesc);
+    JdkBinary bin = rel.getUnpackableBinary(type, arch);
+    if (bin == null) {
+      throw new IOException("Can't find matching binary for " + versionDesc);
+    } else {
+      getLog().info("  Found matching binary: " + bin.getPath());
+    }
 
     File jdkImage = new File(outputDirectory.getParentFile(), new File(bin.getPath()).getName());
     File jceImage = null;
