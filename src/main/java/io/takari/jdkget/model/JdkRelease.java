@@ -85,7 +85,7 @@ public class JdkRelease implements Serializable {
 
         for (String skip : NON_UNPACKABLES) {
           if (fname.endsWith(skip)) {
-            break outer;
+            continue outer;
           }
         }
 
