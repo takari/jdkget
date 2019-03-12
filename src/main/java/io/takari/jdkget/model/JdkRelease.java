@@ -71,8 +71,7 @@ public class JdkRelease implements Serializable {
   }
 
   public Set<BinaryType> getTypes(Set<BinaryType> allowedTypes) {
-    return binaries.keySet().stream()
-        .filter(t -> allowedTypes.stream().anyMatch(at -> at.equals(t)))
+    return binaries.keySet().stream().filter(t -> allowedTypes.stream().anyMatch(at -> at.equals(t)))
         .collect(Collectors.toSet());
   }
 
@@ -81,8 +80,14 @@ public class JdkRelease implements Serializable {
     JdkBinary match = null;
     if (bins != null) {
       int lowest = Integer.MAX_VALUE;
-      for (JdkBinary bin : bins) {
+      outer: for (JdkBinary bin : bins) {
         String fname = filename(bin.getPath()).toLowerCase();
+
+        for (String skip : NON_UNPACKABLES) {
+          if (fname.endsWith(skip)) {
+            break outer;
+          }
+        }
 
         int idx = 0;
         for (String ext : UNPACKABLES) {
@@ -108,4 +113,7 @@ public class JdkRelease implements Serializable {
 
   private final static List<String> UNPACKABLES = Collections.unmodifiableList(Arrays.asList( //
       ".tar.gz", ".tar.z", ".zip", ".bin", ".sh", ".dmg", ".exe"));
+
+  private final static List<String> NON_UNPACKABLES = Collections.unmodifiableList(Arrays.asList( //
+      "-rpm.bin"));
 }
