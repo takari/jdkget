@@ -70,7 +70,10 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
             minor = 0;
             security = 0;
           }
+        } else {
+          build = "";
         }
+        
         return new JdkVersionPost9(major, minor, security, build);
       }
     }
@@ -116,6 +119,17 @@ public abstract class JdkVersion implements Comparable<JdkVersion>, Serializable
       String major = x[0];
       String buildNumber = x.length > 1 ? "-" + x[1] : "";
       return new JdkVersionPre9(i(major), -1, buildNumber);
+    }
+    
+    if (version.startsWith("8.")) { // azul 8
+      int majEnd = findDigits(version, 0);
+      int major = i(version.substring(0, majEnd));
+      int minEnd = findDigits(version, majEnd + 1);
+      int minor = i(version.substring(majEnd + 1, minEnd));
+      int secEnd = findDigits(version, minEnd + 1);
+      int security = i(version.substring(minEnd + 1, secEnd));
+      String buildNumber = version.substring(minEnd);
+      return new JdkVersionPost9(major, minor, security, buildNumber);
     }
 
     return new JdkVersionPre9(i(version), -1, ""); // 7
