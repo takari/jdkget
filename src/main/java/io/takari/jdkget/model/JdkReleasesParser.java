@@ -84,7 +84,7 @@ public class JdkReleasesParser {
     return template //
         .replace("${typeName}", typeName) //
         .replace("${version}", ver.shortVersion()) //
-        .replace("${build}", ver.buildNumber) //
+        .replace("${build}", ver.buildNumber == null ? "" : ver.buildNumber) //ignore build if not oracle 
         .replace("${arch}", arch) //
         .replace("${ext}", ext);
   }
