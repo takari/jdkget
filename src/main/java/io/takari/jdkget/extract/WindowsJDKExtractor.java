@@ -3,9 +3,8 @@ package io.takari.jdkget.extract;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
+import io.takari.jdkget.IJdkExtractor;
 import io.takari.jdkget.JdkGetter;
 import io.takari.jdkget.Util;
 import io.takari.jdkget.model.JdkBinary;
@@ -13,7 +12,7 @@ import io.takari.jdkget.win.CabEntry;
 import io.takari.jdkget.win.CabInput;
 import io.takari.jdkget.win.Cabinet;
 
-public class WindowsJDKExtractor extends AbstractZipExtractor {
+public class WindowsJDKExtractor implements IJdkExtractor {
 
   @Override
   public boolean extractJdk(JdkGetter context, JdkBinary bin, File jdkImage, File outputDir) throws IOException, InterruptedException {
@@ -30,14 +29,7 @@ public class WindowsJDKExtractor extends AbstractZipExtractor {
 
             // extract it
             outputDir.mkdirs();
-            try (ZipInputStream zin = new ZipInputStream(e.getInputStream())) {
-              ZipEntry ze = zin.getNextEntry();
-              while (ze != null) {
-                Util.checkInterrupt();
-                extractEntry(outputDir, null, ze, zin);
-                ze = zin.getNextEntry();
-              }
-            }
+            Util.unzip(e.getInputStream(), null, outputDir, context.getLog());
 
             return true;
           }

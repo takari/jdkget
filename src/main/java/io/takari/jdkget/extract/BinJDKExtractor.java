@@ -5,53 +5,57 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.zip.GZIPInputStream;
 
+import io.takari.jdkget.IJdkExtractor;
 import io.takari.jdkget.JdkGetter;
+import io.takari.jdkget.Util;
 import io.takari.jdkget.model.JdkBinary;
-import io.takari.jdkget.osx.PosixModes;
 
-public class BinJDKExtractor extends AbstractZipExtractor {
+public class BinJDKExtractor implements IJdkExtractor {
 
   private static final int[] ZIP_PREFIX = new int[] {0x50, 0x4b, 0x03, 0x04};
-  private static final int MAX_ZIP_READ = 0x20000;
+  private static final int[] GZIP_PREFIX = new int[] {0x1f, 0x8b, 0x08};
+
+  private static final int MAX_PREFIX_READ = 0x20000;
 
   @Override
-  public boolean extractJdk(JdkGetter context, JdkBinary bin, File jdkImage, File outputDir) throws IOException, InterruptedException {
+  public boolean extractJdk(JdkGetter context, JdkBinary bin, File jdkImage, File outputDir)
+      throws IOException, InterruptedException {
 
     context.getLog().info("Extracting " + jdkImage.getName() + " into " + outputDir);
     outputDir.mkdir();
 
     try (InputStream in = new BufferedInputStream(new FileInputStream(jdkImage))) {
+
       // find start of zip
-      findZipStream(in);
+      if (findBinaryStream(in, ZIP_PREFIX)) {
 
-      ZipInputStream zip = new ZipInputStream(in);
+        Util.unzip(in, bin.getRelease().getVersion().release(), outputDir, context.getLog());
 
-      ZipEntry e;
-      while ((e = zip.getNextEntry()) != null) {
-        extractEntry(outputDir, bin.getRelease().getVersion(), e, zip);
+      } else if (findBinaryStream(in, GZIP_PREFIX)) {
+
+        Util.untar(new GZIPInputStream(in), bin.getRelease().getVersion().release(), outputDir, context.getLog());
+
+      } else {
+        throw new IllegalStateException("Cannot find start of archive stream");
       }
+
     }
 
     // make sure bin files are executables
-    if (File.pathSeparatorChar != ';') {
-      updateExecutables(outputDir);
-    }
+    Util.updateExecutables(outputDir);
 
     return true;
   }
 
-  private void findZipStream(InputStream in) throws IOException {
+  private boolean findBinaryStream(InputStream in, int[] prefix) throws IOException {
 
     int total = 0;
     int idx = 0;
     while (true) {
       if (idx == 0) {
-        in.mark(ZIP_PREFIX.length);
+        in.mark(prefix.length);
       }
 
       int b = in.read();
@@ -59,33 +63,22 @@ public class BinJDKExtractor extends AbstractZipExtractor {
         break;
       }
       total++;
-      if (b == ZIP_PREFIX[idx]) {
+      if (b == prefix[idx]) {
         idx++;
-        if (idx >= ZIP_PREFIX.length) {
+        if (idx >= prefix.length) {
           // found it!
           in.reset();
-          return;
+          return true;
         }
       } else {
         idx = 0;
       }
 
-      if (total > MAX_ZIP_READ) {
+      if (total > MAX_PREFIX_READ) {
         break;
       }
     }
-    throw new IllegalStateException("Cannot find start of zip stream");
+    return false;
   }
 
-  private void updateExecutables(File outputDir) throws IOException {
-    File bin = new File(outputDir, "bin");
-    File[] binFiles = bin.listFiles();
-    if (binFiles != null) {
-      for (File ex : binFiles) {
-        Path p = ex.toPath();
-        int mode = PosixModes.posixToIntMode(Files.getPosixFilePermissions(p));
-        Files.setPosixFilePermissions(p, PosixModes.intModeToPosix(mode | 0111)); // add +x
-      }
-    }
-  }
 }

@@ -5,50 +5,30 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
+import io.takari.jdkget.IJdkExtractor;
 import io.takari.jdkget.JdkGetter;
+import io.takari.jdkget.Util;
 import io.takari.jdkget.model.JdkBinary;
-import io.takari.jdkget.osx.PosixModes;
 
-public class ZipJDKExtractor extends AbstractZipExtractor {
+public class ZipJDKExtractor implements IJdkExtractor {
 
   @Override
-  public boolean extractJdk(JdkGetter context, JdkBinary bin, File jdkImage, File outputDir) throws IOException, InterruptedException {
+  public boolean extractJdk(JdkGetter context, JdkBinary bin, File jdkImage, File outputDir)
+      throws IOException, InterruptedException {
 
     context.getLog().info("Extracting " + jdkImage.getName() + " into " + outputDir);
 
     outputDir.mkdir();
 
     try (InputStream in = new BufferedInputStream(new FileInputStream(jdkImage))) {
-      ZipInputStream zip = new ZipInputStream(in);
-
-      ZipEntry e;
-      while ((e = zip.getNextEntry()) != null) {
-        extractEntry(outputDir, bin.getRelease().getVersion(), e, zip);
-      }
+      Util.unzip(in, bin.getRelease().getVersion().release(), outputDir, context.getLog());
     }
 
     // make sure bin files are executables
-    if (File.pathSeparatorChar != ';') {
-      updateExecutables(outputDir);
-    }
+    Util.updateExecutables(outputDir);
 
     return true;
   }
 
-  private void updateExecutables(File outputDir) throws IOException {
-    File bin = new File(outputDir, "bin");
-    File[] binFiles = bin.listFiles();
-    if (binFiles != null) {
-      for (File ex : binFiles) {
-        Path p = ex.toPath();
-        int mode = PosixModes.posixToIntMode(Files.getPosixFilePermissions(p));
-        Files.setPosixFilePermissions(p, PosixModes.intModeToPosix(mode | 0111)); // add +x
-      }
-    }
-  }
 }

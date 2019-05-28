@@ -1,17 +1,143 @@
 package io.takari.jdkget;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Pack200;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-import io.takari.jdkget.model.JdkVersion;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+
+import io.takari.jdkget.osx.PosixModes;
 
 public class Util {
 
-  public static String cleanEntryName(String entryName, JdkVersion jdkVersion) {
-    String release = jdkVersion.release();
+  public static void untar(InputStream in, String stripPrefix, File outputDir, IOutput log)
+      throws IOException, InterruptedException, FileNotFoundException {
+    TarArchiveInputStream t = new TarArchiveInputStream(in);
+    TarArchiveEntry te;
+    while ((te = t.getNextTarEntry()) != null) {
 
+      checkInterrupt();
+
+      String entryName = cleanEntryName(te.getName(), stripPrefix);
+      if (entryName == null) {
+        continue;
+      }
+
+      File f = new File(outputDir, entryName);
+      if (te.isDirectory()) {
+        f.mkdirs();
+      } else {
+        File parent = f.getParentFile();
+        if (parent != null) {
+          parent.mkdirs();
+        }
+
+        if (te.isSymbolicLink()) {
+          if (File.pathSeparatorChar == ';') {
+            log.info("Not creating symbolic link " + entryName + " -> " + te.getLinkName());
+          } else {
+            Path p = f.toPath();
+            Files.createSymbolicLink(p, p.getParent().resolve(te.getLinkName()));
+          }
+        } else {
+          try (OutputStream out = new FileOutputStream(f)) {
+            copyInterruptibly(t, out);
+          }
+          if (File.pathSeparatorChar != ';') {
+            int mode = (int) te.getMode() & 0000777;
+            Files.setPosixFilePermissions(f.toPath(), PosixModes.intModeToPosix(mode));
+          }
+          f.setLastModified(te.getModTime().getTime());
+        }
+      }
+    }
+  }
+
+  public static void unzip(InputStream in, String stripPrefix, File outputDir, IOutput log)
+      throws InterruptedException, IOException {
+    ZipInputStream zip = new ZipInputStream(in);
+
+    ZipEntry e;
+    while ((e = zip.getNextEntry()) != null) {
+      checkInterrupt();
+      extractZipEntry(outputDir, stripPrefix, e, zip);
+    }
+  }
+
+  private static void extractZipEntry(File outputDir, String stripPrefix, ZipEntry e, InputStream zip)
+      throws IOException, InterruptedException {
+
+    boolean unpack200 = false;
+    String name = e.getName();
+
+    if (stripPrefix != null) {
+      name = Util.cleanEntryName(name, stripPrefix);
+      if (name == null) {
+        return;
+      }
+    }
+
+    if (name.endsWith(".pack")) {
+      name = name.substring(0, name.length() - 5) + ".jar";
+      unpack200 = true;
+    }
+
+    File f = new File(outputDir, name);
+    if (e.isDirectory()) {
+
+      f.mkdirs();
+
+    } else {
+
+      f.createNewFile();
+
+      if (unpack200) {
+        try (JarOutputStream out = new JarOutputStream(new FileOutputStream(f))) {
+          // prevent unpacker from closing the stream
+          InputStream zin = new FilterInputStream(zip) {
+            @Override
+            public void close() throws IOException {}
+          };
+          Pack200.newUnpacker().unpack(zin, out);
+        }
+      } else {
+        try (OutputStream out = new FileOutputStream(f)) {
+          Util.copyInterruptibly(zip, out);
+        }
+      }
+
+    }
+  }
+  
+  public static void updateExecutables(File outputDir) throws IOException {
+    if (File.pathSeparatorChar == ';') {
+      return; // skip windows
+    }
+
+    File bin = new File(outputDir, "bin");
+    File[] binFiles = bin.listFiles();
+    if (binFiles != null) {
+      for (File ex : binFiles) {
+        Path p = ex.toPath();
+        int mode = PosixModes.posixToIntMode(Files.getPosixFilePermissions(p));
+        Files.setPosixFilePermissions(p, PosixModes.intModeToPosix(mode | 0111)); // add +x
+      }
+    }
+  }
+
+  public static String cleanEntryName(String entryName, String stripPrefix) {
     if (entryName.startsWith("./")) {
       entryName = entryName.substring(2);
     }
@@ -22,7 +148,7 @@ public class Util {
     int sl = entryName.indexOf('/');
     if (sl != -1) {
       String root = entryName.substring(0, sl);
-      if (root.contains(release)) {
+      if (root.contains(stripPrefix)) {
         entryName = entryName.substring(sl + 1);
       }
     }
