@@ -12,7 +12,7 @@
   <properties>
     <takari.javaSourceVersion>1.8</takari.javaSourceVersion>
     <maven.test.redirectTestOutputToFile>false</maven.test.redirectTestOutputToFile>
-    <jackson-2-version>2.9.0</jackson-2-version>
+    <jackson-2-version>2.10.1</jackson-2-version>
   </properties>
 
   <scm>
