@@ -18,6 +18,7 @@ public enum Arch {
     boolean sixtyFour;
     
     if(arch.contains("amd64")) sixtyFour = true;
+    else if(arch.contains("aarch64")) sixtyFour = true;
     else if(arch.contains("86_64")) sixtyFour = true;
     else if(arch.contains("86")) sixtyFour = false;
     else if(arch.contains("sparc")) sixtyFour = false; // well, technically it's 64
